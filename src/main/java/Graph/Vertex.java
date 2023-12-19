@@ -1,7 +1,7 @@
 package Graph;
 
 public class Vertex<T> {
-    T Data;
+    T Data; // Generic data
 
     public Vertex(T data)
     {
