@@ -1,25 +1,86 @@
 package com.example.theos;
 
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
+import java.nio.file.Path;
 
-public class Player extends Circle { // 14.12. Mateo: für erste Testzwecke werden die Spieler/Charaktere erstmal abstahiert als Kreise dargestellt
+public class Player {
+    private String name;
+    private static int nextID = 0; // Used for automatic ID distribution
+    private int iD;
+    private Dice basicDie;
+    private Dice specialDie;
+    private Path imagePath;
+    private Field currentField; // Current Field where the player is
 
-    int currentField; // 14.12. Mateo: speichert den Index passend zur Fieldliste, wo sich der Spieler gerade befindet
+    public Player(String characterName, int[] specialDiceArray, Path path)
+    {
+        name = characterName;
+        basicDie = new Dice();
+        specialDie = new Dice(specialDiceArray);
+        imagePath = path;
 
-    private int playerID;
-
-    private static int playerCount = 0; // 14.12. Mateo: damit beim erstellen automatisch durchnummeriert wird
-
-    public Player(double radius, Paint fill) {
-        super(radius, fill);
-        playerCount++;
-        currentField = 0;
-        playerID = playerCount;
+        iD = nextID;
+        nextID++;
     }
 
-    @Override // 14.12. Mateo: für Ausgabe auf Konsole, welcher Spieler was gewürfelt hat
-    public String toString() {
-        return getClass().getSimpleName() + " " + playerID;
+    public Player(String characterName, int[] specialDiceArray, Path path, Field currentCharacterField)
+    {
+        this(characterName, specialDiceArray, path);
+        currentField = currentCharacterField;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public int getID()
+    {
+        return iD;
+    }
+
+    public Path getImagePath()
+    {
+        return imagePath;
+    }
+
+    public void setImagePath(Path path)
+    {
+        imagePath = path;
+    }
+
+    public Field getCurrentField()
+    {
+        return currentField;
+    }
+
+    public void setCurrentField(Field currentField)
+    {
+        this.currentField = currentField;
+    }
+
+    /*
+    Rolls the dice which are saved in the Player class
+    Used to choose the die to roll
+    returns the die result
+    !! DIE SPECIAL DIE CHARGES DO NOT GET CHECKED HERE. THIS NEEDS TO BE DONE IN THE APPLICATION CLASS !!
+    */
+    public int rollDie(Dice.dieType dieType)
+    {
+
+        switch (dieType) {
+            /*
+            // Is it needed? The IDE complains that this statement and the default statement are the same. Should we ignor it or should we remove the statement?
+            case NormalDie -> {
+                return basicDie.rollDie();
+            }
+            break;
+             */
+            case SpecialDie -> {
+                return specialDie.rollDie();
+            }
+            default -> {
+                return basicDie.rollDie();
+            }
+        }
     }
 }
