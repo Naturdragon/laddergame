@@ -35,7 +35,7 @@ public class Field {
         CrossoverField
     }
 
-    class Coordinates {
+    class Coordinates { // nested class for coordinates of fields
 
         int x;
         int y;
