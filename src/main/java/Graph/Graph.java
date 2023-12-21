@@ -41,7 +41,7 @@ public class Graph {
     }
 
     /*
-    Creates a Edge between two Vertexes
+    Creates an Edge between two Vertexes
     The Data of the two Vertexes to be connected
      */
     public <T> void addEdge(T Data1, T Data2)
