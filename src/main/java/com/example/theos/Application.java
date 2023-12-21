@@ -24,7 +24,7 @@ import java.util.Random;
 public class Application extends javafx.application.Application {
 
     static int playerWhoseTurnIs = 0;
-    static List<Player> playerList = new ArrayList<>();
+    static List<TestPlayer> playerList = new ArrayList<>();
     static List<Field> fieldList = new ArrayList<>();
 
     /* 14.12. Mateo:
@@ -33,7 +33,7 @@ public class Application extends javafx.application.Application {
     Loads created path and character into PathTransitions and plays the animation.
     Returns nothing
      */
-    public static void movePlayer(List<Field> fieldList, Player player, Field currentFieldOfPlayer, int fieldsToMove) {
+    public static void movePlayer(List<Field> fieldList, TestPlayer player, Field currentFieldOfPlayer, int fieldsToMove) {
 
         Path path = new Path();
         path.getElements().add(new MoveTo(currentFieldOfPlayer.animationPointX, currentFieldOfPlayer.animationPointY)); // start point of path is current field of player
@@ -61,10 +61,10 @@ public class Application extends javafx.application.Application {
         // FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("hello-view.fxml")); // 14.12. Mateo: bis jetzt war noch kein FXML notwendig
 
         // 14.12. Mateo: Creating all the players and adding them to the list
-        Player player1 = new Player(15, Color.HOTPINK);
-        Player player2 = new Player(15, Color.BLUE);
-        Player player3 = new Player(15, Color.RED);
-        Player player4 = new Player(15, Color.DARKOLIVEGREEN);
+        TestPlayer player1 = new TestPlayer(15, Color.HOTPINK);
+        TestPlayer player2 = new TestPlayer(15, Color.BLUE);
+        TestPlayer player3 = new TestPlayer(15, Color.RED);
+        TestPlayer player4 = new TestPlayer(15, Color.DARKOLIVEGREEN);
 
         // 14.12. Mateo: so players are shown at the correct starting position
         player1.setCenterX(165);
@@ -141,7 +141,8 @@ public class Application extends javafx.application.Application {
 
                     playerWhoseTurnIs++;
 
-                    if (playerWhoseTurnIs == playerList.size()) playerWhoseTurnIs = 0; // 14.12. Mateo: wenn der letzte Spieler dran war startet die Liste (playerWhosTurnIs) wieder vom Anfang
+                    if (playerWhoseTurnIs == playerList.size())
+                        playerWhoseTurnIs = 0; // 14.12. Mateo: wenn der letzte Spieler dran war startet die Liste (playerWhosTurnIs) wieder vom Anfang
                 }
             }
         });
