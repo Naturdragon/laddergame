@@ -1,25 +1,21 @@
 package com.example.theos;
 
-import Graph.Graph;
+import Animation.SpriteAnimation;
 import javafx.animation.PathTransition;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Application extends javafx.application.Application {
@@ -114,11 +110,22 @@ public class Application extends javafx.application.Application {
         testFieldList.add(testField11);
         */
 
-        GameBoard gameBoard=new GameBoard();
+        GameBoard gameBoard = new GameBoard();
 
 
-        int[] mintOLintDie = {1,1,2,2,2,7};
+        int[] mintOLintDie = {1, 1, 2, 2, 2, 7};
         Player player1 = new Player("Mint’O Lint", mintOLintDie, Paths.get("images"));
+        Image mintOLintSprite = new Image("images/mintolint_sprite.png", 64 * 22, 64 * 3, true, false);
+        player1.setImageView(new ImageView(mintOLintSprite));
+        player1.getImageView().setX(711);
+        player1.getImageView().setY(400);
+        SpriteAnimation mintOLintIdle = player1.playIdle();
+        SpriteAnimation mintOLintWalk = player1.playWalk();
+        mintOLintIdle.play();
+        //player1.playWalk();
+        //player1.playSlip();
+
+
 
 
         /* 14.12. Mateo:
@@ -129,14 +136,14 @@ public class Application extends javafx.application.Application {
         für zusätliche Layout-Elemente wie Spieler- und Würfelanzeige.
          */
 
-        Group group = new Group(gameBoard.getRolledNumberDisplay());
+        Group group = new Group(gameBoard.getRolledNumberDisplay(), player1.getImageView());
 
 
         Pane root = new Pane(group);
 
         root.setBackground(gameBoard.getBackground()); // 14.12. Mateo: setBackground method needs Background object, not BackgroundImage
 
-        Scene scene = new Scene(root,sceneWidth, sceneHeight); // 14.12. Mateo: ich hab die Größe erstmal auf 1422x800 eingestellt da 1920x1080 für meinen Laptop-Bildschirm zu groß war
+        Scene scene = new Scene(root, sceneWidth, sceneHeight); // 14.12. Mateo: ich hab die Größe erstmal auf 1422x800 eingestellt da 1920x1080 für meinen Laptop-Bildschirm zu groß war
 
         /* Test von 14.12.:
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() { // 14.12. Mateo: kann automatisch durch Lambda ersetzt werden, ist dann kürzer
@@ -163,8 +170,9 @@ public class Application extends javafx.application.Application {
 
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.SPACE) {
-
+                mintOLintIdle.stop();
                 gameBoard.playerTurn(player1);
+                mintOLintWalk.play();
             }
         });
 
