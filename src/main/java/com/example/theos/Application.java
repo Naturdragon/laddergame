@@ -25,54 +25,10 @@ import java.util.List;
 public class Application extends javafx.application.Application {
 
     /* scene width and height are used for scene size and field class
-    –> x and y parameters of field constructor are in percent, useful for resizing
-     */
-    private static int sceneWidth = 1422;
-    private static int sceneHeight = 800;
-    static Graph boardGraph;
-    static List<Player> playerList;
-    static Background background;
-    static Text rolledNumberDisplay = new Text();
-
-    static { // for initializing the static member variables of the Application class
-
-        boardGraph = new Graph();
-
-        playerList = new ArrayList<>();
-
-        // 14.12. Mateo: Image of board is loaded into a BackgroundImage object, along with other parameters; https://docs.oracle.com/javase/8/javafx/api/javafx/scene/layout/BackgroundImage.html
-        BackgroundImage backgroundImg = new BackgroundImage(
-                new Image("images/gameboard_downsized.png"),
-                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-                new BackgroundSize(100, 100, true, true, true, true));
-
-        background = new Background(backgroundImg);
-
-        rolledNumberDisplay.setX(30);
-        rolledNumberDisplay.setY(750);
-        rolledNumberDisplay.setFont(new Font(30));
-    }
-
-    public static int getSceneWidth() {
-        return sceneWidth;
-    }
-
-    public static int getSceneHeight() {
-        return sceneHeight;
-    }
-
-    /*
-    Lets a player make a move
-    Player can select which die to use, die is rolled
-    calls movePlayer method to play the animation of the player moving
-    Returns nothing
-     */
-    public static void playerTurn(Player player) {
-
-        int rolled = player.rollDie(Dice.dieType.NormalDie);
-
-        rolledNumberDisplay.setText(String.valueOf(rolled));
-    }
+       –> x and y parameters of field constructor are in percent, useful for resizing
+        */
+    static final int sceneWidth = 1422;
+    static final int sceneHeight = 800;
 
     /* 14.12. Mateo:
         Moves player from current field to desired field.
@@ -80,7 +36,7 @@ public class Application extends javafx.application.Application {
         Loads created path and character into PathTransitions and plays the animation.
         Returns nothing
         */
-    public static void movePlayer(List<TestField> testFieldList, TestPlayer player, TestField currentTestFieldOfPlayer, int fieldsToMove) {
+    public static void movePlayerTest(List<TestField> testFieldList, TestPlayer player, TestField currentTestFieldOfPlayer, int fieldsToMove) {
 
         Path path = new Path();
         path.getElements().add(new MoveTo(currentTestFieldOfPlayer.animationPointX, currentTestFieldOfPlayer.animationPointY)); // start point of path is current field of player
@@ -158,6 +114,9 @@ public class Application extends javafx.application.Application {
         testFieldList.add(testField11);
         */
 
+        GameBoard gameBoard=new GameBoard();
+
+
         int[] mintOLintDie = {1,1,2,2,2,7};
         Player player1 = new Player("Mint’O Lint", mintOLintDie, Paths.get("images"));
 
@@ -170,13 +129,14 @@ public class Application extends javafx.application.Application {
         für zusätliche Layout-Elemente wie Spieler- und Würfelanzeige.
          */
 
-        Group group = new Group(rolledNumberDisplay);
+        Group group = new Group(gameBoard.getRolledNumberDisplay());
+
 
         Pane root = new Pane(group);
 
-        root.setBackground(background); // 14.12. Mateo: setBackground method needs Background object, not BackgroundImage
+        root.setBackground(gameBoard.getBackground()); // 14.12. Mateo: setBackground method needs Background object, not BackgroundImage
 
-        Scene scene = new Scene(root, sceneWidth, sceneHeight); // 14.12. Mateo: ich hab die Größe erstmal auf 1422x800 eingestellt da 1920x1080 für meinen Laptop-Bildschirm zu groß war
+        Scene scene = new Scene(root,sceneWidth, sceneHeight); // 14.12. Mateo: ich hab die Größe erstmal auf 1422x800 eingestellt da 1920x1080 für meinen Laptop-Bildschirm zu groß war
 
         /* Test von 14.12.:
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() { // 14.12. Mateo: kann automatisch durch Lambda ersetzt werden, ist dann kürzer
@@ -190,7 +150,7 @@ public class Application extends javafx.application.Application {
 
                     System.out.println(playerList.get(playerWhoseTurnIs).toString() + " rolled " + fieldsToMove); // 14.12. Mateo: Ausgabe des Zuges auf der Konsole
 
-                    movePlayer(testFieldList, playerList.get(playerWhoseTurnIs), testFieldList.get(playerList.get(playerWhoseTurnIs).currentField), fieldsToMove);
+                    movePlayerTest(testFieldList, playerList.get(playerWhoseTurnIs), testFieldList.get(playerList.get(playerWhoseTurnIs).currentField), fieldsToMove);
 
                     playerWhoseTurnIs++;
 
@@ -204,7 +164,7 @@ public class Application extends javafx.application.Application {
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.SPACE) {
 
-                playerTurn(player1);
+                gameBoard.playerTurn(player1);
             }
         });
 

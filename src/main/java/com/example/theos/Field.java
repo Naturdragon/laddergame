@@ -7,8 +7,8 @@ public class Field {
 
     public Field(fieldType type, int xPercentage, int yPercentage) {
         this.type = type;
-        coordinates.x = Application.getSceneWidth() * xPercentage / 100;
-        coordinates.y = Application.getSceneHeight() * yPercentage / 100;
+        coordinates.x = Application.sceneWidth * xPercentage / 100;
+        coordinates.y = Application.sceneHeight * yPercentage / 100;
     }
 
     public fieldType getType() {
