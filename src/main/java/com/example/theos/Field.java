@@ -2,17 +2,42 @@ package com.example.theos;
 
 public class Field {
 
-    public int animationPointX;
-    public int animationPointY;
-    public int fieldID; // 14.12. Mateo: wird in movePlayer Methode verwendet
+    private fieldType type;
+    private Coordinates coordinates;
 
-    private static int fieldCount = 0; // 14.12. Mateo: um Fieldobjekte beim erstellen mit fortlaufender fieldID zu versehen
+    public Field(fieldType type, int xPercentage, int yPercentage) {
+        this.type = type;
+        coordinates.x = Application.sceneWidth * xPercentage / 100;
+        coordinates.y = Application.sceneHeight * yPercentage / 100;
+    }
 
-    public Field(int animationPointX, int animationPointY) {
-        this.animationPointX = animationPointX;
-        this.animationPointY = animationPointY;
+    public fieldType getType() {
+        return type;
+    }
 
-        this.fieldID = fieldCount;
-        fieldCount++;
+    public int getX() {
+        return coordinates.x;
+    }
+
+    public int getY() {
+        return coordinates.y;
+    }
+
+    public Coordinates getCoordinates() {
+        return coordinates;
+    }
+
+    // Types of Fields
+    public enum fieldType {
+        NormalField,
+        LadderField,
+        SpecialChargeField,
+        CrossoverField
+    }
+
+    class Coordinates { // nested class for coordinates of fields
+
+        int x;
+        int y;
     }
 }
