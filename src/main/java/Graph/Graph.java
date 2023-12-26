@@ -56,14 +56,26 @@ public class Graph {
         AdjacencyList.get(vert2).add(edge);
     }
 
-    public <T> void addEdge(T Data1, T Data2, PathTransition Transition)
+    public <T> void addEdge(T data1, T data2, T weight)
     {
-        Vertex vert1 = new Vertex(Data1);
-        Vertex vert2 = new Vertex(Data2);
+        Vertex vert1 = new Vertex(data1);
+        Vertex vert2 = new Vertex(data2);
 
-        Edge edge = new Edge(Data1, Data2, Transition);
+        Edge edge = new Edge(data1, data2, weight);
         AdjacencyList.get(vert1).add(edge);
         AdjacencyList.get(vert2).add(edge);
+    }
+
+    public <T> void addOneDirectionalEdge(T source, T target){
+        Vertex Source = new Vertex(source);
+        Edge edge = new Edge(source, target);
+        AdjacencyList.get(Source).add(edge);
+    }
+
+    public <T> void addOneDirectionalEdge(T source, T target, T weight){
+        Vertex Source = new Vertex(source);
+        Edge edge = new Edge(source, target, weight);
+        AdjacencyList.get(Source).add(edge);
     }
 
     /*
@@ -129,12 +141,10 @@ public class Graph {
 
             for (Edge v : this.getAdjacenctVertex(vertexData)) {
                 if (!visited.contains(v.getSource())) {
-
                     visited.add((T)v.getSource());
                     queue.add((T)v.getSource());
                 }
                 if (!visited.contains(v.getTarget())) {
-
                     visited.add((T)v.getTarget());
                     queue.add((T)v.getTarget());
                 }
@@ -142,6 +152,4 @@ public class Graph {
         }
         return visited;
     }
-
-
 }
