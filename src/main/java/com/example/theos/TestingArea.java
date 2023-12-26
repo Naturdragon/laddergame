@@ -2,8 +2,27 @@ package com.example.theos;
 
 import Graph.Graph;
 
+import java.util.Enumeration;
+
 public class TestingArea {
     public static void main(String[] args) {
+
+        /*
+        Dice standardDie = new Dice();
+        Dice specialDie = new Dice(new int[]{-3,-3,6,6,6,7});
+
+        System.out.println("Standard Die's 10 rolls");
+        for (int i = 0;i < 10; i++) {
+            System.out.println(standardDie.rollDie());
+        }
+
+        System.out.println("\nSpecial Die's 10 rolls");
+        for (int i = 0;i < 10; i++) {
+            System.out.println(specialDie.rollDie());
+        }
+        */
+
+
         Graph graph = new Graph();
         graph.addVertex("A");
         graph.addVertex("B");
@@ -22,5 +41,6 @@ public class TestingArea {
         graph.breadthFirstTraversal("A").stream().forEach(x -> System.out.println(x));
         System.out.println("depthFirstTraversal: ");
         graph.depthFirstTraversal("A").stream().forEach(x -> System.out.println(x));
+
     }
 }
