@@ -1,7 +1,5 @@
 package Graph;
 
-import javafx.animation.PathTransition;
-
 import java.util.*;
 
 public class Graph {
@@ -65,6 +63,15 @@ public class Graph {
         AdjacencyList.get(vert1).add(edge);
         AdjacencyList.get(vert2).add(edge);
     }
+    public <T> void addEdge(T data1, T data2, T weight, T type)
+    {
+        Vertex vert1 = new Vertex(data1);
+        Vertex vert2 = new Vertex(data2);
+
+        Edge edge = new Edge(data1, data2, weight, type);
+        AdjacencyList.get(vert1).add(edge);
+        AdjacencyList.get(vert2).add(edge);
+    }
 
     public <T> void addOneDirectionalEdge(T source, T target){
         Vertex Source = new Vertex(source);
@@ -75,6 +82,11 @@ public class Graph {
     public <T> void addOneDirectionalEdge(T source, T target, T weight){
         Vertex Source = new Vertex(source);
         Edge edge = new Edge(source, target, weight);
+        AdjacencyList.get(Source).add(edge);
+    }
+    public <T> void addOneDirectionalEdge(T source, T target, T weight, T type){
+        Vertex Source = new Vertex(source);
+        Edge edge = new Edge(source, target, weight, type);
         AdjacencyList.get(Source).add(edge);
     }
 
@@ -98,7 +110,15 @@ public class Graph {
     Returns the adjacent Vertexies
     The Data of the Vertex from which the adjacent vertexes should be returned
      */
-    public <T> List<Edge> getAdjacenctVertex(T Data){
+    public <T> List<T> getAdjacenctVertex(T Data){
+        List<T> vertexList = new ArrayList<>();
+        for (Edge item: AdjacencyList.get(new Vertex((Data)))) {
+            vertexList.add((item.getSource() != Data)? (T)item.getSource():(T) item.getTarget());
+        }
+        return vertexList;
+    }
+
+    public <T> List<Edge> getAdjacenctVertexEdges(T Data){
         return AdjacencyList.get(new Vertex((Data)));
     }
 
@@ -115,7 +135,7 @@ public class Graph {
             T vertexData = stack.pop();
             if (!visited.contains(vertexData)) {
                 visited.add(vertexData);
-                for (Edge v : this.getAdjacenctVertex(vertexData)) {
+                for (Edge v : this.getAdjacenctVertexEdges(vertexData)) {
                     if (v.getSource() == vertexData) {
                         stack.push((T) v.getTarget());
                     }else {
@@ -139,7 +159,7 @@ public class Graph {
         while (!queue.isEmpty()) {
             T vertexData = queue.poll();
 
-            for (Edge v : this.getAdjacenctVertex(vertexData)) {
+            for (Edge v : this.getAdjacenctVertexEdges(vertexData)) {
                 if (!visited.contains(v.getSource())) {
                     visited.add((T)v.getSource());
                     queue.add((T)v.getSource());

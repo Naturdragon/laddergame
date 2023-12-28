@@ -3,8 +3,10 @@ package Graph;
 public class Edge<T> {
     T Source; // Vertex of the edge
     T Target; // Vertex of the edge
+    T Weight; // Generic Variable where every thing can be stored attched to the edge
 
-    T Weigth; // Generic Variable where every thing can be stored attched to the edge
+    T Type; // The type of edge it is
+
 
     // Base Edge with a sorce and a destination
     public Edge(T data1, T data2)
@@ -14,11 +16,19 @@ public class Edge<T> {
     }
 
     // Creates an Edge with a weight
-    public Edge(T source, T target, T weigth)
+    public Edge(T source, T target, T weight)
     {
         Source = source;
         Target = target;
-        Weigth = weigth;
+        Weight = weight;
+    }
+
+    public Edge(T source, T target, T weight, T type)
+    {
+        Source = source;
+        Target = target;
+        Weight = weight;
+        Type = type;
     }
 
     public T getSource()
@@ -41,13 +51,21 @@ public class Edge<T> {
         Target = target;
     }
 
-    public T getWeigth()
+    public T getWeight()
     {
-        return Weigth;
+        return Weight;
     }
 
-    public void setWeigth(T weigth)
+    public void setWeight(T weight)
     {
-        Weigth = weigth;
+        Weight = weight;
+    }
+
+    public T getType(){
+        return Type;
+    }
+
+    public void setType(T type){
+        Type = type;
     }
 }
