@@ -14,7 +14,7 @@ public class Player {
     private Dice specialDie;
     private Path imagePath;
     private Field currentField; // Current Field where the player is
-
+    private SpriteAnimation currentAnimation;
     private ImageView imageView; //used to represent the character of the player on screen
 
     public Player(String characterName, int[] specialDiceArray, Path path) {
@@ -65,30 +65,35 @@ public class Player {
     }
 
     /*
-    The following three methods create the respective animations based on the sprite sheet loaded into imageview
-    and allow later use of the animation e.g: .play() or .stop()
-    Return a SpriteAnimation instance
+    The following three methods create the respective animations based on the sprite sheet and
+    load it into the currentAnimation variable of character. Any previous animation is stopped to prevent animation-bugs.
+    Return nothing
      */
-    public SpriteAnimation playIdle() {
-        SpriteAnimation animation = new SpriteAnimation(imageView, 20, 20, 0, 0, 64, 64);
-        animation.setCycleCount(Animation.INDEFINITE);
-
-        return animation;
+    public void playIdle() {
+        if (currentAnimation != null) {
+            currentAnimation.stop();
+        }
+        currentAnimation = new SpriteAnimation(imageView, 20, 20, 0, 0, 64, 64);
+        currentAnimation.setCycleCount(Animation.INDEFINITE);
+        currentAnimation.play();
     }
 
-    public SpriteAnimation playWalk() {
-        SpriteAnimation animation = new SpriteAnimation(imageView, 19, 19, 0, 64, 64, 64);
-        animation.setCycleCount(Animation.INDEFINITE);
-
-        return animation;
+    public void playWalk() {
+        if (currentAnimation != null) {
+            currentAnimation.stop();
+        }
+        currentAnimation = new SpriteAnimation(imageView, 19, 19, 0, 64, 64, 64);
+        currentAnimation.setCycleCount(Animation.INDEFINITE);
+        currentAnimation.play();
     }
 
-    public SpriteAnimation playSlip() {
-        SpriteAnimation animation = new SpriteAnimation(imageView, 22, 22, 0, 128, 64, 64);
-        animation.setCycleCount(Animation.INDEFINITE);
-
-        return animation;
-
+    public void playSlip() {
+        if (currentAnimation != null) {
+            currentAnimation.stop();
+        }
+        currentAnimation = new SpriteAnimation(imageView, 22, 22, 0, 128, 64, 64);
+        currentAnimation.setCycleCount(Animation.INDEFINITE);
+        currentAnimation.play();
     }
 
     /*
