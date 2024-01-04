@@ -5,10 +5,11 @@ public class Field {
     private fieldType type;
     private Coordinates coordinates;
 
-    public Field(fieldType type, int xPercentage, int yPercentage) {
+    public Field(fieldType type, double xPercentage, double yPercentage) {
         this.type = type;
-        coordinates.x = Application.sceneWidth * xPercentage / 100;
-        coordinates.y = Application.sceneHeight * yPercentage / 100;
+        coordinates = new Coordinates();
+        coordinates.x = (int) (Application.sceneWidth * xPercentage / 100);
+        coordinates.y = (int) (Application.sceneHeight * yPercentage / 100);
     }
 
     public fieldType getType() {
@@ -35,7 +36,7 @@ public class Field {
         CrossoverField
     }
 
-    class Coordinates { // nested class for coordinates of fields
+    class Coordinates { // nested class for coordinates of fields; TODO: place getX and getY methods in coordinate class? like so: field.getCoordinates.getX()
 
         int x;
         int y;

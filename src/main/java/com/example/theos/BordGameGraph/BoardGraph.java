@@ -3,16 +3,15 @@ package com.example.theos.BordGameGraph;
 import Graph.*;
 import com.example.theos.Field;
 
-import java.nio.channels.Pipe;
 import java.util.*;
 
-public class BordGraph {
+public class BoardGraph {
     private Graph forwardGraph;
     private Graph backwardGraph;
 
     public Random rnd = new Random();
 
-    public BordGraph()
+    public BoardGraph()
     {
         forwardGraph = new Graph();
         backwardGraph = new Graph();

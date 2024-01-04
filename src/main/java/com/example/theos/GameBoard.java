@@ -1,23 +1,32 @@
 package com.example.theos;
 
 import Graph.Graph;
+import com.example.theos.BordGameGraph.BoardGraph;
+import javafx.animation.PathTransition;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameBoard {
 
-    Graph boardGraph;
-    List<Player> playerList;
-    Background background;
-    Text rolledNumberDisplay;
+    private BoardGraph boardGraph;
+    private List<Player> playerList;
+    private Background background;
+    private Text rolledNumberDisplay;
 
     public GameBoard() {
-        boardGraph = new Graph();
+
+        boardGraph = new BoardGraph();
+
         playerList = new ArrayList<>();
 
         BackgroundImage backgroundImg = new BackgroundImage(
@@ -35,14 +44,14 @@ public class GameBoard {
 
     }
 
-    public GameBoard(Graph boardGraph, List<Player> playerList, Background background, Text rolledNumberDisplay) {
+    public GameBoard(BoardGraph boardGraph, List<Player> playerList, Background background, Text rolledNumberDisplay) {
         this.boardGraph = boardGraph;
         this.playerList = playerList;
         this.background = background;
         this.rolledNumberDisplay = rolledNumberDisplay;
     }
 
-    public Graph getBoardGraph() {
+    public BoardGraph getBoardGraph() {
         return boardGraph;
     }
 
@@ -64,11 +73,13 @@ public class GameBoard {
     calls movePlayer method to play the animation of the player moving
     Returns nothing
      */
-    public void playerTurn(Player player) {
+    public void playerTurn(Player player, Circle testView) {
 
         int rolled = player.rollDie(Dice.dieType.NormalDie);
 
         rolledNumberDisplay.setText(String.valueOf(rolled));
+
+        movePlayer(player, rolled, testView);
     }
 
     /*
@@ -77,10 +88,35 @@ public class GameBoard {
     Loads created path and character into PathTransitions and plays the animation.
     Returns nothing
     */
-    public void movePlayer (Player player, int fieldsToMove){
+    public void movePlayer(Player player, int fieldsToMove, Circle testView) {
 
+        int animationOffsetX = 0;
+        int animationOffsetY = 15;
 
+        Path standardPath = new Path();
+        standardPath.getElements().add(new MoveTo(player.getCurrentField().getX() - animationOffsetX, player.getCurrentField().getY() - animationOffsetY));
 
+        Path ladderPath = new Path();
+
+        for (int i = 0; i < fieldsToMove; i++) {
+            Field nextField = boardGraph.hopCountTraversal(player.getCurrentField(), 1);
+            standardPath.getElements().add(new LineTo(nextField.getX() - animationOffsetX, nextField.getY() - animationOffsetY));
+
+            player.setCurrentField(nextField);
+        }
+
+        //if (player.getCurrentField().getType() == Field.fieldType.LadderField) {}
+
+        int duration = 500 * fieldsToMove; // Duration should be stored in the weight of the Edges that are traversed; how can that information be accessed by this method?
+
+        player.playWalk();
+
+        PathTransition transition = new PathTransition();
+        transition.setDuration(Duration.millis(duration));
+        transition.setPath(standardPath);
+        transition.setNode(player.getImageView());
+        transition.play();
+        transition.setOnFinished(event -> player.playIdle());
     }
 
 }
