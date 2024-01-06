@@ -2,6 +2,7 @@ package com.example.theos;
 
 import com.example.theos.BordGameGraph.BoardGraph;
 import javafx.animation.PathTransition;
+import javafx.animation.SequentialTransition;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.shape.LineTo;
@@ -53,7 +54,8 @@ public class GameBoard {
         return playerList;
     }
 
-    public Background getBackground() {
+    public Background getBackground()
+    {
         return background;
     }
 
@@ -84,7 +86,22 @@ public class GameBoard {
     Loads created path and character into PathTransitions and plays the animation.
     Returns nothing
     */
-    public void movePlayer(Player player, int fieldsToMove) {
+    public void movePlayer(Player player, int fieldsToMove)
+    {
+        int animationOffsetX = 0;
+        int animationOffsetY = 15;
+
+        SequentialTransition sequentialTransition = boardGraph.getAnimationPathFromGraph(player.getCurrentField(),fieldsToMove, animationOffsetX, animationOffsetY, player.getImageView());
+        sequentialTransition.play();
+        sequentialTransition.setOnFinished(event ->player.playIdle());
+
+        player.setCurrentField(boardGraph.hopCountTraversal(player.getCurrentField(),fieldsToMove));
+
+
+
+
+        /*
+        Previous Code
 
         int animationOffsetX = 0;
         int animationOffsetY = 15;
@@ -101,9 +118,13 @@ public class GameBoard {
             player.setCurrentField(nextField);
         }
 
+
+
         //if (player.getCurrentField().getType() == Field.fieldType.LadderField) {}
 
         int duration = 500 * fieldsToMove; // Duration should be stored in the weight of the Edges that are traversed; how can that information be accessed by this method?
+
+
 
         player.playWalk();
 

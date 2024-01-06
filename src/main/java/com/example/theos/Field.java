@@ -2,10 +2,14 @@ package com.example.theos;
 
 public class Field {
 
+    static int idCounter = 0;
+    private int id;
     private fieldType type;
     private Coordinates coordinates;
 
     public Field(fieldType type, double xPercentage, double yPercentage) {
+        id = idCounter;
+        idCounter++;
         this.type = type;
         coordinates = new Coordinates();
         coordinates.x = (int) (Application.sceneWidth * xPercentage / 100);
@@ -23,6 +27,7 @@ public class Field {
     public int getY() {
         return coordinates.y;
     }
+    public int getId(){ return id; }
 
     public Coordinates getCoordinates() {
         return coordinates;
