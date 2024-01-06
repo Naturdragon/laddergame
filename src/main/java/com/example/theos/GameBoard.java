@@ -30,9 +30,9 @@ public class GameBoard {
         playerList = new ArrayList<>();
 
         BackgroundImage backgroundImg = new BackgroundImage(
-                new Image("images/gameboard_downsized.png"),
+                new Image("images/gameboard_screen/Game_BG.PNG"),
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-                new BackgroundSize(100, 100, true, true, true, true));
+                new BackgroundSize(Application.sceneWidth, Application.sceneHeight, false, false, true, true));
 
         background = new Background(backgroundImg);
 
