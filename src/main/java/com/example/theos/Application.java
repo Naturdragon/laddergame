@@ -15,6 +15,7 @@ import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -29,8 +30,13 @@ public class Application extends javafx.application.Application {
     static final int sceneWidth = 1422;
     static final int sceneHeight = 800;
 
+    // colors for texts (in diceUI)
+    final static Color BROWN = Color.rgb(120, 98, 68);
+    final static Color MINT_GREEN = Color.rgb(63, 139, 88);
+
     // accessing the custom font fix: https://stackoverflow.com/questions/30245085/javafx-embed-custom-font-not-working
-    static final Font customFont = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), 22);
+    static final Font CUSTOM_FONT_VARELA = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), 22);
+    static final Font CUSTOM_FONT_CAVEAT = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), 25);
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -127,9 +133,10 @@ public class Application extends javafx.application.Application {
         root.setBackground(gameBoard.getBackground()); // setBackground method needs Background object, not BackgroundImage
 
         // Creating the dice UI with an AnchorPane, which is added to the root pane
-        AnchorPane diceUI = createDiceUI();
+        DiceUI diceUI = new DiceUI();
         diceUI.setTranslateX(40);
         diceUI.setTranslateY(800-215);
+        diceUI.animateSelectionArrow();
 
         root.getChildren().add(diceUI);
 
@@ -170,179 +177,18 @@ public class Application extends javafx.application.Application {
             if (event.getCode() == KeyCode.S) {
                 player1.playSlip();
             }
+            if (event.getCode() == KeyCode.DOWN) {
+                diceUI.showSpecialDieSelected();
+            }
+            if (event.getCode() == KeyCode.UP) {
+                diceUI.showNormalDieSelected();
+            }
         });
 
         stage.setTitle("The O’s");
         stage.setScene(scene);
         stage.setResizable(false); // daweil mal ohne resizable
         stage.show();
-    }
-
-    /*
-    Creates the diceUI and with the inital values (first player to turn)
-    Returns an AnchorPane
-     */
-    public static AnchorPane createDiceUI() {
-        // Colors used for the texts
-        Color brown = Color.rgb(120, 98, 68);
-        Color mintGreen = Color.rgb(63, 139, 88);
-
-        // Creating all the ImageViews based on the assets and sizing them accordingly
-        ImageView background = new ImageView(new Image("images/gameboard_screen/Game_BG_Player.png"));
-        background.setFitWidth(550);
-        background.setPreserveRatio(true);
-
-        ImageView selectionArrow = new ImageView(new Image("images/gameboard_screen/Game_Die_Select.png"));
-        selectionArrow.setFitWidth(30);
-        selectionArrow.setPreserveRatio(true);
-        selectionArrow.setX(496);
-        selectionArrow.setY(73);
-
-        ImageView spaceBar = new ImageView(new Image("images/option_button_extras/Button_Space_Small.PNG"));
-        spaceBar.setFitWidth(152);
-        spaceBar.setPreserveRatio(true);
-
-        ImageView playerPortrait = new ImageView(new Image("images/player_icons/Icon_4.png"));
-        playerPortrait.setFitWidth(160);
-        playerPortrait.setPreserveRatio(true);
-
-        ImageView nextPlayer1 = new ImageView(new Image("images/gameboard_screen/Game_O_2.png"));
-        nextPlayer1.setFitWidth(44);
-        nextPlayer1.setPreserveRatio(true);
-
-        ImageView nextPlayer2 = new ImageView(new Image("images/gameboard_screen/Game_O_3.png"));
-        nextPlayer2.setFitWidth(44);
-        nextPlayer2.setPreserveRatio(true);
-
-        ImageView nextPlayer3 = new ImageView(new Image("images/gameboard_screen/Game_O_4.png"));
-        nextPlayer3.setFitWidth(44);
-        nextPlayer3.setPreserveRatio(true);
-
-        ImageView nextPlayer4 = new ImageView(new Image("images/gameboard_screen/Game_O_5.png"));
-        nextPlayer4.setFitWidth(44);
-        nextPlayer4.setPreserveRatio(true);
-
-        ImageView nextPlayer5 = new ImageView(new Image("images/gameboard_screen/Game_O_6.png"));
-        nextPlayer5.setFitWidth(44);
-        nextPlayer5.setPreserveRatio(true);
-
-        ImageView normalDieBG = new ImageView(new Image("images/gameboard_screen/Game_Die_0.png"));
-        normalDieBG.setFitWidth(224);
-        normalDieBG.setPreserveRatio(true);
-
-        ImageView specialDieBG = new ImageView(new Image("images/gameboard_screen/Game_Die_4.png"));
-        specialDieBG.setFitWidth(224);
-        specialDieBG.setPreserveRatio(true);
-
-        // Creating all the text nodes and setting their font
-        Text normalDie0 = new Text("1");
-        Text normalDie1 = new Text("2");
-        Text normalDie2 = new Text("3");
-        Text normalDie3 = new Text("4");
-        Text normalDie4 = new Text("5");
-        Text normalDie5 = new Text("6");
-
-        normalDie0.setFont(customFont);
-        normalDie0.setFill(brown);
-        normalDie1.setFont(customFont);
-        normalDie1.setFill(brown);
-        normalDie2.setFont(customFont);
-        normalDie2.setFill(brown);
-        normalDie3.setFont(customFont);
-        normalDie3.setFill(brown);
-        normalDie4.setFont(customFont);
-        normalDie4.setFill(brown);
-        normalDie5.setFont(customFont);
-        normalDie5.setFill(brown);
-
-        Text specialDie0 = new Text("1");
-        Text specialDie1 = new Text("1");
-        Text specialDie2 = new Text("2");
-        Text specialDie3 = new Text("2");
-        Text specialDie4 = new Text("2");
-        Text specialDie5 = new Text("7");
-
-        specialDie0.setFont(customFont);
-        specialDie0.setFill(mintGreen);
-        specialDie1.setFont(customFont);
-        specialDie1.setFill(mintGreen);
-        specialDie2.setFont(customFont);
-        specialDie2.setFill(mintGreen);
-        specialDie3.setFont(customFont);
-        specialDie3.setFill(mintGreen);
-        specialDie4.setFont(customFont);
-        specialDie4.setFill(mintGreen);
-        specialDie5.setFont(customFont);
-        specialDie5.setFill(mintGreen);
-
-        Text playerName = new Text("Mint O’Lint");
-        playerName.setFont(customFont);
-        playerName.setFill(brown);
-
-        Text normalDieUsages = new Text("∞");
-        normalDieUsages.setFont(customFont);
-        normalDieUsages.setFill(brown);
-
-        Text specialDieUsages = new Text("3×");
-        specialDieUsages.setFont(customFont);
-        specialDieUsages.setFill(brown);
-
-        Text spaceButtonLabel = new Text("SPACE");
-        spaceButtonLabel.setFont(customFont);
-        spaceButtonLabel.setFill(brown);
-
-        Text pressToRollText = new Text("Press to roll");
-        pressToRollText.setFont(customFont);
-        pressToRollText.setFill(brown);
-
-        // Layout for the left side (charactericon and name)
-        VBox leftSide = new VBox(1, playerPortrait, playerName);
-        leftSide.setAlignment(Pos.CENTER);
-
-        // Layout for the right side (nextPlayerIcons, dice + text, spacebar-button, selector)
-        HBox nextPlayerIcons = new HBox(15);
-        nextPlayerIcons.getChildren().addAll(nextPlayer1, nextPlayer2, nextPlayer3, nextPlayer4, nextPlayer5);
-
-        HBox normalDieTexts = new HBox(23, normalDieUsages, normalDie0, normalDie1, normalDie2,
-                normalDie3, normalDie4, normalDie5);
-        HBox.setMargin(normalDie0, new Insets(0, 0, 0, 6.5));
-
-        HBox specialDieTexts = new HBox(23, specialDieUsages, specialDie0, specialDie1, specialDie2,
-                specialDie3, specialDie4, specialDie5);
-        HBox.setMargin(specialDie0, new Insets(0, 0, 0, 1.5));
-
-        StackPane spaceButton = new StackPane(spaceBar, spaceButtonLabel);
-
-        VBox rightSide = new VBox(5, nextPlayerIcons, normalDieTexts, specialDieTexts, spaceButton);
-        VBox.setMargin(normalDieTexts, new Insets(25, 0, 0, 3));
-        VBox.setMargin(specialDieTexts, new Insets(15, 0, 10, 3));
-        VBox.setMargin(spaceButton, new Insets(0, 0, 0, -130));
-
-        AnchorPane mainLayout = new AnchorPane();
-
-        mainLayout.getChildren().addAll(background, normalDieBG, specialDieBG, leftSide, rightSide, selectionArrow, pressToRollText);
-        // set anchor for the right side of the layout
-        AnchorPane.setTopAnchor(rightSide, 0.0);
-        AnchorPane.setLeftAnchor(rightSide, 222.0);
-        // set anchor for the left side of the layout
-        AnchorPane.setTopAnchor(leftSide, 18.0);
-        AnchorPane.setLeftAnchor(leftSide, 23.0);
-        // set anchor for the text label "Press to roll"
-        AnchorPane.setRightAnchor(pressToRollText, 43.0);
-        AnchorPane.setBottomAnchor(pressToRollText, 17.0);
-        // set anchor for the background of the normaldie and specialdie images
-        AnchorPane.setRightAnchor(normalDieBG, 63.0);
-        AnchorPane.setBottomAnchor(normalDieBG, 104.0);
-        AnchorPane.setRightAnchor(specialDieBG, 63.0);
-        AnchorPane.setBottomAnchor(specialDieBG, 57.0);
-
-        mainLayout.setPrefSize(200, 200);
-
-        return mainLayout;
-    }
-
-    public static void animateDiceUI(AnchorPane anchorPane) {
-        TranslateTransition translateTransition = new TranslateTransition();
     }
 
     public static void main(String[] args) {

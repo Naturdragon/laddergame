@@ -30,6 +30,10 @@ public class Dice {
         return charge;
     }
 
+    public int[] getDice() {
+        return dice;
+    }
+
     // Method for increasing charge by 1
     public void addCharge()
     {

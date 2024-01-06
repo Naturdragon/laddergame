@@ -40,6 +40,10 @@ public class Player {
         return iD;
     }
 
+    public Dice getSpecialDie() {
+        return specialDie;
+    }
+
     public Path getImagePath() {
         return imagePath;
     }
