@@ -2,6 +2,15 @@ package com.example.theos.BordGameGraph;
 
 import Graph.*;
 import com.example.theos.Field;
+import javafx.animation.PathTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
+import javafx.scene.image.ImageView;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.util.Duration;
 
 import java.util.*;
 
@@ -51,8 +60,8 @@ public class BoardGraph {
 
     public <T> void addOneDirectionalEdge(T source, T target, T weight, edgeType type)
     {
-        forwardGraph.addOneDirectionalEdge(source, target, new Weight(weight,type));
-        backwardGraph.addOneDirectionalEdge(target, source, new Weight(weight,type));
+        forwardGraph.addOneDirectionalEdge(source, target, new Weight(weight, type));
+        backwardGraph.addOneDirectionalEdge(target, source, new Weight(weight, type));
     }
 
     /*
@@ -65,55 +74,191 @@ public class BoardGraph {
         backwardGraph.removeEdge(targed, source);
     }
 
+    /*
+    Used to traverce the graph in both directions. Takes care of
+     */
     public Field hopCountTraversal(Field root, int hops)
     {
+        if (hops == 0) return root; // Whenn a zero got roled nothing needs to be done. Return the current field
+
         Field vertexData = root;
         int vertexListSize;
         Weight tmpWeigth;
-        if (hops > 0) {
+        if (hops > 0) { // Checks which graph should be used
+
+            /*
+            1. Checks if current field is a crossing.
+                    Crossing -> Event for selection
+                    Normal Field Select Next Field
+                    A Ladder Field here should not be possible. Because it will only be there when it triggers and after that the new field will be the current field.
+            2. Checks if the new Field is a ladder field.
+                    new Field will become the target Field of the Ladder (Ladder will be deselected)
+
+             */
             for (int i = 0; i < hops; i++) {
                 vertexListSize = forwardGraph.getAdjacenctVertex(vertexData).size();
-                if (vertexListSize > 1) {
-                    switch (vertexData.getType()) {
-                        case CrossoverField:
-                            System.out.println("Crosing selection is not implemented jet!");
-                            break;
-                        case LadderField:
-                            for (var item : forwardGraph.getAdjacenctVertexEdges(vertexData)) {
-                                tmpWeigth = (Weight)item.getWeight();
-                                if (tmpWeigth.getType() == edgeType.NormalEdge && i < hops) {
-                                    vertexData = (item.getSource() == vertexData) ? (Field) item.getTarget() : (Field) item.getSource();
-                                    break;
-                                }
+                if (vertexListSize > 0) {
+                    if (vertexData.getType() == Field.fieldType.CrossoverField) {
+                        // TODO: Implementing the Crossing selection
+                        System.out.println("Crosing selection is not implemented jet!");
+                    } else {
+                        if (vertexData.getType() == Field.fieldType.LadderField) System.out.println("!! This should not Happen !!");
+                        for (var item : forwardGraph.getAdjacenctVertexEdges(vertexData)) {
+                            tmpWeigth = (Weight) item.getWeight();
+                            if (tmpWeigth.getType() == edgeType.NormalEdge) {
+                                vertexData = (item.getSource() == vertexData) ? (Field) item.getTarget() : (Field) item.getSource();
+                                break;
+                            }
+                        }
+                    }
 
-                                if (tmpWeigth.getType() == edgeType.LadderEdge && i == hops-1) {
+
+                    if (vertexData.getType() == Field.fieldType.LadderField) {
+                        if (i == hops - 1) { // Last loop
+                            for (var item : forwardGraph.getAdjacenctVertexEdges(vertexData)) {
+                                tmpWeigth = (Weight) item.getWeight();
+                                if (tmpWeigth.getType() == edgeType.LadderEdge) {
                                     vertexData = (item.getSource() == vertexData) ? (Field) item.getTarget() : (Field) item.getSource();
                                     break;
                                 }
                             }
-                            break;
-                        default:
-                            System.out.println("The Graph was not built how it should have been. THis state should not be possible");
-
+                        }
                     }
                 } else {
-                    vertexData = forwardGraph.getAdjacenctVertex(vertexData).get(0);   // One way forward
+                    return vertexData;   // End of Graph
                 }
             }
+
+
             return vertexData;
         } else {
-            if (hops == 0) return root;
-            for (int i = hops; i <= 0; i++) {
+
+            for (int i = hops; i < 0; i++) {
                 vertexListSize = backwardGraph.getAdjacenctVertex(vertexData).size();
-                if (vertexListSize > 1) {
-                    vertexData = backwardGraph.getAdjacenctVertex(vertexData).get(rnd.nextInt(vertexListSize)); // More than one way back
+                if (vertexListSize > 0) {
+                    if (vertexListSize > 1) {
+                        vertexData = backwardGraph.getAdjacenctVertex(vertexData).get(rnd.nextInt(vertexListSize)); // More than one way back
+                    } else {
+                        vertexData = backwardGraph.getAdjacenctVertex(vertexData).get(0);   // One way back
+                    }
                 } else {
-                    vertexData = backwardGraph.getAdjacenctVertex(vertexData).get(0);   // One way back
+                    return vertexData;  // End of Graph
                 }
             }
             return vertexData;
         }
     }
+
+    public SequentialTransition getAnimationPathFromGraph(Field root, int hops, int animationOffsetX, int animationOffsetY, ImageView img)
+    {
+        SequentialTransition seqtrans = new SequentialTransition();
+
+        // see below code block
+        PathTransition pathTrans = new PathTransition();
+        pathTrans.setPath(new Line(root.getX()-animationOffsetX, root.getY()-animationOffsetY, root.getX()-animationOffsetX, root.getY()-animationOffsetY));
+        pathTrans.setDuration(Duration.ZERO);
+        pathTrans.setNode(img);
+        seqtrans.getChildren().add(pathTrans);
+        // Adds a basic non Moving Transsition. This allows the returning of the seqtrans at any point after the code block above.
+
+        if (hops == 0) return seqtrans; // Nothing Happens
+
+        Path standartPath = new Path(); // Path to be used for normale movement
+        standartPath.getElements().add(new MoveTo(root.getX() - animationOffsetX, root.getY() - animationOffsetY));
+        double standartDurration = 0;
+
+        Path ladderPath = new Path(); // Path to be used for normale movement
+        double ladderDurration = 0;
+
+
+
+        Field vertexData = root;
+        int vertexListSize;
+        Weight tmpWeigth;
+        if (hops > 0) { // Checks which graph should be used
+            for (int i = 0; i < hops; i++) {
+                vertexListSize = forwardGraph.getAdjacenctVertex(vertexData).size();
+                if (vertexListSize > 0) {
+                    if (vertexData.getType() == Field.fieldType.CrossoverField) {
+                        // TODO: Implementing the Crossing selection
+                        System.out.println("Crosing selection is not implemented jet!");
+                    } else {
+                        if (vertexData.getType() == Field.fieldType.LadderField)
+                            System.out.println("!! This should not Happen !!");
+                        for (var item : forwardGraph.getAdjacenctVertexEdges(vertexData)) {
+                            tmpWeigth = (Weight) item.getWeight();
+                            if (tmpWeigth.getType() == edgeType.NormalEdge) {
+                                var nextVertexData = (item.getSource() == vertexData) ? (Field) item.getTarget() : (Field) item.getSource();
+                                standartPath.getElements().add(new LineTo(nextVertexData.getX()-animationOffsetX,nextVertexData.getY()-animationOffsetY));
+                                standartDurration = standartDurration + (Integer) tmpWeigth.getData();
+                                vertexData = nextVertexData;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (vertexData.getType() == Field.fieldType.LadderField) {
+                        if (i == hops - 1) { // Last loop
+                            for (var item : forwardGraph.getAdjacenctVertexEdges(vertexData)) {
+                                tmpWeigth = (Weight) item.getWeight();
+                                if (tmpWeigth.getType() == edgeType.LadderEdge) {
+                                    ladderPath.getElements().add(new MoveTo(vertexData.getX() - animationOffsetX, vertexData.getY() - animationOffsetY));
+                                    var nextVertexData = (item.getSource() == vertexData) ? (Field) item.getTarget() : (Field) item.getSource();
+                                    ladderPath.getElements().add(new LineTo(nextVertexData.getX()-animationOffsetX,nextVertexData.getY()-animationOffsetY));
+                                    ladderDurration = ladderDurration + (Integer) tmpWeigth.getData();
+                                    vertexData = nextVertexData;
+                                    break;
+                                }
+                            }
+                        }
+                        PathTransition ladderPathTransition = new PathTransition();
+                        ladderPathTransition.setPath(ladderPath);
+                        ladderPathTransition.setDuration(Duration.millis(ladderDurration));
+                        ladderPathTransition.setNode(img);
+                        seqtrans.getChildren().add(ladderPathTransition);
+                    }
+                } else {
+                    return seqtrans;   // End of Graph
+                }
+            }
+            PathTransition standartPathTransition = new PathTransition();
+            standartPathTransition.setPath(standartPath);
+            standartPathTransition.setDuration(Duration.millis(standartDurration));
+            standartPathTransition.setNode(img);
+            seqtrans.getChildren().add(standartPathTransition);
+
+            PathTransition ladderPathTransition = new PathTransition();
+            ladderPathTransition.setPath(ladderPath);
+            ladderPathTransition.setDuration(Duration.millis(ladderDurration));
+            ladderPathTransition.setNode(img);
+            seqtrans.getChildren().add(ladderPathTransition);
+
+            return seqtrans;
+        } else {
+
+            for (int i = hops; i < 0; i++) {
+                vertexListSize = backwardGraph.getAdjacenctVertex(vertexData).size();
+                if (vertexListSize > 0) {
+                    if (vertexListSize > 1) {
+                        vertexData = backwardGraph.getAdjacenctVertex(vertexData).get(rnd.nextInt(vertexListSize)); // More than one way back
+                    } else {
+
+                        vertexData = backwardGraph.getAdjacenctVertex(vertexData).get(0);   // One way back
+                    }
+                } else {
+                    return seqtrans;  // End of Graph
+                }
+            }
+
+            return seqtrans;
+        }
+    }
+
+    public void checkGraph()
+    {
+        System.out.println("!! NOT IMPLEMENTED JET !!");
+    }
+
         /*
         Implement HopCountTraversal Methode
 

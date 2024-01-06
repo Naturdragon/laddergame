@@ -29,17 +29,26 @@ public class Application extends javafx.application.Application {
     static final int sceneWidth = 1422;
     static final int sceneHeight = 800;
 
+    static boolean negativeInputForTesting = false;
+
     // accessing the custom font fix: https://stackoverflow.com/questions/30245085/javafx-embed-custom-font-not-working
     static final Font customFont = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), 22);
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
+        /*
+        Create Title Screen (Disable for Testing)
+        Stage titlescreen = new Stage();
+        */
         // FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("hello-view.fxml")); // bis jetzt war noch kein FXML notwendig
 
         GameBoard gameBoard = new GameBoard();
 
+
+
         // Initialize gameboard Graph
         List<Field> fieldList = new ArrayList<>();
+
 
         Field field1 = new Field(Field.fieldType.NormalField, 17.3, 50.1); // Field 1
         Field field2 = new Field(Field.fieldType.NormalField, 19.2, 48.4); // Field 2
@@ -57,7 +66,7 @@ public class Application extends javafx.application.Application {
         Field field14 = new Field(Field.fieldType.NormalField, 39.6, 62.7); // Field 14
         Field field15 = new Field(Field.fieldType.NormalField, 40.8, 58.7); // Field 15
         Field field16 = new Field(Field.fieldType.NormalField, 40.9, 54.1); // Field 16
-        Field field17 = new Field(Field.fieldType.LadderField, 39.8, 50.2); // Field 17
+        Field field17 = new Field(Field.fieldType.NormalField, 39.8, 50.2); // Field 17
         Field field18 = new Field(Field.fieldType.NormalField, 38.4, 47); // Field 18
         Field field19 = new Field(Field.fieldType.NormalField, 36.3, 44.8);
         Field field20 = new Field(Field.fieldType.NormalField, 34, 42.9);
@@ -158,17 +167,38 @@ public class Application extends javafx.application.Application {
         });
          */
 
+
         scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.SPACE) {
-                gameBoard.playerTurn(player1, playerTestView);
-            }
+            if(!negativeInputForTesting) {
+                if (event.getCode() == KeyCode.SPACE) {
+                    gameBoard.playerTurn(player1, playerTestView);
+                }
 
-            if (event.getCode() == KeyCode.A) {
-                player1.playIdle();
-            }
+                if (event.getCode() == KeyCode.A) {
+                    player1.playIdle();
+                }
 
-            if (event.getCode() == KeyCode.S) {
-                player1.playSlip();
+                if (event.getCode() == KeyCode.S) {
+                    player1.playSlip();
+                }
+                if (event.getCode() == KeyCode.DIGIT1) gameBoard.movePlayer(player1, 1);
+                if (event.getCode() == KeyCode.DIGIT2) gameBoard.movePlayer(player1, 2);
+                if (event.getCode() == KeyCode.DIGIT3) gameBoard.movePlayer(player1, 3);
+                if (event.getCode() == KeyCode.DIGIT4) gameBoard.movePlayer(player1, 4);
+                if (event.getCode() == KeyCode.DIGIT5) gameBoard.movePlayer(player1, 5);
+                if (event.getCode() == KeyCode.DIGIT6) gameBoard.movePlayer(player1, 6);
+                if (event.getCode() == KeyCode.DIGIT7) gameBoard.movePlayer(player1, 7);
+                if (event.getCode() == KeyCode.DIGIT0) gameBoard.movePlayer(player1, -1);
+                if (event.getCode() == KeyCode.MINUS) negativeInputForTesting = true;
+            }else{
+                if (event.getCode() == KeyCode.DIGIT1) gameBoard.movePlayer(player1, -1);
+                if (event.getCode() == KeyCode.DIGIT2) gameBoard.movePlayer(player1, -2);
+                if (event.getCode() == KeyCode.DIGIT3) gameBoard.movePlayer(player1, -3);
+                if (event.getCode() == KeyCode.DIGIT4) gameBoard.movePlayer(player1, -4);
+                if (event.getCode() == KeyCode.DIGIT5) gameBoard.movePlayer(player1, -5);
+                if (event.getCode() == KeyCode.DIGIT6) gameBoard.movePlayer(player1, -6);
+                if (event.getCode() == KeyCode.DIGIT7) gameBoard.movePlayer(player1, -7);
+                negativeInputForTesting = false;
             }
         });
 
