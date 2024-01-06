@@ -15,6 +15,7 @@ import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -31,67 +32,408 @@ public class Application extends javafx.application.Application {
 
     static boolean negativeInputForTesting = false;
 
+    // colors for texts (in diceUI)
+    final static Color BROWN = Color.rgb(120, 98, 68);
+    final static Color MINT_GREEN = Color.rgb(63, 139, 88);
+
     // accessing the custom font fix: https://stackoverflow.com/questions/30245085/javafx-embed-custom-font-not-working
-    static final Font customFont = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), 22);
+    static final Font CUSTOM_FONT_VARELA = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), 22);
+    static final Font CUSTOM_FONT_CAVEAT = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), 25);
 
     @Override
-    public void start(Stage stage) {
-        /*
-        Create Title Screen (Disable for Testing)
-        Stage titlescreen = new Stage();
-        */
+    public void start(Stage stage) throws IOException {
         // FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("hello-view.fxml")); // bis jetzt war noch kein FXML notwendig
 
         GameBoard gameBoard = new GameBoard();
 
+        // Initialize game board Graph
 
 
         // Initialize gameboard Graph
         List<Field> fieldList = new ArrayList<>();
 
+        // Fields for spawn area
+        Field spawn1 = new Field(Field.fieldType.NormalField, 4.8, 60.1); // 1 = Diva O'Hara
+        Field spawn2 = new Field(Field.fieldType.NormalField, 8.3, 56.6); // 2 = Y'Olanda
+        Field spawn3 = new Field(Field.fieldType.NormalField, 11.6, 53.1); // 3 = Kidd'O
+        Field spawn4 = new Field(Field.fieldType.NormalField, 8.3, 63.9); // 4 = Mint'O Lint
+        Field spawn5 = new Field(Field.fieldType.NormalField, 11.9, 60.3); // 5 = Brooke O'Let
+        Field spawn6 = new Field(Field.fieldType.NormalField, 15.2, 56.9); // 6 = O'Fitz
 
-        Field field1 = new Field(Field.fieldType.NormalField, 17.3, 50.1); // Field 1
-        Field field2 = new Field(Field.fieldType.NormalField, 19.2, 48.4); // Field 2
-        Field field3 = new Field(Field.fieldType.NormalField, 21.4, 47.9); // Field 3
-        Field field4 = new Field(Field.fieldType.NormalField, 23.7, 48.5); // Field 4
-        Field field5 = new Field(Field.fieldType.NormalField, 25.1, 51.3); // Field 5
-        Field field6 = new Field(Field.fieldType.NormalField, 25.1, 55.5); // Field 6
-        Field field7 = new Field(Field.fieldType.LadderField, 25.1, 60.1); // Field 7
-        Field field8 = new Field(Field.fieldType.NormalField, 26.1, 63.6); // Field 8
-        Field field9 = new Field(Field.fieldType.NormalField, 28, 66); // Field 9
-        Field field10 = new Field(Field.fieldType.NormalField, 30.4, 67.4); // Field 10
-        Field field11 = new Field(Field.fieldType.NormalField, 32.9, 67.6); // Field 11
-        Field field12 = new Field(Field.fieldType.NormalField, 35.4, 67); // Field 12
-        Field field13 = new Field(Field.fieldType.NormalField, 37.7, 65.3); // Field 13
-        Field field14 = new Field(Field.fieldType.NormalField, 39.6, 62.7); // Field 14
-        Field field15 = new Field(Field.fieldType.NormalField, 40.8, 58.7); // Field 15
-        Field field16 = new Field(Field.fieldType.NormalField, 40.9, 54.1); // Field 16
-        Field field17 = new Field(Field.fieldType.NormalField, 39.8, 50.2); // Field 17
-        Field field18 = new Field(Field.fieldType.NormalField, 38.4, 47); // Field 18
-        Field field19 = new Field(Field.fieldType.NormalField, 36.3, 44.8);
-        Field field20 = new Field(Field.fieldType.NormalField, 34, 42.9);
+        // Fields on main path
+        Field field101 = new Field(Field.fieldType.NormalField, 17.3, 50.1);
+        Field field102 = new Field(Field.fieldType.NormalField, 19.2, 48.4);
+        Field field103 = new Field(Field.fieldType.NormalField, 21.4, 47.9);
+        Field field104 = new Field(Field.fieldType.NormalField, 23.7, 48.5);
+        Field field105 = new Field(Field.fieldType.NormalField, 25.1, 51.3);
+        Field field106 = new Field(Field.fieldType.NormalField, 25.1, 55.5);
+        Field field107 = new Field(Field.fieldType.LadderField, 25.1, 60.1);
+        Field field108 = new Field(Field.fieldType.NormalField, 26.1, 63.6);
+        Field field109 = new Field(Field.fieldType.NormalField, 28, 66);
+        Field field110 = new Field(Field.fieldType.NormalField, 30.4, 67.4);
 
+        Field field111 = new Field(Field.fieldType.NormalField, 32.9, 67.6);
+        Field field112 = new Field(Field.fieldType.NormalField, 35.4, 67);
+        Field field113 = new Field(Field.fieldType.NormalField, 37.7, 65.3);
+        Field field114 = new Field(Field.fieldType.NormalField, 39.6, 62.7);
+        Field field115 = new Field(Field.fieldType.NormalField, 40.8, 58.7);
+        Field field116 = new Field(Field.fieldType.NormalField, 40.9, 54.1);
+        Field field117 = new Field(Field.fieldType.LadderField, 39.8, 50.2);
+        Field field118 = new Field(Field.fieldType.NormalField, 38.4, 47);
+        Field field119 = new Field(Field.fieldType.NormalField, 36.3, 44.8);
+        Field field120 = new Field(Field.fieldType.NormalField, 34, 42.9);
 
-        fieldList.add(field1);
-        fieldList.add(field2);
-        fieldList.add(field3);
-        fieldList.add(field4);
-        fieldList.add(field5);
-        fieldList.add(field6);
-        fieldList.add(field7);
-        fieldList.add(field8);
-        fieldList.add(field9);
-        fieldList.add(field10);
-        fieldList.add(field11);
-        fieldList.add(field12);
-        fieldList.add(field13);
-        fieldList.add(field14);
-        fieldList.add(field15);
-        fieldList.add(field16);
-        fieldList.add(field17);
-        fieldList.add(field18);
-        fieldList.add(field19);
-        fieldList.add(field20);
+        Field field121 = new Field(Field.fieldType.LadderField, 31.4, 41.1);
+        Field field122 = new Field(Field.fieldType.NormalField, 28.7, 39.4);
+        Field field123 = new Field(Field.fieldType.NormalField, 26.2, 37.9);
+        Field field124 = new Field(Field.fieldType.NormalField, 23.7, 36.4);
+        Field field125 = new Field(Field.fieldType.LadderField, 21.2, 34.7);
+        Field field126 = new Field(Field.fieldType.NormalField, 18.7, 33.1);
+        Field field127 = new Field(Field.fieldType.LadderField, 16.6, 30.9);
+        Field field128 = new Field(Field.fieldType.NormalField, 15.1, 28.4);
+        Field field129 = new Field(Field.fieldType.NormalField, 14.1, 25.3);
+        Field field130 = new Field(Field.fieldType.NormalField, 13.6, 21.3);
+
+        Field field131 = new Field(Field.fieldType.NormalField, 14.3, 17.1);
+        Field field132 = new Field(Field.fieldType.NormalField, 15.7, 14);
+        Field field133 = new Field(Field.fieldType.NormalField, 17.7, 12);
+        Field field134 = new Field(Field.fieldType.NormalField, 19.9, 10.9);
+        Field field135 = new Field(Field.fieldType.NormalField, 21.9, 11.3);
+        Field field136 = new Field(Field.fieldType.NormalField, 23.6, 12.4);
+        Field field137 = new Field(Field.fieldType.NormalField, 25.1, 14.4);
+        Field field138 = new Field(Field.fieldType.NormalField, 26.3, 17);
+        Field field139 = new Field(Field.fieldType.NormalField, 27.2, 19.9);
+        Field field140 = new Field(Field.fieldType.NormalField, 28.1, 23.2);
+
+        Field field141 = new Field(Field.fieldType.NormalField, 29, 26.3);
+        Field field142 = new Field(Field.fieldType.NormalField, 30.2, 29.2);
+        Field field143 = new Field(Field.fieldType.LadderField, 31.7, 31.8);
+        Field field144 = new Field(Field.fieldType.NormalField, 33.5, 34.1);
+        Field field145 = new Field(Field.fieldType.NormalField, 35.7, 35.5);
+        Field field146 = new Field(Field.fieldType.NormalField, 38.2, 36.6);
+        Field field147 = new Field(Field.fieldType.NormalField, 40.8, 36.9);
+        Field field148 = new Field(Field.fieldType.NormalField, 43.6, 36.4);
+        Field field149 = new Field(Field.fieldType.CrossoverField, 45.9, 34.5);
+        Field field150 = new Field(Field.fieldType.NormalField, 43.8, 32.7);
+
+        Field field151 = new Field(Field.fieldType.NormalField, 42, 30.7);
+        Field field152 = new Field(Field.fieldType.NormalField, 40.1, 28.9);
+        Field field153 = new Field(Field.fieldType.NormalField, 38.4, 27.1);
+        Field field154 = new Field(Field.fieldType.LadderField, 36.6, 25.1);
+        Field field155 = new Field(Field.fieldType.NormalField, 34.9, 23.3);
+        Field field156 = new Field(Field.fieldType.NormalField, 33.5, 21.1);
+        Field field157 = new Field(Field.fieldType.NormalField, 32.5, 18.2);
+        Field field158 = new Field(Field.fieldType.NormalField, 32.2, 14.6);
+        Field field159 = new Field(Field.fieldType.NormalField, 32.8, 11.3);
+        Field field160 = new Field(Field.fieldType.SpecialChargeField, 34.1, 8.4);
+
+        Field field161 = new Field(Field.fieldType.NormalField, 35.9, 6.8);
+        Field field162 = new Field(Field.fieldType.NormalField, 37.8, 6.1);
+        Field field163 = new Field(Field.fieldType.NormalField, 39.6, 6.4);
+        Field field164 = new Field(Field.fieldType.NormalField, 41.4, 7.6);
+        Field field165 = new Field(Field.fieldType.NormalField, 43, 9.1);
+        Field field166 = new Field(Field.fieldType.NormalField, 44.7, 10.8);
+        Field field167 = new Field(Field.fieldType.NormalField, 46.6, 12.8);
+        Field field168 = new Field(Field.fieldType.NormalField, 48.5, 14.8);
+        Field field169 = new Field(Field.fieldType.NormalField, 50.3, 16.6);
+        Field field170 = new Field(Field.fieldType.LadderField, 52.1, 18.3);
+
+        Field field171 = new Field(Field.fieldType.LadderField, 53.8, 20);
+        Field field172 = new Field(Field.fieldType.NormalField, 55.5, 21.9);
+        Field field173 = new Field(Field.fieldType.NormalField, 57.1, 23.6);
+        Field field174 = new Field(Field.fieldType.NormalField, 59.2, 21.6);
+        Field field175 = new Field(Field.fieldType.NormalField, 61.5, 19.3);
+        Field field176 = new Field(Field.fieldType.NormalField, 63.6, 17);
+        Field field177 = new Field(Field.fieldType.LadderField, 66.1, 14.9);
+        Field field178 = new Field(Field.fieldType.NormalField, 69, 14.5);
+        Field field179 = new Field(Field.fieldType.NormalField, 71.1, 15.8);
+        Field field180 = new Field(Field.fieldType.NormalField, 72.8, 18.6);
+
+        Field field181 = new Field(Field.fieldType.NormalField, 73.6, 22.2);
+        Field field182 = new Field(Field.fieldType.NormalField, 73.4, 26);
+        Field field183 = new Field(Field.fieldType.NormalField, 72.4, 29.7);
+        Field field184 = new Field(Field.fieldType.LadderField, 70.6, 32.5);
+        Field field185 = new Field(Field.fieldType.NormalField, 68.4, 34.9);
+        Field field186 = new Field(Field.fieldType.NormalField, 66.2, 37.1);
+        Field field187 = new Field(Field.fieldType.NormalField, 64.2, 39.1);
+        Field field188 = new Field(Field.fieldType.NormalField, 66.2, 41.2);
+        Field field189 = new Field(Field.fieldType.NormalField, 68.3, 43.4);
+        Field field190 = new Field(Field.fieldType.NormalField, 70.5, 45.5);
+
+        Field field191 = new Field(Field.fieldType.NormalField, 72.8, 46.8);
+        Field field192 = new Field(Field.fieldType.NormalField, 75.1, 47);
+        Field field193 = new Field(Field.fieldType.NormalField, 77.3, 46.4);
+        Field field194 = new Field(Field.fieldType.LadderField, 79.5, 44.7);
+        Field field195 = new Field(Field.fieldType.NormalField, 81.1, 42.3);
+
+        fieldList.add(field101);
+        fieldList.add(field102);
+        fieldList.add(field103);
+        fieldList.add(field104);
+        fieldList.add(field105);
+        fieldList.add(field106);
+        fieldList.add(field107);
+        fieldList.add(field108);
+        fieldList.add(field109);
+        fieldList.add(field110);
+
+        fieldList.add(field111);
+        fieldList.add(field112);
+        fieldList.add(field113);
+        fieldList.add(field114);
+        fieldList.add(field115);
+        fieldList.add(field116);
+        fieldList.add(field117);
+        fieldList.add(field118);
+        fieldList.add(field119);
+        fieldList.add(field120);
+
+        fieldList.add(field121);
+        fieldList.add(field122);
+        fieldList.add(field123);
+        fieldList.add(field124);
+        fieldList.add(field125);
+        fieldList.add(field126);
+        fieldList.add(field127);
+        fieldList.add(field128);
+        fieldList.add(field129);
+        fieldList.add(field130);
+
+        fieldList.add(field131);
+        fieldList.add(field132);
+        fieldList.add(field133);
+        fieldList.add(field134);
+        fieldList.add(field135);
+        fieldList.add(field136);
+        fieldList.add(field137);
+        fieldList.add(field138);
+        fieldList.add(field139);
+        fieldList.add(field140);
+
+        fieldList.add(field141);
+        fieldList.add(field142);
+        fieldList.add(field143);
+        fieldList.add(field144);
+        fieldList.add(field145);
+        fieldList.add(field146);
+        fieldList.add(field147);
+        fieldList.add(field148);
+        fieldList.add(field149);
+        fieldList.add(field150);
+
+        fieldList.add(field151);
+        fieldList.add(field152);
+        fieldList.add(field153);
+        fieldList.add(field154);
+        fieldList.add(field155);
+        fieldList.add(field156);
+        fieldList.add(field157);
+        fieldList.add(field158);
+        fieldList.add(field159);
+        fieldList.add(field160);
+
+        fieldList.add(field161);
+        fieldList.add(field162);
+        fieldList.add(field163);
+        fieldList.add(field164);
+        fieldList.add(field165);
+        fieldList.add(field166);
+        fieldList.add(field167);
+        fieldList.add(field168);
+        fieldList.add(field169);
+        fieldList.add(field170);
+
+        fieldList.add(field171);
+        fieldList.add(field172);
+        fieldList.add(field173);
+        fieldList.add(field174);
+        fieldList.add(field175);
+        fieldList.add(field176);
+        fieldList.add(field177);
+        fieldList.add(field178);
+        fieldList.add(field179);
+        fieldList.add(field180);
+
+        fieldList.add(field181);
+        fieldList.add(field182);
+        fieldList.add(field183);
+        fieldList.add(field184);
+        fieldList.add(field185);
+        fieldList.add(field186);
+        fieldList.add(field187);
+        fieldList.add(field188);
+        fieldList.add(field189);
+        fieldList.add(field190);
+
+        fieldList.add(field191);
+        fieldList.add(field192);
+        fieldList.add(field193);
+        fieldList.add(field194);
+        fieldList.add(field195);
+
+        // Fields on shortest path
+        Field field201 = new Field(Field.fieldType.NormalField, 48.2, 37.2);
+        Field field202 = new Field(Field.fieldType.NormalField, 50.7, 39.6);
+        Field field203 = new Field(Field.fieldType.NormalField, 53, 42);
+        Field field204 = new Field(Field.fieldType.NormalField, 51.1, 44.7);
+        Field field205 = new Field(Field.fieldType.SpecialChargeField, 49.9, 48.5);
+        Field field206 = new Field(Field.fieldType.NormalField, 49.5, 53.3);
+        Field field207 = new Field(Field.fieldType.NormalField, 50.3, 57.5);
+        Field field208 = new Field(Field.fieldType.NormalField, 51.8, 60.7);
+        Field field209 = new Field(Field.fieldType.CrossoverField, 53.8, 62.5);
+        Field field210 = new Field(Field.fieldType.LadderField, 55.9, 63.1);
+
+        Field field211 = new Field(Field.fieldType.SpecialChargeField, 58.4, 62.2);
+        Field field212 = new Field(Field.fieldType.LadderField, 60.4, 59.5);
+        Field field213 = new Field(Field.fieldType.LadderField, 61.7, 55.7);
+        Field field214 = new Field(Field.fieldType.SpecialChargeField, 62, 51.4);
+        Field field215 = new Field(Field.fieldType.LadderField, 61.4, 47.2);
+        Field field216 = new Field(Field.fieldType.NormalField, 59.9, 43.7);
+        Field field217 = new Field(Field.fieldType.NormalField, 57.8, 41.1);
+        Field field218 = new Field(Field.fieldType.NormalField, 55.9, 38.3);
+        Field field219 = new Field(Field.fieldType.NormalField, 56.1, 34.3);
+        Field field220 = new Field(Field.fieldType.NormalField, 58.3, 33.4);
+
+        Field field221 = new Field(Field.fieldType.NormalField, 60.2, 35.1);
+        Field field222 = new Field(Field.fieldType.NormalField, 62.2, 37.1);
+
+        fieldList.add(field201);
+        fieldList.add(field202);
+        fieldList.add(field203);
+        fieldList.add(field204);
+        fieldList.add(field205);
+        fieldList.add(field206);
+        fieldList.add(field207);
+        fieldList.add(field208);
+        fieldList.add(field209);
+        fieldList.add(field210);
+
+        fieldList.add(field211);
+        fieldList.add(field212);
+        fieldList.add(field213);
+        fieldList.add(field214);
+        fieldList.add(field215);
+        fieldList.add(field216);
+        fieldList.add(field217);
+        fieldList.add(field218);
+        fieldList.add(field219);
+        fieldList.add(field220);
+
+        fieldList.add(field221);
+        fieldList.add(field222);
+
+        // Fields on longest path
+        Field field301 = new Field(Field.fieldType.NormalField, 52.5, 67.1);
+        Field field302 = new Field(Field.fieldType.NormalField, 51.1, 71.7);
+        Field field303 = new Field(Field.fieldType.NormalField, 50.3, 76.3);
+        Field field304 = new Field(Field.fieldType.NormalField, 50, 80.7);
+        Field field305 = new Field(Field.fieldType.NormalField, 50.5, 85.6);
+        Field field306 = new Field(Field.fieldType.NormalField, 51.9, 89.6);
+        Field field307 = new Field(Field.fieldType.SpecialChargeField, 54.2, 92.2);
+        Field field308 = new Field(Field.fieldType.NormalField, 57, 93.4);
+        Field field309 = new Field(Field.fieldType.NormalField, 59.6, 93.3);
+        Field field310 = new Field(Field.fieldType.NormalField, 62.3, 92.1);
+
+        Field field311 = new Field(Field.fieldType.NormalField, 64.6, 90.3);
+        Field field312 = new Field(Field.fieldType.LadderField, 66.4, 87.1);
+        Field field313 = new Field(Field.fieldType.NormalField, 67.2, 82.9);
+        Field field314 = new Field(Field.fieldType.LadderField, 67.2, 78.4);
+        Field field315 = new Field(Field.fieldType.NormalField, 66.6, 73.9);
+        Field field316 = new Field(Field.fieldType.LadderField, 65.8, 69.6);
+        Field field317 = new Field(Field.fieldType.NormalField, 65.7, 65.3);
+        Field field318 = new Field(Field.fieldType.NormalField, 66.3, 61.4);
+        Field field319 = new Field(Field.fieldType.NormalField, 67.6, 58);
+        Field field320 = new Field(Field.fieldType.NormalField, 69.6, 55.8);
+
+        Field field321 = new Field(Field.fieldType.LadderField, 71.9, 54.9);
+        Field field322 = new Field(Field.fieldType.NormalField, 74.4, 55.3);
+        Field field323 = new Field(Field.fieldType.NormalField, 76.7, 57.1);
+        Field field324 = new Field(Field.fieldType.LadderField, 78.6, 60.5);
+        Field field325 = new Field(Field.fieldType.NormalField, 79.6, 64.8);
+        Field field326 = new Field(Field.fieldType.NormalField, 79.8, 69.1);
+        Field field327 = new Field(Field.fieldType.LadderField, 79.7, 73.7);
+        Field field328 = new Field(Field.fieldType.NormalField, 79.7, 78.6);
+        Field field329 = new Field(Field.fieldType.NormalField, 80.3, 83);
+        Field field330 = new Field(Field.fieldType.NormalField, 81.5, 87.2);
+
+        Field field331 = new Field(Field.fieldType.NormalField, 83.5, 90.4);
+        Field field332 = new Field(Field.fieldType.LadderField, 86.7, 91.8);
+        Field field333 = new Field(Field.fieldType.NormalField, 89.8, 90.8);
+        Field field334 = new Field(Field.fieldType.NormalField, 92.1, 88.5);
+        Field field335 = new Field(Field.fieldType.NormalField, 93.7, 85.1);
+        Field field336 = new Field(Field.fieldType.NormalField, 94.6, 81.3);
+        Field field337 = new Field(Field.fieldType.NormalField, 94.9, 77.4);
+        Field field338 = new Field(Field.fieldType.NormalField, 94.3, 73.7);
+        Field field339 = new Field(Field.fieldType.NormalField, 93.3, 70.3);
+        Field field340 = new Field(Field.fieldType.LadderField, 91.9, 67.6);
+
+        Field field341 = new Field(Field.fieldType.NormalField, 90.1, 65.4);
+        Field field342 = new Field(Field.fieldType.NormalField, 88.2, 63.5);
+        Field field343 = new Field(Field.fieldType.NormalField, 86.4, 61.6);
+        Field field344 = new Field(Field.fieldType.NormalField, 84.3, 59.4);
+        Field field345 = new Field(Field.fieldType.NormalField, 82.5, 57.1);
+        Field field346 = new Field(Field.fieldType.LadderField, 82, 53.2);
+        Field field347 = new Field(Field.fieldType.NormalField, 82.7, 49.7);
+
+        fieldList.add(field301);
+        fieldList.add(field302);
+        fieldList.add(field303);
+        fieldList.add(field304);
+        fieldList.add(field305);
+        fieldList.add(field306);
+        fieldList.add(field307);
+        fieldList.add(field308);
+        fieldList.add(field309);
+        fieldList.add(field310);
+
+        fieldList.add(field311);
+        fieldList.add(field312);
+        fieldList.add(field313);
+        fieldList.add(field314);
+        fieldList.add(field315);
+        fieldList.add(field316);
+        fieldList.add(field317);
+        fieldList.add(field318);
+        fieldList.add(field319);
+        fieldList.add(field320);
+
+        fieldList.add(field321);
+        fieldList.add(field322);
+        fieldList.add(field323);
+        fieldList.add(field324);
+        fieldList.add(field325);
+        fieldList.add(field326);
+        fieldList.add(field327);
+        fieldList.add(field328);
+        fieldList.add(field329);
+        fieldList.add(field330);
+
+        fieldList.add(field331);
+        fieldList.add(field332);
+        fieldList.add(field333);
+        fieldList.add(field334);
+        fieldList.add(field335);
+        fieldList.add(field336);
+        fieldList.add(field337);
+        fieldList.add(field338);
+        fieldList.add(field339);
+        fieldList.add(field340);
+
+        fieldList.add(field341);
+        fieldList.add(field342);
+        fieldList.add(field343);
+        fieldList.add(field344);
+        fieldList.add(field345);
+        fieldList.add(field346);
+        fieldList.add(field347);
+
+        // Fields for winning area
+        Field win1 = new Field(Field.fieldType.NormalField, 82.4, 29.1);
+        Field win2 = new Field(Field.fieldType.NormalField, 84.5, 31.3);
+        Field win3 = new Field(Field.fieldType.NormalField, 85.1, 26.1);
+        Field win4 = new Field(Field.fieldType.NormalField, 86.4, 28.7);
+        Field win5 = new Field(Field.fieldType.NormalField, 88.4, 26.5);
+        Field win6 = new Field(Field.fieldType.NormalField, 88.9, 31.1);
 
         for (int i = 0; i < fieldList.size(); i++) {
             gameBoard.getBoardGraph().addVertex(fieldList.get(i));
@@ -101,21 +443,110 @@ public class Application extends javafx.application.Application {
             gameBoard.getBoardGraph().addOneDirectionalEdge(fieldList.get(i), fieldList.get(i + 1), 500, BoardGraph.edgeType.NormalEdge);
         }
 
-        gameBoard.getBoardGraph().addOneDirectionalEdge(field7, field17, 2500, BoardGraph.edgeType.LadderEdge);
+        // Add normal edges from spawn area to first field
+        gameBoard.getBoardGraph().addVertex(spawn1);
+        gameBoard.getBoardGraph().addVertex(spawn2);
+        gameBoard.getBoardGraph().addVertex(spawn3);
+        gameBoard.getBoardGraph().addVertex(spawn4);
+        gameBoard.getBoardGraph().addVertex(spawn5);
+        gameBoard.getBoardGraph().addVertex(spawn6);
+
+        gameBoard.getBoardGraph().addOneDirectionalEdge(spawn1, field101, 500, BoardGraph.edgeType.NormalEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(spawn2, field101, 500, BoardGraph.edgeType.NormalEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(spawn3, field101, 500, BoardGraph.edgeType.NormalEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(spawn4, field101, 500, BoardGraph.edgeType.NormalEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(spawn5, field101, 500, BoardGraph.edgeType.NormalEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(spawn6, field101, 500, BoardGraph.edgeType.NormalEdge);
+
+        // Add ladder edges between the necessary fields (going from the main path)
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field107, field117, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field121, field104, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field125, field140, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field127, field135, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field143, field124, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field154, field165, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field170, field202, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field171, field203, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field177, field182, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field184, field174, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field194, field322, 2500, BoardGraph.edgeType.LadderEdge);
+
+        // Add ladder edges between the necessary fields (going from the shortest path)
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field210, field203, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field212, field204, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field213, field204, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field215, field206, 2500, BoardGraph.edgeType.LadderEdge);
+
+        // Add ladder edges between the necessary fields (going from the longest path)
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field312, field304, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field314, field330, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field316, field301, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field321, field189, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field324, field318, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field327, field344, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field332, field337, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field340, field328, 2500, BoardGraph.edgeType.LadderEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field346, field322, 2500, BoardGraph.edgeType.LadderEdge);
+
+        // Add normal edges from last fields to winning area
+        gameBoard.getBoardGraph().addVertex(win1);
+        gameBoard.getBoardGraph().addVertex(win2);
+        gameBoard.getBoardGraph().addVertex(win3);
+        gameBoard.getBoardGraph().addVertex(win4);
+        gameBoard.getBoardGraph().addVertex(win5);
+        gameBoard.getBoardGraph().addVertex(win6);
+
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field195, win1, 500, BoardGraph.edgeType.NormalEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field347, win1, 500, BoardGraph.edgeType.NormalEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field195, win2, 500, BoardGraph.edgeType.NormalEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field347, win2, 500, BoardGraph.edgeType.NormalEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field195, win3, 500, BoardGraph.edgeType.NormalEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field347, win3, 500, BoardGraph.edgeType.NormalEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field195, win4, 500, BoardGraph.edgeType.NormalEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field347, win4, 500, BoardGraph.edgeType.NormalEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field195, win5, 500, BoardGraph.edgeType.NormalEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field347, win5, 500, BoardGraph.edgeType.NormalEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field195, win6, 500, BoardGraph.edgeType.NormalEdge);
+        gameBoard.getBoardGraph().addOneDirectionalEdge(field347, win6, 500, BoardGraph.edgeType.NormalEdge);
+
         // initializing gameBoard Graph done; should we move this into a method?
 
         Circle playerTestView = new Circle(5); // just used for testing; better visualizes the exact path of player
-        playerTestView.setCenterX(field1.getX());
-        playerTestView.setCenterY(field1.getY());
+        playerTestView.setCenterX(field101.getX());
+        playerTestView.setCenterY(field101.getY());
 
         int[] mintOLintDie = {1, 1, 2, 2, 2, 7};
         Player player1 = new Player("Mint’O Lint", mintOLintDie, Paths.get("images"));
 
-        Image mintOLintSprite = new Image("images/mintolint_sprite.png", 64 * 22, 64 * 3, true, false);
-        player1.setImageView(new ImageView(mintOLintSprite));
-        player1.setCurrentField(field1);
-        player1.getImageView().setX(field1.getX() - 32);
-        player1.getImageView().setY(field1.getY() - 32 - 15);
+        ImageView sprite1 = new ImageView(new Image("images/sprites/Sprites_1.png"));
+        sprite1.setPreserveRatio(true);
+        sprite1.setFitWidth(54);
+
+        ImageView sprite2 = new ImageView(new Image("images/sprites/Sprites_2.png"));
+        sprite2.setPreserveRatio(true);
+        sprite2.setFitWidth(54);
+
+        ImageView sprite3 = new ImageView(new Image("images/sprites/Sprites_3.png"));
+        sprite3.setPreserveRatio(true);
+        sprite3.setFitWidth(54);
+
+        ImageView sprite4 = new ImageView(new Image("images/sprites/Sprites_4.png"));
+        sprite4.setPreserveRatio(true);
+        sprite4.setFitWidth(54);
+
+        ImageView sprite5 = new ImageView(new Image("images/sprites/Sprites_5.png"));
+        sprite5.setPreserveRatio(true);
+        sprite5.setFitWidth(54);
+
+        ImageView sprite6 = new ImageView(new Image("images/sprites/Sprites_6.png"));
+        sprite6.setPreserveRatio(true);
+        sprite6.setFitWidth(54);
+
+        player1.setImageView(sprite4);
+        player1.setCurrentField(spawn4);
+        player1.getImageView().setX(spawn4.getX() - 27);
+        player1.getImageView().setY(spawn4.getY() - 27 - 15);
+
 
         player1.playIdle();
         //player1.playWalk();
@@ -167,38 +598,23 @@ public class Application extends javafx.application.Application {
         });
          */
 
-
         scene.setOnKeyPressed(event -> {
-            if(!negativeInputForTesting) {
-                if (event.getCode() == KeyCode.SPACE) {
-                    gameBoard.playerTurn(player1, playerTestView);
-                }
+            if (event.getCode() == KeyCode.SPACE) {
+                gameBoard.playerTurn(player1, playerTestView);
+            }
 
-                if (event.getCode() == KeyCode.A) {
-                    player1.playIdle();
-                }
+            if (event.getCode() == KeyCode.A) {
+                player1.playIdle();
+            }
 
-                if (event.getCode() == KeyCode.S) {
-                    player1.playSlip();
-                }
-                if (event.getCode() == KeyCode.DIGIT1) gameBoard.movePlayer(player1, 1);
-                if (event.getCode() == KeyCode.DIGIT2) gameBoard.movePlayer(player1, 2);
-                if (event.getCode() == KeyCode.DIGIT3) gameBoard.movePlayer(player1, 3);
-                if (event.getCode() == KeyCode.DIGIT4) gameBoard.movePlayer(player1, 4);
-                if (event.getCode() == KeyCode.DIGIT5) gameBoard.movePlayer(player1, 5);
-                if (event.getCode() == KeyCode.DIGIT6) gameBoard.movePlayer(player1, 6);
-                if (event.getCode() == KeyCode.DIGIT7) gameBoard.movePlayer(player1, 7);
-                if (event.getCode() == KeyCode.DIGIT0) gameBoard.movePlayer(player1, -1);
-                if (event.getCode() == KeyCode.MINUS) negativeInputForTesting = true;
-            }else{
-                if (event.getCode() == KeyCode.DIGIT1) gameBoard.movePlayer(player1, -1);
-                if (event.getCode() == KeyCode.DIGIT2) gameBoard.movePlayer(player1, -2);
-                if (event.getCode() == KeyCode.DIGIT3) gameBoard.movePlayer(player1, -3);
-                if (event.getCode() == KeyCode.DIGIT4) gameBoard.movePlayer(player1, -4);
-                if (event.getCode() == KeyCode.DIGIT5) gameBoard.movePlayer(player1, -5);
-                if (event.getCode() == KeyCode.DIGIT6) gameBoard.movePlayer(player1, -6);
-                if (event.getCode() == KeyCode.DIGIT7) gameBoard.movePlayer(player1, -7);
-                negativeInputForTesting = false;
+            if (event.getCode() == KeyCode.S) {
+                player1.playSwim();
+            }
+            if (event.getCode() == KeyCode.DOWN) {
+                diceUI.showSpecialDieSelected();
+            }
+            if (event.getCode() == KeyCode.UP) {
+                diceUI.showNormalDieSelected();
             }
         });
 
@@ -206,173 +622,6 @@ public class Application extends javafx.application.Application {
         stage.setScene(scene);
         stage.setResizable(false); // daweil mal ohne resizable
         stage.show();
-    }
-
-    /*
-    Creates the diceUI and with the inital values (first player to turn)
-    Returns an AnchorPane
-     */
-    public static AnchorPane createDiceUI() {
-        // Colors used for the texts
-        Color brown = Color.rgb(120, 98, 68);
-        Color mintGreen = Color.rgb(63, 139, 88);
-
-        // Creating all the ImageViews based on the assets and sizing them accordingly
-        ImageView background = new ImageView(new Image("images/gameboard_screen/Game_BG_Player.png"));
-        background.setFitWidth(550);
-        background.setPreserveRatio(true);
-
-        ImageView selectionArrow = new ImageView(new Image("images/gameboard_screen/Game_Die_Select.png"));
-        selectionArrow.setFitWidth(30);
-        selectionArrow.setPreserveRatio(true);
-        selectionArrow.setX(496);
-        selectionArrow.setY(73);
-
-        ImageView spaceBar = new ImageView(new Image("images/option_button_extras/Button_Space_Small.PNG"));
-        spaceBar.setFitWidth(152);
-        spaceBar.setPreserveRatio(true);
-
-        ImageView playerPortrait = new ImageView(new Image("images/player_icons/Icon_4.png"));
-        playerPortrait.setFitWidth(160);
-        playerPortrait.setPreserveRatio(true);
-
-        ImageView nextPlayer1 = new ImageView(new Image("images/gameboard_screen/Game_O_2.png"));
-        nextPlayer1.setFitWidth(44);
-        nextPlayer1.setPreserveRatio(true);
-
-        ImageView nextPlayer2 = new ImageView(new Image("images/gameboard_screen/Game_O_3.png"));
-        nextPlayer2.setFitWidth(44);
-        nextPlayer2.setPreserveRatio(true);
-
-        ImageView nextPlayer3 = new ImageView(new Image("images/gameboard_screen/Game_O_4.png"));
-        nextPlayer3.setFitWidth(44);
-        nextPlayer3.setPreserveRatio(true);
-
-        ImageView nextPlayer4 = new ImageView(new Image("images/gameboard_screen/Game_O_5.png"));
-        nextPlayer4.setFitWidth(44);
-        nextPlayer4.setPreserveRatio(true);
-
-        ImageView nextPlayer5 = new ImageView(new Image("images/gameboard_screen/Game_O_6.png"));
-        nextPlayer5.setFitWidth(44);
-        nextPlayer5.setPreserveRatio(true);
-
-        ImageView normalDieBG = new ImageView(new Image("images/gameboard_screen/Game_Die_0.png"));
-        normalDieBG.setFitWidth(224);
-        normalDieBG.setPreserveRatio(true);
-
-        ImageView specialDieBG = new ImageView(new Image("images/gameboard_screen/Game_Die_4.png"));
-        specialDieBG.setFitWidth(224);
-        specialDieBG.setPreserveRatio(true);
-
-        // Creating all the text nodes and setting their font
-        Text normalDie0 = new Text("1");
-        Text normalDie1 = new Text("2");
-        Text normalDie2 = new Text("3");
-        Text normalDie3 = new Text("4");
-        Text normalDie4 = new Text("5");
-        Text normalDie5 = new Text("6");
-
-        normalDie0.setFont(customFont);
-        normalDie0.setFill(brown);
-        normalDie1.setFont(customFont);
-        normalDie1.setFill(brown);
-        normalDie2.setFont(customFont);
-        normalDie2.setFill(brown);
-        normalDie3.setFont(customFont);
-        normalDie3.setFill(brown);
-        normalDie4.setFont(customFont);
-        normalDie4.setFill(brown);
-        normalDie5.setFont(customFont);
-        normalDie5.setFill(brown);
-
-        Text specialDie0 = new Text("1");
-        Text specialDie1 = new Text("1");
-        Text specialDie2 = new Text("2");
-        Text specialDie3 = new Text("2");
-        Text specialDie4 = new Text("2");
-        Text specialDie5 = new Text("7");
-
-        specialDie0.setFont(customFont);
-        specialDie0.setFill(mintGreen);
-        specialDie1.setFont(customFont);
-        specialDie1.setFill(mintGreen);
-        specialDie2.setFont(customFont);
-        specialDie2.setFill(mintGreen);
-        specialDie3.setFont(customFont);
-        specialDie3.setFill(mintGreen);
-        specialDie4.setFont(customFont);
-        specialDie4.setFill(mintGreen);
-        specialDie5.setFont(customFont);
-        specialDie5.setFill(mintGreen);
-
-        Text playerName = new Text("Mint O’Lint");
-        playerName.setFont(customFont);
-        playerName.setFill(brown);
-
-        Text normalDieUsages = new Text("∞");
-        normalDieUsages.setFont(customFont);
-        normalDieUsages.setFill(brown);
-
-        Text specialDieUsages = new Text("3×");
-        specialDieUsages.setFont(customFont);
-        specialDieUsages.setFill(brown);
-
-        Text spaceButtonLabel = new Text("SPACE");
-        spaceButtonLabel.setFont(customFont);
-        spaceButtonLabel.setFill(brown);
-
-        Text pressToRollText = new Text("Press to roll");
-        pressToRollText.setFont(customFont);
-        pressToRollText.setFill(brown);
-
-        // Layout for the left side (charactericon and name)
-        VBox leftSide = new VBox(1, playerPortrait, playerName);
-        leftSide.setAlignment(Pos.CENTER);
-
-        // Layout for the right side (nextPlayerIcons, dice + text, spacebar-button, selector)
-        HBox nextPlayerIcons = new HBox(15);
-        nextPlayerIcons.getChildren().addAll(nextPlayer1, nextPlayer2, nextPlayer3, nextPlayer4, nextPlayer5);
-
-        HBox normalDieTexts = new HBox(23, normalDieUsages, normalDie0, normalDie1, normalDie2,
-                normalDie3, normalDie4, normalDie5);
-        HBox.setMargin(normalDie0, new Insets(0, 0, 0, 6.5));
-
-        HBox specialDieTexts = new HBox(23, specialDieUsages, specialDie0, specialDie1, specialDie2,
-                specialDie3, specialDie4, specialDie5);
-        HBox.setMargin(specialDie0, new Insets(0, 0, 0, 1.5));
-
-        StackPane spaceButton = new StackPane(spaceBar, spaceButtonLabel);
-
-        VBox rightSide = new VBox(5, nextPlayerIcons, normalDieTexts, specialDieTexts, spaceButton);
-        VBox.setMargin(normalDieTexts, new Insets(25, 0, 0, 3));
-        VBox.setMargin(specialDieTexts, new Insets(15, 0, 10, 3));
-        VBox.setMargin(spaceButton, new Insets(0, 0, 0, -130));
-
-        AnchorPane mainLayout = new AnchorPane();
-
-        mainLayout.getChildren().addAll(background, normalDieBG, specialDieBG, leftSide, rightSide, selectionArrow, pressToRollText);
-        // set anchor for the right side of the layout
-        AnchorPane.setTopAnchor(rightSide, 0.0);
-        AnchorPane.setLeftAnchor(rightSide, 222.0);
-        // set anchor for the left side of the layout
-        AnchorPane.setTopAnchor(leftSide, 18.0);
-        AnchorPane.setLeftAnchor(leftSide, 23.0);
-        // set anchor for the text label "Press to roll"
-        AnchorPane.setRightAnchor(pressToRollText, 43.0);
-        AnchorPane.setBottomAnchor(pressToRollText, 17.0);
-        // set anchor for the background of the normaldie and specialdie images
-        AnchorPane.setRightAnchor(normalDieBG, 63.0);
-        AnchorPane.setBottomAnchor(normalDieBG, 104.0);
-        AnchorPane.setRightAnchor(specialDieBG, 63.0);
-        AnchorPane.setBottomAnchor(specialDieBG, 57.0);
-
-        mainLayout.setPrefSize(200, 200);
-
-        return mainLayout;
-    }
-
-    public static void animateDiceUI(AnchorPane anchorPane) {
-        TranslateTransition translateTransition = new TranslateTransition();
     }
 
     public static void main(String[] args) {
