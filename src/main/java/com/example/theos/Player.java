@@ -73,7 +73,7 @@ public class Player {
         if (currentAnimation != null) {
             currentAnimation.stop();
         }
-        currentAnimation = new SpriteAnimation(imageView, 20, 20, 0, 0, 64, 64);
+        currentAnimation = new SpriteAnimation(imageView, 20, 20, 0, 0, 74, 74);
         currentAnimation.setCycleCount(Animation.INDEFINITE);
         currentAnimation.play();
     }
@@ -82,17 +82,53 @@ public class Player {
         if (currentAnimation != null) {
             currentAnimation.stop();
         }
-        currentAnimation = new SpriteAnimation(imageView, 19, 19, 0, 64, 64, 64);
+        currentAnimation = new SpriteAnimation(imageView, 20, 20, 0, 74, 74, 74);
         currentAnimation.setCycleCount(Animation.INDEFINITE);
         currentAnimation.play();
     }
 
-    public void playSlip() {
+    public void playSwim() {
         if (currentAnimation != null) {
             currentAnimation.stop();
         }
-        currentAnimation = new SpriteAnimation(imageView, 22, 22, 0, 128, 64, 64);
+        currentAnimation = new SpriteAnimation(imageView, 20, 20, 0, 148, 74, 74);
         currentAnimation.setCycleCount(Animation.INDEFINITE);
+        currentAnimation.play();
+    }
+
+    public void playFallTransparent() {
+        if (currentAnimation != null) {
+            currentAnimation.stop();
+        }
+        currentAnimation = new SpriteAnimation(imageView, 6, 6, 0, 222, 74, 74);
+        currentAnimation.setCycleCount(1);
+        currentAnimation.play();
+    }
+
+    public void playFallOpaque() {
+        if (currentAnimation != null) {
+            currentAnimation.stop();
+        }
+        currentAnimation = new SpriteAnimation(imageView, 6, 6, 0, 296, 74, 74);
+        currentAnimation.setCycleCount(1);
+        currentAnimation.play();
+    }
+
+    public void playFallCereal() {
+        if (currentAnimation != null) {
+            currentAnimation.stop();
+        }
+        currentAnimation = new SpriteAnimation(imageView, 6, 6, 740, 222, 74, 74);
+        currentAnimation.setCycleCount(1);
+        currentAnimation.play();
+    }
+
+    public void playJump() {
+        if (currentAnimation != null) {
+            currentAnimation.stop();
+        }
+        currentAnimation = new SpriteAnimation(imageView, 6, 6, 740, 296, 74, 74);
+        currentAnimation.setCycleCount(1);
         currentAnimation.play();
     }
 
