@@ -49,10 +49,10 @@ public class BoardGraph {
         backwardGraph.addOneDirectionalEdge(target, source, weight);
     }
 
-    public <T> void addOneDirectionalEdge(T source, T target, T weight, T type)
+    public <T> void addOneDirectionalEdge(T source, T target, T weight, edgeType type)
     {
-        forwardGraph.addOneDirectionalEdge(source, target, weight, type);
-        backwardGraph.addOneDirectionalEdge(target, source, weight, type);
+        forwardGraph.addOneDirectionalEdge(source, target, new Weight(weight,type));
+        backwardGraph.addOneDirectionalEdge(target, source, new Weight(weight,type));
     }
 
     /*
@@ -69,6 +69,7 @@ public class BoardGraph {
     {
         Field vertexData = root;
         int vertexListSize;
+        Weight tmpWeigth;
         if (hops > 0) {
             for (int i = 0; i < hops; i++) {
                 vertexListSize = forwardGraph.getAdjacenctVertex(vertexData).size();
@@ -79,11 +80,13 @@ public class BoardGraph {
                             break;
                         case LadderField:
                             for (var item : forwardGraph.getAdjacenctVertexEdges(vertexData)) {
-                                if (item.getType() == edgeType.NormalEdge && i < hops) {
+                                tmpWeigth = (Weight)item.getWeight();
+                                if (tmpWeigth.getType() == edgeType.NormalEdge && i < hops) {
                                     vertexData = (item.getSource() == vertexData) ? (Field) item.getTarget() : (Field) item.getSource();
                                     break;
                                 }
-                                if (item.getType() == edgeType.LadderEdge && i == hops-1) {
+
+                                if (tmpWeigth.getType() == edgeType.LadderEdge && i == hops-1) {
                                     vertexData = (item.getSource() == vertexData) ? (Field) item.getTarget() : (Field) item.getSource();
                                     break;
                                 }

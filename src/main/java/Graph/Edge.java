@@ -5,8 +5,6 @@ public class Edge<T> {
     T Target; // Vertex of the edge
     T Weight; // Generic Variable where every thing can be stored attched to the edge
 
-    T Type; // The type of edge it is
-
 
     // Base Edge with a sorce and a destination
     public Edge(T data1, T data2)
@@ -21,14 +19,6 @@ public class Edge<T> {
         Source = source;
         Target = target;
         Weight = weight;
-    }
-
-    public Edge(T source, T target, T weight, T type)
-    {
-        Source = source;
-        Target = target;
-        Weight = weight;
-        Type = type;
     }
 
     public T getSource()
@@ -59,13 +49,5 @@ public class Edge<T> {
     public void setWeight(T weight)
     {
         Weight = weight;
-    }
-
-    public T getType(){
-        return Type;
-    }
-
-    public void setType(T type){
-        Type = type;
     }
 }
