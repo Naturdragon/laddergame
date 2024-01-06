@@ -38,6 +38,8 @@ public class Application extends javafx.application.Application {
     static final Font CUSTOM_FONT_VARELA = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), 22);
     static final Font CUSTOM_FONT_CAVEAT = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), 25);
 
+    static boolean waitingForUserInput = true;
+
     @Override
     public void start(Stage stage) throws IOException {
         // FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("hello-view.fxml")); // bis jetzt war noch kein FXML notwendig
@@ -126,62 +128,39 @@ public class Application extends javafx.application.Application {
         für zusätliche Layout-Elemente wie Spieler- und Würfelanzeige.
          */
 
-        Group group = new Group(gameBoard.getRolledNumberDisplay(), player1.getImageView());
+        Group group = new Group(player1.getImageView());
 
         Pane root = new Pane(group);
 
         root.setBackground(gameBoard.getBackground()); // setBackground method needs Background object, not BackgroundImage
 
-        // Creating the dice UI with an AnchorPane, which is added to the root pane
-        DiceUI diceUI = new DiceUI();
-        diceUI.setTranslateX(40);
-        diceUI.setTranslateY(800-215);
-        diceUI.animateSelectionArrow();
+        // Placing the DiceUI of the GameBoard on the screen
+        gameBoard.getDiceUI().setTranslateX(40);
+        gameBoard.getDiceUI().setTranslateY(800 - 215);
 
-        root.getChildren().add(diceUI);
+        root.getChildren().addAll(gameBoard.getDiceUI());
 
         Scene scene = new Scene(root, sceneWidth, sceneHeight); // ich hab die Größe erstmal auf 1422x800 eingestellt da 1920x1080 für meinen Laptop-Bildschirm zu groß war
 
-        /* Test:
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() { // kann automatisch durch Lambda ersetzt werden, ist dann kürzer
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.SPACE) { // passiert nur wenn Space gedrückt wird
-
-                    Random randomizer = new Random();
-
-                    int fieldsToMove = randomizer.nextInt(4) + 1;
-
-                    System.out.println(playerList.get(playerWhoseTurnIs).toString() + " rolled " + fieldsToMove); // Ausgabe des Zuges auf der Konsole
-
-                    movePlayerTest(testFieldList, playerList.get(playerWhoseTurnIs), testFieldList.get(playerList.get(playerWhoseTurnIs).currentField), fieldsToMove);
-
-                    playerWhoseTurnIs++;
-
-                    if (playerWhoseTurnIs == playerList.size())
-                        playerWhoseTurnIs = 0; // wenn der letzte Spieler dran war startet die Liste (playerWhosTurnIs) wieder vom Anfang
-                }
-            }
-        });
-         */
-
         scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.SPACE) {
-                gameBoard.playerTurn(player1, playerTestView);
-            }
-
             if (event.getCode() == KeyCode.A) {
                 player1.playIdle();
             }
-
             if (event.getCode() == KeyCode.S) {
                 player1.playSlip();
             }
-            if (event.getCode() == KeyCode.DOWN) {
-                diceUI.showSpecialDieSelected();
-            }
-            if (event.getCode() == KeyCode.UP) {
-                diceUI.showNormalDieSelected();
+            if (waitingForUserInput) {
+                if (event.getCode() == KeyCode.UP) {
+                    gameBoard.getDiceUI().selectNormalDie();
+                }
+                // Special die charges are checked here!
+                if (event.getCode() == KeyCode.DOWN && player1.getSpecialDie().getCharge() > 0) {
+                    gameBoard.getDiceUI().selectSpecialDie();
+                }
+                if (event.getCode() == KeyCode.SPACE) {
+                    waitingForUserInput = false;
+                    gameBoard.playerTurn(player1);
+                }
             }
         });
 

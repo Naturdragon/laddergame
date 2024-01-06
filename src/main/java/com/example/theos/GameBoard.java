@@ -1,16 +1,12 @@
 package com.example.theos;
 
-import Graph.Graph;
 import com.example.theos.BordGameGraph.BoardGraph;
 import javafx.animation.PathTransition;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -21,7 +17,7 @@ public class GameBoard {
     private BoardGraph boardGraph;
     private List<Player> playerList;
     private Background background;
-    private Text rolledNumberDisplay;
+    private DiceUI diceUI;
 
     public GameBoard() {
 
@@ -36,23 +32,21 @@ public class GameBoard {
 
         background = new Background(backgroundImg);
 
-        rolledNumberDisplay = new Text();
-
-        rolledNumberDisplay.setX(30);
-        rolledNumberDisplay.setY(750);
-        rolledNumberDisplay.setFont(new Font(30));
-
+        diceUI = new DiceUI();
     }
 
-    public GameBoard(BoardGraph boardGraph, List<Player> playerList, Background background, Text rolledNumberDisplay) {
+    public GameBoard(BoardGraph boardGraph, List<Player> playerList, Background background) {
         this.boardGraph = boardGraph;
         this.playerList = playerList;
         this.background = background;
-        this.rolledNumberDisplay = rolledNumberDisplay;
     }
 
     public BoardGraph getBoardGraph() {
         return boardGraph;
+    }
+
+    public DiceUI getDiceUI() {
+        return diceUI;
     }
 
     public List<Player> getPlayerList() {
@@ -63,23 +57,25 @@ public class GameBoard {
         return background;
     }
 
-    public Text getRolledNumberDisplay() {
-        return rolledNumberDisplay;
-    }
-
     /*
-    Lets a player make a move meaning:
-    Player can select which die to use, die is rolled
-    calls movePlayer method to play the animation of the player moving
+    Rolls the appropriate die of the player depending on which one is selected at the diceUI
+    Calls animateRolledNumber method of diceUI and the movePlayer method
     Returns nothing
      */
-    public void playerTurn(Player player, Circle testView) {
+    public void playerTurn(Player player) {
 
-        int rolled = player.rollDie(Dice.dieType.NormalDie);
+        int rolled = 0;
 
-        rolledNumberDisplay.setText(String.valueOf(rolled));
+        if (diceUI.getUiState() == DiceUI.state.NormalDieSelected) {
+            rolled = player.rollDie(Dice.dieType.NormalDie);
+        }
+        if (diceUI.getUiState() == DiceUI.state.SpecialDieSelected) {
+            rolled = player.rollDie(Dice.dieType.SpecialDie);
+        }
 
-        movePlayer(player, rolled, testView);
+        diceUI.animateRolledNumber(player, rolled);
+
+        movePlayer(player, rolled);
     }
 
     /*
@@ -88,7 +84,7 @@ public class GameBoard {
     Loads created path and character into PathTransitions and plays the animation.
     Returns nothing
     */
-    public void movePlayer(Player player, int fieldsToMove, Circle testView) {
+    public void movePlayer(Player player, int fieldsToMove) {
 
         int animationOffsetX = 0;
         int animationOffsetY = 15;
@@ -116,7 +112,10 @@ public class GameBoard {
         transition.setPath(standardPath);
         transition.setNode(player.getImageView());
         transition.play();
-        transition.setOnFinished(event -> player.playIdle());
+        transition.setOnFinished(event -> {
+            diceUI.animatePlayerSwitch(player);
+            player.playIdle();
+        });
     }
 
 }

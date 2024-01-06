@@ -1,7 +1,6 @@
 package com.example.theos;
 
-import javafx.animation.Animation;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
@@ -10,8 +9,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class DiceUI extends AnchorPane {
 
@@ -45,6 +49,12 @@ public class DiceUI extends AnchorPane {
     private Text specialDie4;
     private Text specialDie5;
 
+    private state uiState;
+
+    /*
+    Default constructor creates the interface and layouts it
+    the content is filled with Mint'O Lint as a character for demonstration purposes
+     */
     public DiceUI() {
         BACKGROUND.setFitWidth(550);
         BACKGROUND.setPreserveRatio(true);
@@ -53,6 +63,7 @@ public class DiceUI extends AnchorPane {
         SELECTION_ARROW.setPreserveRatio(true);
         SELECTION_ARROW.setX(496);
         SELECTION_ARROW.setY(74);
+        animateSelectionArrow();
 
         SPACE_BAR_BG.setFitWidth(152);
         SPACE_BAR_BG.setPreserveRatio(true);
@@ -116,10 +127,10 @@ public class DiceUI extends AnchorPane {
 
         specialDie0 = new Text("1");
         specialDie1 = new Text("1");
-        specialDie2 = new Text("1");
-        specialDie3 = new Text("1");
-        specialDie4 = new Text("1");
-        specialDie5 = new Text("1");
+        specialDie2 = new Text("2");
+        specialDie3 = new Text("2");
+        specialDie4 = new Text("2");
+        specialDie5 = new Text("7");
 
         specialDie0.setFont(Application.CUSTOM_FONT_VARELA);
         specialDie0.setFill(Application.MINT_GREEN);
@@ -176,13 +187,19 @@ public class DiceUI extends AnchorPane {
         AnchorPane.setBottomAnchor(specialDieBG, 57.0);
 
         this.setPrefSize(200, 200);
+
+        selectNormalDie();
+    }
+
+    public state getUiState() {
+        return uiState;
     }
 
     /*
     Updates the data shown by the UI with the new player currently playing
     Returns nothing
      */
-    public void updatePlayer(Player nextPlayer) {
+    public void updateUI(Player nextPlayer) {
         playerName.setText(nextPlayer.getName());
 
         specialDieUsages.setText(nextPlayer.getSpecialDie().getCharge() + "×");
@@ -194,13 +211,26 @@ public class DiceUI extends AnchorPane {
         specialDie4.setText(String.valueOf(nextPlayer.getSpecialDie().getDice()[4]));
         specialDie5.setText(String.valueOf(nextPlayer.getSpecialDie().getDice()[5]));
 
+        specialDie0.setFill(Application.MINT_GREEN);
+        specialDie1.setFill(Application.MINT_GREEN);
+        specialDie2.setFill(Application.MINT_GREEN);
+        specialDie3.setFill(Application.MINT_GREEN);
+        specialDie4.setFill(Application.MINT_GREEN);
+        specialDie5.setFill(Application.MINT_GREEN);
+
+        NORMAL_DIE_0.setFill(Application.BROWN);
+        NORMAL_DIE_1.setFill(Application.BROWN);
+        NORMAL_DIE_2.setFill(Application.BROWN);
+        NORMAL_DIE_3.setFill(Application.BROWN);
+        NORMAL_DIE_4.setFill(Application.BROWN);
+        NORMAL_DIE_5.setFill(Application.BROWN);
     }
 
     /*
-    Animates the DiceUI moving down and back up and updates all the data shown
+    Animates the DiceUI moving down and back up and updates all the data shown using updateUI()
     Returns nothing
      */
-    public void animate(Player nextPlayer) {
+    public void animatePlayerSwitch(Player nextPlayer) {
         TranslateTransition translateDown = new TranslateTransition(Duration.millis(1000), this);
         translateDown.setByY(this.getHeight());
 
@@ -209,23 +239,30 @@ public class DiceUI extends AnchorPane {
 
         translateDown.play();
         translateDown.setOnFinished(event -> {
-            updatePlayer(nextPlayer);
+            updateUI(nextPlayer);
+            selectNormalDie();
             translateUp.play();
+            translateUp.setOnFinished(event1 -> Application.waitingForUserInput = true);
         });
     }
 
-    public void showNormalDieSelected() {
+    // updates the ui to show the normal die being selected, returns nothing
+    public void selectNormalDie() {
+        uiState = state.NormalDieSelected;
         SELECTION_ARROW.setY(74);
         NORMAL_DIE_BG.setOpacity(1);
         specialDieBG.setOpacity(0.5);
     }
 
-    public void showSpecialDieSelected() {
+    // updates the ui to show the special die being selected, returns nothing
+    public void selectSpecialDie() {
+        uiState = state.SpecialDieSelected;
         SELECTION_ARROW.setY(121);
         NORMAL_DIE_BG.setOpacity(0.5);
         specialDieBG.setOpacity(1);
     }
 
+    // animates the selection arrow moving up and down (for indefinite duration)
     public void animateSelectionArrow() {
         TranslateTransition transition = new TranslateTransition(Duration.millis(500), SELECTION_ARROW);
         transition.setByY(-3);
@@ -233,4 +270,153 @@ public class DiceUI extends AnchorPane {
         transition.setAutoReverse(true);
         transition.play();
     }
+
+    /*
+    Shows the user which number was rolled
+    the rolled number is loaded into a ParallelTransition consisting of a Scale- and a FadeTransition
+    Returns nothing (the animation is played from within the method)
+     */
+    public void animateRolledNumber(Player player, int numberRolled) {
+
+        ScaleTransition scale = new ScaleTransition(Duration.millis(200));
+        scale.setToX(3);
+        scale.setToY(3);
+
+        FadeTransition fade = new FadeTransition(Duration.millis(400));
+        fade.setToValue(0.0);
+
+        ParallelTransition parallel = new ParallelTransition(scale, fade);
+
+        if (uiState == state.NormalDieSelected) {
+            if (numberRolled == 1) {
+                scale.setNode(NORMAL_DIE_0);
+                fade.setNode(NORMAL_DIE_0);
+            }
+            if (numberRolled == 2) {
+                scale.setNode(NORMAL_DIE_1);
+                fade.setNode(NORMAL_DIE_1);
+            }
+            if (numberRolled == 3) {
+                scale.setNode(NORMAL_DIE_2);
+                fade.setNode(NORMAL_DIE_2);
+            }
+            if (numberRolled == 4) {
+                scale.setNode(NORMAL_DIE_3);
+                fade.setNode(NORMAL_DIE_3);
+            }
+            if (numberRolled == 5) {
+                scale.setNode(NORMAL_DIE_4);
+                fade.setNode(NORMAL_DIE_4);
+            }
+            if (numberRolled == 6) {
+                scale.setNode(NORMAL_DIE_5);
+                fade.setNode(NORMAL_DIE_5);
+            }
+        }
+
+        // this part feels needlessly long but it works:
+        if (uiState == state.SpecialDieSelected) {
+            int[] dieUsed = player.getSpecialDie().getDice();
+
+            List<Integer> equalsFound = new ArrayList<>();
+
+            int indexOfRolledNumber;
+
+            for (int i = 0; i < dieUsed.length; i++) {
+                if (numberRolled == dieUsed[i]) {
+                    equalsFound.add(i);
+                }
+            }
+
+            if (equalsFound.size() > 1) {
+                Random random = new Random();
+                indexOfRolledNumber = equalsFound.get(random.nextInt(equalsFound.size()));
+            } else {
+                indexOfRolledNumber = equalsFound.get(0);
+            }
+
+            if (indexOfRolledNumber == 0) {
+                scale.setNode(specialDie0);
+                fade.setNode(specialDie0);
+            }
+            if (indexOfRolledNumber == 1) {
+                scale.setNode(specialDie1);
+                fade.setNode(specialDie1);
+            }
+            if (indexOfRolledNumber == 2) {
+                scale.setNode(specialDie2);
+                fade.setNode(specialDie2);
+            }
+            if (indexOfRolledNumber == 3) {
+                scale.setNode(specialDie3);
+                fade.setNode(specialDie3);
+            }
+            if (indexOfRolledNumber == 4) {
+                scale.setNode(specialDie4);
+                fade.setNode(specialDie4);
+            }
+            if (indexOfRolledNumber == 5) {
+                scale.setNode(specialDie5);
+                fade.setNode(specialDie5);
+            }
+        }
+
+        parallel.play();
+        parallel.setOnFinished(event -> {
+            // again, this could probably be a lot more compact, but it works
+            NORMAL_DIE_0.setOpacity(1);
+            NORMAL_DIE_0.setScaleY(1);
+            NORMAL_DIE_0.setScaleX(1);
+
+            NORMAL_DIE_1.setOpacity(1);
+            NORMAL_DIE_1.setScaleY(1);
+            NORMAL_DIE_1.setScaleX(1);
+
+            NORMAL_DIE_2.setOpacity(1);
+            NORMAL_DIE_2.setScaleY(1);
+            NORMAL_DIE_2.setScaleX(1);
+
+            NORMAL_DIE_3.setOpacity(1);
+            NORMAL_DIE_3.setScaleY(1);
+            NORMAL_DIE_3.setScaleX(1);
+
+            NORMAL_DIE_4.setOpacity(1);
+            NORMAL_DIE_4.setScaleY(1);
+            NORMAL_DIE_4.setScaleX(1);
+
+            NORMAL_DIE_5.setOpacity(1);
+            NORMAL_DIE_5.setScaleY(1);
+            NORMAL_DIE_5.setScaleX(1);
+
+            specialDie0.setOpacity(1);
+            specialDie0.setScaleY(1);
+            specialDie0.setScaleX(1);
+
+            specialDie1.setOpacity(1);
+            specialDie1.setScaleY(1);
+            specialDie1.setScaleX(1);
+
+            specialDie2.setOpacity(1);
+            specialDie2.setScaleY(1);
+            specialDie2.setScaleX(1);
+
+            specialDie3.setOpacity(1);
+            specialDie3.setScaleY(1);
+            specialDie3.setScaleX(1);
+
+            specialDie4.setOpacity(1);
+            specialDie4.setScaleY(1);
+            specialDie4.setScaleX(1);
+
+            specialDie5.setOpacity(1);
+            specialDie5.setScaleY(1);
+            specialDie5.setScaleX(1);
+        });
+    }
+
+    public enum state {
+        NormalDieSelected,
+        SpecialDieSelected
+    }
 }
+
