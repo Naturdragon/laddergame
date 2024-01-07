@@ -170,8 +170,6 @@ public class BoardGraph {
         Path ladderPath = new Path(); // Path to be used for normale movement
         double ladderDurration = 0;
 
-
-
         Field vertexData = root;
         int vertexListSize;
         Weight tmpWeigth;
@@ -211,11 +209,13 @@ public class BoardGraph {
                                 }
                             }
                         }
+                        /*
                         PathTransition ladderPathTransition = new PathTransition();
                         ladderPathTransition.setPath(ladderPath);
                         ladderPathTransition.setDuration(Duration.millis(ladderDurration));
                         ladderPathTransition.setNode(img);
                         seqtrans.getChildren().add(ladderPathTransition);
+                         */
                     }
                 } else {
                     return seqtrans;   // End of Graph
@@ -231,7 +231,7 @@ public class BoardGraph {
             ladderPathTransition.setPath(ladderPath);
             ladderPathTransition.setDuration(Duration.millis(ladderDurration));
             ladderPathTransition.setNode(img);
-            seqtrans.getChildren().add(ladderPathTransition);
+            //seqtrans.getChildren().add(ladderPathTransition);
 
             return seqtrans;
         } else {

@@ -36,6 +36,6 @@ public class TestWinningScreen extends Application {
 
         // Create an instance of WinningScreen and call showWinningScreen
         WinningScreen winningScreen = new WinningScreen();
-        winningScreen.showWinningScreen(primaryStage, finishedPlayers);
+        winningScreen.createWinningScreen(finishedPlayers);
     }
 }

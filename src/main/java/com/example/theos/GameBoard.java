@@ -1,9 +1,16 @@
 package com.example.theos;
 
 import com.example.theos.BordGameGraph.BoardGraph;
+import javafx.animation.PathTransition;
 import javafx.animation.SequentialTransition;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +22,8 @@ public class GameBoard {
     private Background background;
     private DiceUI diceUI;
     private List<Player> finishedPlayers;
+
+    private boolean allPlayersFinished = false;
 
     public GameBoard() {
 
@@ -46,12 +55,49 @@ public class GameBoard {
         return diceUI;
     }
 
+    public void setPlayerList(List<Player> playerList) {
+        this.playerList = playerList;
+    }
+
     public List<Player> getPlayerList() {
         return playerList;
     }
 
     public Background getBackground() {
         return background;
+    }
+
+    public boolean isAllPlayersFinished() {
+        return allPlayersFinished;
+    }
+
+    public void setAllPlayersFinished(boolean allPlayersFinished) {
+        this.allPlayersFinished = allPlayersFinished;
+    }
+
+    public List<Player> getFinishedPlayers() {
+        return finishedPlayers;
+    }
+
+    /*
+        Creates the scene/screen view of the gameboard
+        Returns a scene object, which can be used for the stage object in TheOs start() method
+         */
+    public Scene createGameBoardScreen() {
+        Pane root = new Pane();
+
+        root.setBackground(background);
+
+        // Placing the diceUI on the sceen
+        diceUI.setTranslateX(40);
+        diceUI.setTranslateY(800 - 215);
+        root.getChildren().add(diceUI);
+
+        for (Player player : playerList) {
+            root.getChildren().add(player.getImageView());
+        }
+
+        return new Scene(root, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
     }
 
     /*
@@ -85,14 +131,16 @@ public class GameBoard {
         int animationOffsetX = 0;
         int animationOffsetY = 15;
 
+        player.playWalk();
+
         SequentialTransition sequentialTransition = boardGraph.getAnimationPathFromGraph(player.getCurrentField(), fieldsToMove, animationOffsetX, animationOffsetY, player.getImageView());
         sequentialTransition.play();
-        sequentialTransition.setOnFinished(event -> player.playIdle());
+        sequentialTransition.setOnFinished(event -> {
+            diceUI.switchPlayerTurn(player, this);
+            player.playIdle();
+        });
 
         player.setCurrentField(boardGraph.hopCountTraversal(player.getCurrentField(), fieldsToMove));
-
-
-
 
         /*
         Previous Code
