@@ -63,7 +63,6 @@ public class SceneController {
         });
     }
 
-
     public static void showWinningSceen(List<Player> finishedPlayers) {
         Scene scene = WinningScreen.createWinningScreen(finishedPlayers);
         stage.setScene(scene);

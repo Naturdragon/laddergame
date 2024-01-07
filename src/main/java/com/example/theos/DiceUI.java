@@ -13,9 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -36,13 +34,9 @@ public class DiceUI extends AnchorPane {
     static final Text NORMAL_DIE_4 = new Text("5");
     static final Text NORMAL_DIE_5 = new Text("6");
     static final Text SPACE_BUTTON_LABEL = new Text("SPACE");
-    static final Text PRESS_TO_ROLL_TEXT = new Text("Press to roll");
+    static final Text PRESS_TO_ROLL_TEXT = new Text("Press to Roll");
 
-    private ImageView nextPlayer1;
-    private ImageView nextPlayer2;
-    private ImageView nextPlayer3;
-    private ImageView nextPlayer4;
-    private ImageView nextPlayer5;
+    private List<ImageView> nextPlayerIconsList = new ArrayList<>();
     private ImageView specialDieBG;
     private ImageView playerPortrait;
     private Text specialDieUsages;
@@ -98,57 +92,43 @@ public class DiceUI extends AnchorPane {
         NORMAL_DIE_5.setFont(CUSTOM_FONT_VARELA);
         NORMAL_DIE_5.setFill(TheOs.BROWN);
 
-        nextPlayer1 = new ImageView(new Image("images/gameboard_screen/Game_O_2.png"));
-        nextPlayer1.setFitWidth(44);
-        nextPlayer1.setPreserveRatio(true);
-        nextPlayer2 = new ImageView(new Image("images/gameboard_screen/Game_O_3.png"));
-        nextPlayer2.setFitWidth(44);
-        nextPlayer2.setPreserveRatio(true);
-        nextPlayer3 = new ImageView(new Image("images/gameboard_screen/Game_O_4.png"));
-        nextPlayer3.setFitWidth(44);
-        nextPlayer3.setPreserveRatio(true);
-        nextPlayer4 = new ImageView(new Image("images/gameboard_screen/Game_O_5.png"));
-        nextPlayer4.setFitWidth(44);
-        nextPlayer4.setPreserveRatio(true);
-        nextPlayer5 = new ImageView(new Image("images/gameboard_screen/Game_O_6.png"));
-        nextPlayer5.setFitWidth(44);
-        nextPlayer5.setPreserveRatio(true);
+        for (int i = 0; i < 5; i++) {
+            ImageView nextPlayer = new ImageView();
+            nextPlayer.setFitWidth(44);
+            nextPlayer.setPreserveRatio(true);
 
-        specialDieBG = new ImageView(new Image("images/gameboard_screen/Game_Die_4.png"));
+            nextPlayerIconsList.add(nextPlayer);
+        }
+
+        specialDieBG = new ImageView();
         specialDieBG.setFitWidth(224);
         specialDieBG.setPreserveRatio(true);
 
-        playerPortrait = new ImageView(new Image("images/player_icons/Icon_4.png"));
+        playerPortrait = new ImageView();
         playerPortrait.setFitWidth(160);
         playerPortrait.setPreserveRatio(true);
 
-        playerName = new Text("Mint O’Lint");
+        playerName = new Text();
         playerName.setFont(CUSTOM_FONT_CAVEAT);
         playerName.setFill(TheOs.BROWN);
 
-        specialDieUsages = new Text("3×");
+        specialDieUsages = new Text();
         specialDieUsages.setFont(CUSTOM_FONT_VARELA);
         specialDieUsages.setFill(TheOs.BROWN);
 
-        specialDie0 = new Text("1");
-        specialDie1 = new Text("1");
-        specialDie2 = new Text("2");
-        specialDie3 = new Text("2");
-        specialDie4 = new Text("2");
-        specialDie5 = new Text("7");
+        specialDie0 = new Text();
+        specialDie1 = new Text();
+        specialDie2 = new Text();
+        specialDie3 = new Text();
+        specialDie4 = new Text();
+        specialDie5 = new Text();
 
         specialDie0.setFont(CUSTOM_FONT_VARELA);
-        specialDie0.setFill(TheOs.MINT_GREEN);
         specialDie1.setFont(CUSTOM_FONT_VARELA);
-        specialDie1.setFill(TheOs.MINT_GREEN);
         specialDie2.setFont(CUSTOM_FONT_VARELA);
-        specialDie2.setFill(TheOs.MINT_GREEN);
         specialDie3.setFont(CUSTOM_FONT_VARELA);
-        specialDie3.setFill(TheOs.MINT_GREEN);
         specialDie4.setFont(CUSTOM_FONT_VARELA);
-        specialDie4.setFill(TheOs.MINT_GREEN);
         specialDie5.setFont(CUSTOM_FONT_VARELA);
-        specialDie5.setFill(TheOs.MINT_GREEN);
 
         // Creating the layout:
 
@@ -158,7 +138,7 @@ public class DiceUI extends AnchorPane {
 
         // Layout for the right side (nextPlayerIcons, dice + text, spacebar-button, selector)
         HBox nextPlayerIcons = new HBox(15);
-        nextPlayerIcons.getChildren().addAll(nextPlayer1, nextPlayer2, nextPlayer3, nextPlayer4, nextPlayer5);
+        nextPlayerIcons.getChildren().addAll(nextPlayerIconsList.get(0), nextPlayerIconsList.get(1), nextPlayerIconsList.get(2), nextPlayerIconsList.get(3), nextPlayerIconsList.get(4));
 
         HBox normalDieTexts = new HBox(23, NORMAL_DIE_USAGES, NORMAL_DIE_0, NORMAL_DIE_1, NORMAL_DIE_2,
                 NORMAL_DIE_3, NORMAL_DIE_4, NORMAL_DIE_5);
@@ -166,7 +146,7 @@ public class DiceUI extends AnchorPane {
 
         HBox specialDieTexts = new HBox(23, specialDieUsages, specialDie0, specialDie1, specialDie2,
                 specialDie3, specialDie4, specialDie5);
-        HBox.setMargin(specialDie0, new Insets(0, 0, 0, 1.5));
+        HBox.setMargin(specialDieUsages, new Insets(0, 1.5, 0, 0));
 
         StackPane spaceButton = new StackPane(SPACE_BAR_BG, SPACE_BUTTON_LABEL);
 
@@ -204,31 +184,123 @@ public class DiceUI extends AnchorPane {
     Updates the data shown by the UI with the new player currently playing
     Returns nothing
      */
-    public void updateUI(Player nextPlayer) {
-        playerName.setText(nextPlayer.getName());
+    public void updateUI(List<Player> playerList) {
+        playerName.setText(playerList.get(0).getName());
 
-        specialDieUsages.setText(nextPlayer.getSpecialDie().getCharge() + "×");
+        specialDieUsages.setText(playerList.get(0).getSpecialDie().getCharge() + "×");
 
-        specialDie0.setText(String.valueOf(nextPlayer.getSpecialDie().getDice()[0]));
-        specialDie1.setText(String.valueOf(nextPlayer.getSpecialDie().getDice()[1]));
-        specialDie2.setText(String.valueOf(nextPlayer.getSpecialDie().getDice()[2]));
-        specialDie3.setText(String.valueOf(nextPlayer.getSpecialDie().getDice()[3]));
-        specialDie4.setText(String.valueOf(nextPlayer.getSpecialDie().getDice()[4]));
-        specialDie5.setText(String.valueOf(nextPlayer.getSpecialDie().getDice()[5]));
+        specialDie0.setText(String.valueOf(playerList.get(0).getSpecialDie().getDice()[0]));
+        specialDie1.setText(String.valueOf(playerList.get(0).getSpecialDie().getDice()[1]));
+        specialDie2.setText(String.valueOf(playerList.get(0).getSpecialDie().getDice()[2]));
+        specialDie3.setText(String.valueOf(playerList.get(0).getSpecialDie().getDice()[3]));
+        specialDie4.setText(String.valueOf(playerList.get(0).getSpecialDie().getDice()[4]));
+        specialDie5.setText(String.valueOf(playerList.get(0).getSpecialDie().getDice()[5]));
 
-        specialDie0.setFill(TheOs.MINT_GREEN);
-        specialDie1.setFill(TheOs.MINT_GREEN);
-        specialDie2.setFill(TheOs.MINT_GREEN);
-        specialDie3.setFill(TheOs.MINT_GREEN);
-        specialDie4.setFill(TheOs.MINT_GREEN);
-        specialDie5.setFill(TheOs.MINT_GREEN);
+        playerPortrait.setImage(new Image(playerList.get(0).getImage()));
 
-        NORMAL_DIE_0.setFill(TheOs.BROWN);
-        NORMAL_DIE_1.setFill(TheOs.BROWN);
-        NORMAL_DIE_2.setFill(TheOs.BROWN);
-        NORMAL_DIE_3.setFill(TheOs.BROWN);
-        NORMAL_DIE_4.setFill(TheOs.BROWN);
-        NORMAL_DIE_5.setFill(TheOs.BROWN);
+        for (int i = 0; i < playerList.size() - 1; i++) {
+            nextPlayerIconsList.get(i).setImage(new Image(playerList.get(i + 1).getNextPlayerImagePath()));
+        }
+
+        switch (playerList.get(0).getName()) {
+            case "Diva O'Hara" -> {
+                specialDieBG.setImage(new Image("images/gameboard_screen/Game_Die_1.PNG"));
+                specialDie0.setFill(TheOs.DIVA_PINK);
+                specialDie1.setFill(TheOs.DIVA_PINK);
+                specialDie2.setFill(TheOs.DIVA_PINK);
+                specialDie3.setFill(TheOs.DIVA_PINK);
+                specialDie4.setFill(TheOs.DIVA_PINK);
+                specialDie5.setFill(TheOs.DIVA_PINK);
+
+                HBox.setMargin(specialDie0, new Insets(0,0,0,-3.5));
+                HBox.setMargin(specialDie1, new Insets(0,0,0,-9));
+                HBox.setMargin(specialDie2, new Insets(0,0,0,-4));
+                HBox.setMargin(specialDie3, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie4, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie5, new Insets(0,0,0,0));
+            }
+            case "Y'Olanda" -> {
+                specialDieBG.setImage(new Image("images/gameboard_screen/Game_Die_2.PNG"));
+                specialDie0.setFill(TheOs.OLANDA_RED);
+                specialDie1.setFill(TheOs.OLANDA_RED);
+                specialDie2.setFill(TheOs.OLANDA_RED);
+                specialDie3.setFill(TheOs.OLANDA_RED);
+                specialDie4.setFill(TheOs.OLANDA_RED);
+                specialDie5.setFill(TheOs.OLANDA_RED);
+
+                HBox.setMargin(specialDie0, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie1, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie2, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie3, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie4, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie5, new Insets(0,0,0,0));
+            }
+            case "Kidd'O" -> {
+                specialDieBG.setImage(new Image("images/gameboard_screen/Game_Die_3.PNG"));
+                specialDie0.setFill(TheOs.KIDD_YELLOW);
+                specialDie1.setFill(TheOs.KIDD_YELLOW);
+                specialDie2.setFill(TheOs.KIDD_YELLOW);
+                specialDie3.setFill(TheOs.KIDD_YELLOW);
+                specialDie4.setFill(TheOs.KIDD_YELLOW);
+                specialDie5.setFill(TheOs.KIDD_YELLOW);
+
+                HBox.setMargin(specialDie0, new Insets(0,0,0,-3.5));
+                HBox.setMargin(specialDie1, new Insets(0,0,0,-9));
+                HBox.setMargin(specialDie2, new Insets(0,0,0,-5));
+                HBox.setMargin(specialDie3, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie4, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie5, new Insets(0,0,0,0));
+            }
+            case "Mint'O Lint" -> {
+                specialDieBG.setImage(new Image("images/gameboard_screen/Game_Die_4.PNG"));
+                specialDie0.setFill(TheOs.MINT_GREEN);
+                specialDie1.setFill(TheOs.MINT_GREEN);
+                specialDie2.setFill(TheOs.MINT_GREEN);
+                specialDie3.setFill(TheOs.MINT_GREEN);
+                specialDie4.setFill(TheOs.MINT_GREEN);
+                specialDie5.setFill(TheOs.MINT_GREEN);
+
+                HBox.setMargin(specialDie0, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie1, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie2, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie3, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie4, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie5, new Insets(0,0,0,0));
+            }
+            case "Brooke O'Let" -> {
+                specialDieBG.setImage(new Image("images/gameboard_screen/Game_Die_5.PNG"));
+                specialDie0.setFill(TheOs.BROOKE_BLUE);
+                specialDie1.setFill(TheOs.BROOKE_BLUE);
+                specialDie2.setFill(TheOs.BROOKE_BLUE);
+                specialDie3.setFill(TheOs.BROOKE_BLUE);
+                specialDie4.setFill(TheOs.BROOKE_BLUE);
+                specialDie5.setFill(TheOs.BROOKE_BLUE);
+
+                HBox.setMargin(specialDie0, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie1, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie2, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie3, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie4, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie5, new Insets(0,0,0,0));
+            }
+            case "O'Fitz" -> {
+                specialDieBG.setImage(new Image("images/gameboard_screen/Game_Die_6.PNG"));
+                specialDie0.setFill(TheOs.FITZ_PURPLE);
+                specialDie1.setFill(TheOs.FITZ_PURPLE);
+                specialDie2.setFill(TheOs.FITZ_PURPLE);
+                specialDie3.setFill(TheOs.FITZ_PURPLE);
+                specialDie4.setFill(TheOs.FITZ_PURPLE);
+                specialDie5.setFill(TheOs.FITZ_PURPLE);
+
+                HBox.setMargin(specialDie0, new Insets(0,0,0,-4));
+                HBox.setMargin(specialDie1, new Insets(0,0,0,-5));
+                HBox.setMargin(specialDie2, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie3, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie4, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie5, new Insets(0,0,0,0));
+            }
+            default -> System.out.println("Character not found"); // only the names in the above ifs should be possible
+        }
     }
 
     /*
@@ -236,7 +308,7 @@ public class DiceUI extends AnchorPane {
     !! THIS METHOD ALSO CHECKS IF THE GAME IS OVER (ALL PLAYERS REACHED THE LAST FIELD) !!
     Returns nothing
      */
-    public void switchPlayerTurn(Player nextPlayer, GameBoard gameBoard) {
+    public void switchPlayerTurn(GameBoard gameBoard) {
         TranslateTransition translateDown = new TranslateTransition(Duration.millis(1000), this);
         translateDown.setByY(this.getHeight());
 
@@ -245,28 +317,7 @@ public class DiceUI extends AnchorPane {
 
         translateDown.play();
         translateDown.setOnFinished(event -> {
-
-            Player player1 = new Player("Diva O'Hara", new int[]{-3,-3,6,6,7}, Paths.get("images/player_icons/Icon_1.PNG"), Paths.get("images/winning_screen/Win_1.PNG"), new Field(Field.fieldType.NormalField, 100,100));
-            Player player2 = new Player("Y'Olanda", new int[]{1,1,2,4,6,6}, Paths.get("images/player_icons/Icon_2.PNG"), Paths.get("images/winning_screen/Win_2.PNG"), new Field(Field.fieldType.NormalField, 100,100));
-            Player player3 = new Player("Kidd'O", new int[]{-2,-1,4,5,6,6}, Paths.get("images/player_icons/Icon_3.PNG"), Paths.get("images/winning_screen/Win_3.PNG"), new Field(Field.fieldType.NormalField, 100,100));
-            Player player4 = new Player("Mint'O Lint", new int[]{1,1,2,2,2,7}, Paths.get("images/player_icons/Icon_4.PNG"), Paths.get("images/winning_screen/Win_4.PNG"), new Field(Field.fieldType.NormalField, 100,100));
-            Player player5 = new Player("Brooke O'Let", new int[]{2,2,3,4,4,5}, Paths.get("images/player_icons/Icon_5.PNG"), Paths.get("images/winning_screen/Win_5.PNG"), new Field(Field.fieldType.NormalField, 100,100));
-            Player player6 = new Player("O'Fitz", new int[]{-1,0,2,3,4,7}, Paths.get("images/player_icons/Icon_6.PNG"), Paths.get("images/winning_screen/Win_6.PNG"), new Field(Field.fieldType.NormalField, 100,100));
-
-            // Mark players as finished
-            player1.increaseTurns();
-            player2.increaseTurns();
-            player3.increaseTurns();
-            player4.increaseTurns();
-            player5.increaseTurns();
-            player6.increaseTurns();
-
-            List<Player> finishedPlayers = Arrays.asList(player5, player2, player3, player1, player6, player4);
-
-            // if (gameBoard.isAllPlayersFinished()) => when all players are finished the winning screen is shown here
-            //SceneController.showWinningSceen(finishedPlayers);
-
-            updateUI(nextPlayer);
+            updateUI(gameBoard.getPlayerList());
             selectNormalDie();
             translateUp.play();
             translateUp.setOnFinished(event1 -> TheOs.waitingForUserInput = true);

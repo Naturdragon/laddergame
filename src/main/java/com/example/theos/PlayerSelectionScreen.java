@@ -350,38 +350,38 @@ public class PlayerSelectionScreen {
         for (int i = 0; i < players.length; i++) {
             if (players[i].playerNumber > 0) {
                 if (i == 0) {
-                    com.example.theos.Player player = new com.example.theos.Player("Diva O'Hara", new int[]{-3,-3,6,6,7}, Paths.get("images/player_icons/Icon_1.PNG"), Paths.get("images/winning_screen/Win_1.PNG"), Paths.get("images/gameboard_screen/Game_O_1.PNG"), Paths.get("images/sprites/Sprites_1.png"));
-                    Field spawn = new Field(Field.fieldType.NormalField, 4.8, 60.1); // 1 = Diva O'Hara
+                    com.example.theos.Player player = new com.example.theos.Player("Diva O'Hara", new int[]{-3, -3, 6, 6, 6, 7}, Paths.get("images/player_icons/Icon_1.PNG"), Paths.get("images/winning_screen/Win_1.PNG"), Paths.get("images/gameboard_screen/Game_O_1.PNG"), Paths.get("images/sprites/Sprites_1.png"));
+                    Field spawn = new Field(Field.fieldType.NormalField, 4.8, 60.1 - 1); // 1 = Diva O'Hara
                     player.setCurrentField(spawn);
                     selectedPlayers.add(player);
                 }
                 if (i == 1) {
-                    com.example.theos.Player player = new com.example.theos.Player("Y'Olanda", new int[]{1,1,2,4,6,6}, Paths.get("images/player_icons/Icon_2.PNG"), Paths.get("images/winning_screen/Win_2.PNG"), Paths.get("images/gameboard_screen/Game_O_2.PNG"), Paths.get("images/sprites/Sprites_2.png"));
-                    Field spawn = new Field(Field.fieldType.NormalField, 8.3, 56.6); // 2 = Y'Olanda
+                    com.example.theos.Player player = new com.example.theos.Player("Y'Olanda", new int[]{1, 1, 2, 4, 6, 6}, Paths.get("images/player_icons/Icon_2.PNG"), Paths.get("images/winning_screen/Win_2.PNG"), Paths.get("images/gameboard_screen/Game_O_2.PNG"), Paths.get("images/sprites/Sprites_2.png"));
+                    Field spawn = new Field(Field.fieldType.NormalField, 8.3, 56.6 - 1); // 2 = Y'Olanda
                     player.setCurrentField(spawn);
                     selectedPlayers.add(player);
                 }
                 if (i == 2) {
-                    com.example.theos.Player player = new com.example.theos.Player("Kidd'O", new int[]{-2,-1,4,5,6,6}, Paths.get("images/player_icons/Icon_3.PNG"), Paths.get("images/winning_screen/Win_3.PNG"), Paths.get("images/gameboard_screen/Game_O_3.PNG"), Paths.get("images/sprites/Sprites_3.png"));
-                    Field spawn = new Field(Field.fieldType.NormalField, 11.6, 53.1); // 3 = Kidd'O
+                    com.example.theos.Player player = new com.example.theos.Player("Kidd'O", new int[]{-2, -1, 4, 5, 6, 6}, Paths.get("images/player_icons/Icon_3.PNG"), Paths.get("images/winning_screen/Win_3.PNG"), Paths.get("images/gameboard_screen/Game_O_3.PNG"), Paths.get("images/sprites/Sprites_3.png"));
+                    Field spawn = new Field(Field.fieldType.NormalField, 11.6, 53.1 - 1); // 3 = Kidd'O
                     player.setCurrentField(spawn);
                     selectedPlayers.add(player);
                 }
                 if (i == 3) {
-                    com.example.theos.Player player = new com.example.theos.Player("Mint'O Lint", new int[]{1,1,2,2,2,7}, Paths.get("images/player_icons/Icon_4.PNG"), Paths.get("images/winning_screen/Win_4.PNG"), Paths.get("images/gameboard_screen/Game_O_4.PNG"), Paths.get("images/sprites/Sprites_4.png"));
-                    Field spawn = new Field(Field.fieldType.NormalField, 8.3, 63.9); // 4 = Mint'O Lint
+                    com.example.theos.Player player = new com.example.theos.Player("Mint'O Lint", new int[]{1, 1, 2, 2, 2, 7}, Paths.get("images/player_icons/Icon_4.PNG"), Paths.get("images/winning_screen/Win_4.PNG"), Paths.get("images/gameboard_screen/Game_O_4.PNG"), Paths.get("images/sprites/Sprites_4.png"));
+                    Field spawn = new Field(Field.fieldType.NormalField, 8.3, 63.9 - 1); // 4 = Mint'O Lint
                     player.setCurrentField(spawn);
                     selectedPlayers.add(player);
                 }
                 if (i == 4) {
-                    com.example.theos.Player player = new com.example.theos.Player("Brooke O'Let", new int[]{2,2,3,4,4,5}, Paths.get("images/player_icons/Icon_5.PNG"), Paths.get("images/winning_screen/Win_5.PNG"), Paths.get("images/gameboard_screen/Game_O_5.PNG"), Paths.get("images/sprites/Sprites_5.png"));
-                    Field spawn = new Field(Field.fieldType.NormalField, 11.9, 60.3); // 5 = Brooke O'Let
+                    com.example.theos.Player player = new com.example.theos.Player("Brooke O'Let", new int[]{2, 2, 3, 4, 4, 5}, Paths.get("images/player_icons/Icon_5.PNG"), Paths.get("images/winning_screen/Win_5.PNG"), Paths.get("images/gameboard_screen/Game_O_5.PNG"), Paths.get("images/sprites/Sprites_5.png"));
+                    Field spawn = new Field(Field.fieldType.NormalField, 11.9, 60.3 - 1); // 5 = Brooke O'Let
                     player.setCurrentField(spawn);
                     selectedPlayers.add(player);
                 }
                 if (i == 5) {
-                    com.example.theos.Player player = new com.example.theos.Player("O'Fitz", new int[]{-1,0,2,3,4,7}, Paths.get("images/player_icons/Icon_6.PNG"), Paths.get("images/winning_screen/Win_6.PNG"), Paths.get("images/gameboard_screen/Game_O_6.PNG"), Paths.get("images/sprites/Sprites_6.png"));
-                    Field spawn = new Field(Field.fieldType.NormalField, 15.2, 56.9); // 6 = O'Fitz
+                    com.example.theos.Player player = new com.example.theos.Player("O'Fitz", new int[]{-1, 0, 2, 3, 4, 7}, Paths.get("images/player_icons/Icon_6.PNG"), Paths.get("images/winning_screen/Win_6.PNG"), Paths.get("images/gameboard_screen/Game_O_6.PNG"), Paths.get("images/sprites/Sprites_6.png"));
+                    Field spawn = new Field(Field.fieldType.NormalField, 15.2, 56.9 - 1); // 6 = O'Fitz
                     player.setCurrentField(spawn);
                     selectedPlayers.add(player);
                 }

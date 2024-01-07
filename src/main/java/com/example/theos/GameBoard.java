@@ -89,6 +89,7 @@ public class GameBoard {
         root.setBackground(background);
 
         // Placing the diceUI on the sceen
+        diceUI.updateUI(playerList);
         diceUI.setTranslateX(40);
         diceUI.setTranslateY(800 - 215);
         root.getChildren().add(diceUI);
@@ -105,14 +106,6 @@ public class GameBoard {
 
     public void fillGraphData() {
         List<Field> fieldList = new ArrayList<>();
-
-        // Fields for spawn area
-        Field spawn1 = new Field(Field.fieldType.NormalField, 4.8, 60.1); // 1 = Diva O'Hara
-        Field spawn2 = new Field(Field.fieldType.NormalField, 8.3, 56.6); // 2 = Y'Olanda
-        Field spawn3 = new Field(Field.fieldType.NormalField, 11.6, 53.1); // 3 = Kidd'O
-        Field spawn4 = new Field(Field.fieldType.NormalField, 8.3, 63.9); // 4 = Mint'O Lint
-        Field spawn5 = new Field(Field.fieldType.NormalField, 11.9, 60.3); // 5 = Brooke O'Let
-        Field spawn6 = new Field(Field.fieldType.NormalField, 15.2, 56.9); // 6 = O'Fitz
 
         // Fields on main path
         Field field101 = new Field(Field.fieldType.NormalField, 17.3, 50.1);
@@ -575,6 +568,9 @@ public class GameBoard {
         diceUI.animateRolledNumber(player, rolled);
 
         movePlayer(player, rolled);
+
+        playerList.add(playerList.get(0));
+        playerList.remove(0);
     }
 
     /*
@@ -592,7 +588,7 @@ public class GameBoard {
         SequentialTransition sequentialTransition = boardGraph.getAnimationPathFromGraph(player.getCurrentField(), fieldsToMove, animationOffsetX, animationOffsetY, player.getImageView());
         sequentialTransition.play();
         sequentialTransition.setOnFinished(event -> {
-            diceUI.switchPlayerTurn(player, this);
+            diceUI.switchPlayerTurn(this);
             player.playIdle();
         });
 
