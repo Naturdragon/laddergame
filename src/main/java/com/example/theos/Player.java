@@ -30,7 +30,7 @@ public class Player {
         turnCount = 0;
     }
 
-    public Player(String characterName, int[] specialDiceArray, Path path,Path winningImagePath, Field currentCharacterField) {
+    public Player(String characterName, int[] specialDiceArray, Path path, Path winningImagePath, Field currentCharacterField) {
         this(characterName, specialDiceArray, path);
         this.winningImagePath = winningImagePath;
         currentField = currentCharacterField;
@@ -73,7 +73,7 @@ public class Player {
     }
 
     public String getWinningImagePath() {
-        return  (winningImagePath != null) ? winningImagePath.toString() : "";
+        return (winningImagePath != null) ? winningImagePath.toString() : "";
     }
 
     public String getImage() {

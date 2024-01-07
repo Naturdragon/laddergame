@@ -570,7 +570,7 @@ public class TheOs extends javafx.application.Application {
         root.getChildren().addAll(gameBoard.getDiceUI());
 
         Scene inGameScene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT); // ich hab die Größe erstmal auf 1422x800 eingestellt da 1920x1080 für meinen Laptop-Bildschirm zu groß war
-        Scene playerSelectScene = PlayerSelectionScreen.createPlayerSelectionScreen();
+        //Scene playerSelectScene = PlayerSelectionScreen.createPlayerSelectionScreen();
 
         inGameScene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.A) {
@@ -594,6 +594,7 @@ public class TheOs extends javafx.application.Application {
             }
         });
 
+        /*
         inGameScene.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 stage.setScene(playerSelectScene);
@@ -610,6 +611,8 @@ public class TheOs extends javafx.application.Application {
         stage.setScene(inGameScene);
         stage.setResizable(false); // daweil mal ohne resizable
         stage.show();
+
+         */
     }
 
     public static void main(String[] args) {
