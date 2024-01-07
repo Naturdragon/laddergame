@@ -1,9 +1,6 @@
 package com.example.theos;
 
 import com.example.theos.BordGameGraph.BoardGraph;
-import javafx.animation.TranslateTransition;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -13,22 +10,20 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Application extends javafx.application.Application {
+public class TheOs extends javafx.application.Application {
 
     /* scene width and height are used for scene size and field class
        (–> x and y parameters of field constructor are in percent, useful for resizing)
         */
-    static final int sceneWidth = 1422;
-    static final int sceneHeight = 800;
+    static final int SCENE_WIDTH = 1422;
+    static final int SCENE_HEIGHT = 800;
 
     static boolean negativeInputForTesting = false;
 
@@ -37,8 +32,8 @@ public class Application extends javafx.application.Application {
     final static Color MINT_GREEN = Color.rgb(63, 139, 88);
 
     // accessing the custom font fix: https://stackoverflow.com/questions/30245085/javafx-embed-custom-font-not-working
-    static final Font CUSTOM_FONT_VARELA = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), 22);
-    static final Font CUSTOM_FONT_CAVEAT = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), 25);
+    static final Font CUSTOM_FONT_VARELA = Font.loadFont(TheOs.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), 22);
+    static final Font CUSTOM_FONT_CAVEAT = Font.loadFont(TheOs.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), 25);
 
     static boolean waitingForUserInput = true;
 
@@ -574,14 +569,15 @@ public class Application extends javafx.application.Application {
 
         root.getChildren().addAll(gameBoard.getDiceUI());
 
-        Scene scene = new Scene(root, sceneWidth, sceneHeight); // ich hab die Größe erstmal auf 1422x800 eingestellt da 1920x1080 für meinen Laptop-Bildschirm zu groß war
+        Scene inGameScene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT); // ich hab die Größe erstmal auf 1422x800 eingestellt da 1920x1080 für meinen Laptop-Bildschirm zu groß war
+        Scene playerSelectScene = PlayerSelectionScreen.createPlayerSelectionScreen();
 
-        scene.setOnKeyPressed(event -> {
+        inGameScene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.A) {
                 player1.playIdle();
             }
             if (event.getCode() == KeyCode.S) {
-                player1.playSlip();
+                player1.playSwim();
             }
             if (waitingForUserInput) {
                 if (event.getCode() == KeyCode.UP) {
@@ -598,8 +594,20 @@ public class Application extends javafx.application.Application {
             }
         });
 
+        inGameScene.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                stage.setScene(playerSelectScene);
+            }
+        });
+
+        playerSelectScene.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                stage.setScene(inGameScene);
+            }
+        });
+
         stage.setTitle("The O’s");
-        stage.setScene(scene);
+        stage.setScene(inGameScene);
         stage.setResizable(false); // daweil mal ohne resizable
         stage.show();
     }

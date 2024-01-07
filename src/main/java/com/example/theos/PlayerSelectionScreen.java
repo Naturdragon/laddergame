@@ -1,6 +1,5 @@
-package com.example.theos.BordGameGraph;
+package com.example.theos;
 
-import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
@@ -13,7 +12,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import java.util.Arrays;
 public class PlayerSelectionScreen {
@@ -28,18 +26,17 @@ public class PlayerSelectionScreen {
     private static final double DESELECT_BUTTON_OFFSET_X = 50; // Adjust this value
     private static final double DESELECT_BUTTON_OFFSET_Y = 50;  // Adjust this value
 
-    private String[] selectedCharacters;
-    private GridPane charactersGrid;
-    private BooleanProperty[] playerSelectedProperties;
+    static private String[] selectedCharacters;
+    private static GridPane charactersGrid;
+    static private BooleanProperty[] playerSelectedProperties;
 
-    static final Font CAVEAT = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("Caveat-SemiBold.ttf"), -1);
+    static final Font CAVEAT = Font.loadFont(PlayerSelectionScreen.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), -1);
 
-    static final Font VARELA = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("VarelaRound-Regular.ttf"), -1);
+    static final Font VARELA = Font.loadFont(PlayerSelectionScreen.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), -1);
 
-    Color brown = Color.rgb(120, 98, 68);
+    static Color brown = Color.rgb(120, 98, 68);
 
-    @Override
-    public void start(Stage primaryStage) {
+    public static Scene createPlayerSelectionScreen() {
         VBox instructionsBox = createInstructionsBox();
         charactersGrid = createCharactersGrid();
 
@@ -48,16 +45,13 @@ public class PlayerSelectionScreen {
         mainLayout.setSpacing(SPACING_VALUE);
         mainLayout.setFillHeight(false);
 
-        String backgroundImage = "Player_Selection_Screen.png";
+        String backgroundImage = "images/player_select_screen/Player_Selection_Screen.PNG";
         mainLayout.setStyle("-fx-background-image: url('" + backgroundImage + "'); -fx-background-size: cover;");
 
-        Scene scene = new Scene(mainLayout, SCREEN_WIDTH, SCREEN_HEIGHT);
-        primaryStage.setTitle("Player Selection Screen");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        return new Scene(mainLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
     }
 
-    private VBox createInstructionsBox() {
+    private static VBox createInstructionsBox() {
 
         Text controls = new Text("CONTROLS");
         controls.setFont(Font.font(VARELA.getFamily(), 58));
@@ -123,19 +117,19 @@ public class PlayerSelectionScreen {
         return leftSide;
     }
 
-    private GridPane createCharactersGrid() {
+    private static GridPane createCharactersGrid() {
         charactersGrid = new GridPane();
         charactersGrid.setPadding(new Insets(PADDING_VALUE));
         charactersGrid.setHgap(-3);
         charactersGrid.setVgap(38);
 
         String[] characterImagePaths = {
-                "Icon_1.PNG",
-                "Icon_2.PNG",
-                "Icon_3.PNG",
-                "Icon_4.PNG",
-                "Icon_5.PNG",
-                "Icon_6.PNG"
+                "images/player_icons/Icon_1.PNG",
+                "images/player_icons/Icon_2.PNG",
+                "images/player_icons/Icon_3.PNG",
+                "images/player_icons/Icon_4.PNG",
+                "images/player_icons/Icon_5.PNG",
+                "images/player_icons/Icon_6.PNG"
         };
 
         selectedCharacters = new String[characterImagePaths.length];
@@ -239,7 +233,7 @@ public class PlayerSelectionScreen {
         return charactersGrid;
     }
 
-    private Circle createCharacterButton(int playerIndex, ImageView characterImage) {
+    private static Circle createCharacterButton(int playerIndex, ImageView characterImage) {
         Circle button = new Circle(CHARACTER_IMAGE_SIZE / 2);
         button.setFill(Color.TRANSPARENT);
         button.setStroke(Color.TRANSPARENT);
@@ -253,7 +247,7 @@ public class PlayerSelectionScreen {
         return button;
     }
 
-    private ImageView createCharacterImageView(String imagePath, int playerIndex) {
+    private static ImageView createCharacterImageView(String imagePath, int playerIndex) {
         Image image = new Image(imagePath, CHARACTER_IMAGE_SIZE, CHARACTER_IMAGE_SIZE, true, true);
         ImageView imageView = new ImageView(image);
 
@@ -264,8 +258,8 @@ public class PlayerSelectionScreen {
         return imageView;
     }
 
-    private ImageView createDeselectButton(int playerIndex, ImageView characterImage) {
-        Image deselectImage = new Image("Player_Deselect.PNG", 35, 35, true, true);
+    private static ImageView createDeselectButton(int playerIndex, ImageView characterImage) {
+        Image deselectImage = new Image("images/player_select_screen/Player_Deselect.PNG", 35, 35, true, true);
         ImageView deselectImageView = new ImageView(deselectImage);
 
         playerSelectedProperties[playerIndex] = new SimpleBooleanProperty(false);
@@ -279,7 +273,7 @@ public class PlayerSelectionScreen {
         return deselectImageView;
     }
 
-    private void togglePlayerSelection(int playerIndex, ImageView characterImage) {
+    private static void togglePlayerSelection(int playerIndex, ImageView characterImage) {
         if (selectedCharacters[playerIndex] == null) {
             selectPlayer(playerIndex, characterImage);
         } else {
@@ -287,7 +281,7 @@ public class PlayerSelectionScreen {
         }
     }
 
-    private void selectPlayer(int playerIndex, ImageView characterImage) {
+    private static void selectPlayer(int playerIndex, ImageView characterImage) {
         selectedCharacters[playerIndex] = "Player " + (playerIndex + 1);
         playerSelectedProperties[playerIndex].set(true);
         characterImage.setTranslateY(SELECTED_IMAGE_TRANSLATE_Y);
@@ -297,7 +291,7 @@ public class PlayerSelectionScreen {
         updateGameStatus();
     }
 
-    private void deselectPlayer(int playerIndex, ImageView characterImage) {
+    private static void deselectPlayer(int playerIndex, ImageView characterImage) {
         selectedCharacters[playerIndex] = null;
         playerSelectedProperties[playerIndex].set(false);
         characterImage.setTranslateY(0);
@@ -307,13 +301,13 @@ public class PlayerSelectionScreen {
         updateGameStatus();
     }
 
-    private void updateGameStatus() {
+    private static void updateGameStatus() {
         if (countSelectedPlayers() >= MIN_PLAYERS) {
             System.out.println("Minimum players selected. You can start the game!");
         }
     }
 
-    private int countSelectedPlayers() {
+    private static int countSelectedPlayers() {
         int count = 0;
         for (String character : selectedCharacters) {
             if (character != null) {
@@ -322,7 +316,4 @@ public class PlayerSelectionScreen {
         }
         return count;
     }
-
-
-
 }

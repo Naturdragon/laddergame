@@ -9,7 +9,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -68,30 +67,30 @@ public class DiceUI extends AnchorPane {
         SPACE_BAR_BG.setFitWidth(152);
         SPACE_BAR_BG.setPreserveRatio(true);
 
-        SPACE_BUTTON_LABEL.setFont(Application.CUSTOM_FONT_VARELA);
-        SPACE_BUTTON_LABEL.setFill(Application.BROWN);
+        SPACE_BUTTON_LABEL.setFont(TheOs.CUSTOM_FONT_VARELA);
+        SPACE_BUTTON_LABEL.setFill(TheOs.BROWN);
 
-        PRESS_TO_ROLL_TEXT.setFont(Application.CUSTOM_FONT_VARELA);
-        PRESS_TO_ROLL_TEXT.setFill(Application.BROWN);
+        PRESS_TO_ROLL_TEXT.setFont(TheOs.CUSTOM_FONT_VARELA);
+        PRESS_TO_ROLL_TEXT.setFill(TheOs.BROWN);
 
         NORMAL_DIE_BG.setFitWidth(224);
         NORMAL_DIE_BG.setPreserveRatio(true);
 
-        NORMAL_DIE_USAGES.setFont(Application.CUSTOM_FONT_VARELA);
-        NORMAL_DIE_USAGES.setFill(Application.BROWN);
+        NORMAL_DIE_USAGES.setFont(TheOs.CUSTOM_FONT_VARELA);
+        NORMAL_DIE_USAGES.setFill(TheOs.BROWN);
 
-        NORMAL_DIE_0.setFont(Application.CUSTOM_FONT_VARELA);
-        NORMAL_DIE_0.setFill(Application.BROWN);
-        NORMAL_DIE_1.setFont(Application.CUSTOM_FONT_VARELA);
-        NORMAL_DIE_1.setFill(Application.BROWN);
-        NORMAL_DIE_2.setFont(Application.CUSTOM_FONT_VARELA);
-        NORMAL_DIE_2.setFill(Application.BROWN);
-        NORMAL_DIE_3.setFont(Application.CUSTOM_FONT_VARELA);
-        NORMAL_DIE_3.setFill(Application.BROWN);
-        NORMAL_DIE_4.setFont(Application.CUSTOM_FONT_VARELA);
-        NORMAL_DIE_4.setFill(Application.BROWN);
-        NORMAL_DIE_5.setFont(Application.CUSTOM_FONT_VARELA);
-        NORMAL_DIE_5.setFill(Application.BROWN);
+        NORMAL_DIE_0.setFont(TheOs.CUSTOM_FONT_VARELA);
+        NORMAL_DIE_0.setFill(TheOs.BROWN);
+        NORMAL_DIE_1.setFont(TheOs.CUSTOM_FONT_VARELA);
+        NORMAL_DIE_1.setFill(TheOs.BROWN);
+        NORMAL_DIE_2.setFont(TheOs.CUSTOM_FONT_VARELA);
+        NORMAL_DIE_2.setFill(TheOs.BROWN);
+        NORMAL_DIE_3.setFont(TheOs.CUSTOM_FONT_VARELA);
+        NORMAL_DIE_3.setFill(TheOs.BROWN);
+        NORMAL_DIE_4.setFont(TheOs.CUSTOM_FONT_VARELA);
+        NORMAL_DIE_4.setFill(TheOs.BROWN);
+        NORMAL_DIE_5.setFont(TheOs.CUSTOM_FONT_VARELA);
+        NORMAL_DIE_5.setFill(TheOs.BROWN);
 
         nextPlayer1 = new ImageView(new Image("images/gameboard_screen/Game_O_2.png"));
         nextPlayer1.setFitWidth(44);
@@ -118,12 +117,12 @@ public class DiceUI extends AnchorPane {
         playerPortrait.setPreserveRatio(true);
 
         playerName = new Text("Mint O’Lint");
-        playerName.setFont(Application.CUSTOM_FONT_CAVEAT);
-        playerName.setFill(Application.BROWN);
+        playerName.setFont(TheOs.CUSTOM_FONT_CAVEAT);
+        playerName.setFill(TheOs.BROWN);
 
         specialDieUsages = new Text("3×");
-        specialDieUsages.setFont(Application.CUSTOM_FONT_VARELA);
-        specialDieUsages.setFill(Application.BROWN);
+        specialDieUsages.setFont(TheOs.CUSTOM_FONT_VARELA);
+        specialDieUsages.setFill(TheOs.BROWN);
 
         specialDie0 = new Text("1");
         specialDie1 = new Text("1");
@@ -132,18 +131,18 @@ public class DiceUI extends AnchorPane {
         specialDie4 = new Text("2");
         specialDie5 = new Text("7");
 
-        specialDie0.setFont(Application.CUSTOM_FONT_VARELA);
-        specialDie0.setFill(Application.MINT_GREEN);
-        specialDie1.setFont(Application.CUSTOM_FONT_VARELA);
-        specialDie1.setFill(Application.MINT_GREEN);
-        specialDie2.setFont(Application.CUSTOM_FONT_VARELA);
-        specialDie2.setFill(Application.MINT_GREEN);
-        specialDie3.setFont(Application.CUSTOM_FONT_VARELA);
-        specialDie3.setFill(Application.MINT_GREEN);
-        specialDie4.setFont(Application.CUSTOM_FONT_VARELA);
-        specialDie4.setFill(Application.MINT_GREEN);
-        specialDie5.setFont(Application.CUSTOM_FONT_VARELA);
-        specialDie5.setFill(Application.MINT_GREEN);
+        specialDie0.setFont(TheOs.CUSTOM_FONT_VARELA);
+        specialDie0.setFill(TheOs.MINT_GREEN);
+        specialDie1.setFont(TheOs.CUSTOM_FONT_VARELA);
+        specialDie1.setFill(TheOs.MINT_GREEN);
+        specialDie2.setFont(TheOs.CUSTOM_FONT_VARELA);
+        specialDie2.setFill(TheOs.MINT_GREEN);
+        specialDie3.setFont(TheOs.CUSTOM_FONT_VARELA);
+        specialDie3.setFill(TheOs.MINT_GREEN);
+        specialDie4.setFont(TheOs.CUSTOM_FONT_VARELA);
+        specialDie4.setFill(TheOs.MINT_GREEN);
+        specialDie5.setFont(TheOs.CUSTOM_FONT_VARELA);
+        specialDie5.setFill(TheOs.MINT_GREEN);
 
         // Creating the layout:
 
@@ -211,19 +210,19 @@ public class DiceUI extends AnchorPane {
         specialDie4.setText(String.valueOf(nextPlayer.getSpecialDie().getDice()[4]));
         specialDie5.setText(String.valueOf(nextPlayer.getSpecialDie().getDice()[5]));
 
-        specialDie0.setFill(Application.MINT_GREEN);
-        specialDie1.setFill(Application.MINT_GREEN);
-        specialDie2.setFill(Application.MINT_GREEN);
-        specialDie3.setFill(Application.MINT_GREEN);
-        specialDie4.setFill(Application.MINT_GREEN);
-        specialDie5.setFill(Application.MINT_GREEN);
+        specialDie0.setFill(TheOs.MINT_GREEN);
+        specialDie1.setFill(TheOs.MINT_GREEN);
+        specialDie2.setFill(TheOs.MINT_GREEN);
+        specialDie3.setFill(TheOs.MINT_GREEN);
+        specialDie4.setFill(TheOs.MINT_GREEN);
+        specialDie5.setFill(TheOs.MINT_GREEN);
 
-        NORMAL_DIE_0.setFill(Application.BROWN);
-        NORMAL_DIE_1.setFill(Application.BROWN);
-        NORMAL_DIE_2.setFill(Application.BROWN);
-        NORMAL_DIE_3.setFill(Application.BROWN);
-        NORMAL_DIE_4.setFill(Application.BROWN);
-        NORMAL_DIE_5.setFill(Application.BROWN);
+        NORMAL_DIE_0.setFill(TheOs.BROWN);
+        NORMAL_DIE_1.setFill(TheOs.BROWN);
+        NORMAL_DIE_2.setFill(TheOs.BROWN);
+        NORMAL_DIE_3.setFill(TheOs.BROWN);
+        NORMAL_DIE_4.setFill(TheOs.BROWN);
+        NORMAL_DIE_5.setFill(TheOs.BROWN);
     }
 
     /*
@@ -242,7 +241,7 @@ public class DiceUI extends AnchorPane {
             updateUI(nextPlayer);
             selectNormalDie();
             translateUp.play();
-            translateUp.setOnFinished(event1 -> Application.waitingForUserInput = true);
+            translateUp.setOnFinished(event1 -> TheOs.waitingForUserInput = true);
         });
     }
 

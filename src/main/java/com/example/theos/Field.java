@@ -12,8 +12,8 @@ public class Field {
         idCounter++;
         this.type = type;
         coordinates = new Coordinates();
-        coordinates.x = (int) (Application.sceneWidth * xPercentage / 100);
-        coordinates.y = (int) (Application.sceneHeight * yPercentage / 100);
+        coordinates.x = (int) (TheOs.SCENE_WIDTH * xPercentage / 100);
+        coordinates.y = (int) (TheOs.SCENE_HEIGHT * yPercentage / 100);
     }
 
     public fieldType getType() {
