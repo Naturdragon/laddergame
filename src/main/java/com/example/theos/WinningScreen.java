@@ -18,7 +18,10 @@ import javafx.stage.Stage;
 import java.util.Arrays;
 import java.util.List;
 
-public class WinningScreen {
+import static com.example.theos.TitleScreen.animateButtons;
+import static javafx.application.Application.launch;
+
+public class WinningScreen extends Application{
 
     static final Font VARELA = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), -1);
 
@@ -26,7 +29,7 @@ public class WinningScreen {
      * primaryStage    The primary stage of the JavaFX application.
      * finishedPlayers List of players who have completed the game.
      */
-    public static Scene createWinningScreen(List<Player> finishedPlayers) {
+    void createWinningScreen(Stage primaryStage, List<Player> finishedPlayers) {
         // Extract the winner
         Player winner = finishedPlayers.get(0);
 
@@ -92,7 +95,7 @@ public class WinningScreen {
 
         //Adjust the position of the Return to Main Menu Text
         returnToMenu.setTranslateX(122);
-        returnToMenu.setTranslateY(47);
+        returnToMenu.setTranslateY(40);
 
         // Adjust the position of returnButton
         returnButton.setTranslateX(0);
@@ -100,7 +103,7 @@ public class WinningScreen {
 
         //Adjust the position of the SPACE Text
         spaceText.setTranslateX(117);
-        spaceText.setTranslateY(-38);
+        spaceText.setTranslateY(-40);
 
         //Adjust the position of the Button IMAGE
         menuButton.setTranslateX(120);
@@ -108,6 +111,8 @@ public class WinningScreen {
 
         spaceText.toFront(); // Bring spaceText to the front
         menuButton.toBack(); // Send menuButton to the back
+
+        animateButtons(returnToMenu, spaceText, menuButton);
 
         // Creating the right side with the leaderboard
         GridPane leaderboardGrid = new GridPane();
@@ -164,7 +169,19 @@ public class WinningScreen {
         mainLayout.setStyle("-fx-background-image: " + backgroundImage + "; " +
                 "-fx-background-size: cover;");
 
-        // Creating the scene and returning it
-        return new Scene(mainLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
+        // Creating the scene and setting it to the stage
+        Scene scene = new Scene(mainLayout, 1422, 800);
+        primaryStage.setTitle("Game Winning Screen");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+
     }
 }
