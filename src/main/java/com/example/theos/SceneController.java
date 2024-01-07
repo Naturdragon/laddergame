@@ -20,6 +20,7 @@ public class SceneController {
     public static void showTitleScreen() {
     }
 
+    /*
     public static void showPlayerSelectSceen() {
         Scene scene = PlayerSelectionScreen.createPlayerSelectionScreen();
         stage.setScene(scene);
@@ -32,6 +33,8 @@ public class SceneController {
         });
     }
 
+
+     */
     /*
     Shows the gameboard screen, also:
     the instance of the gameboard which holds all data of the game (number of players, finished players, etc) is created here
@@ -560,6 +563,7 @@ public class SceneController {
         });
     }
 
+    /*
     public static void showWinningSceen(List<Player> finishedPlayers) {
         Scene scene = WinningScreen.createWinningScreen(finishedPlayers);
         stage.setScene(scene);
@@ -571,4 +575,6 @@ public class SceneController {
             }
         });
     }
+
+     */
 }
