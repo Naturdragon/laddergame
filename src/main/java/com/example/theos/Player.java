@@ -2,6 +2,7 @@ package com.example.theos;
 
 import Animation.SpriteAnimation;
 import javafx.animation.Animation;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.nio.file.Path;
@@ -14,6 +15,8 @@ public class Player {
     private Dice specialDie;
     private Path imagePath;
     private Path winningImagePath;
+    private Path nextPlayerImagePath;
+    private Path spriteImagePath;
     private Field currentField; // Current Field where the player is
     private SpriteAnimation currentAnimation;
     private ImageView imageView; //used to represent the character of the player on screen
@@ -35,6 +38,27 @@ public class Player {
         this.winningImagePath = winningImagePath;
         currentField = currentCharacterField;
     }
+
+    public Player(String characterName, int[] specialDiceArray, Path path, Path winningImagePath, Path nextPlayerImagePath, Path spriteImagePath) {
+        this(characterName, specialDiceArray, path);
+        this.winningImagePath = winningImagePath;
+        this.nextPlayerImagePath = nextPlayerImagePath;
+        this.spriteImagePath = spriteImagePath;
+
+        imageView = new ImageView(new Image(getSpriteImagePath()));
+
+        imageView.setPreserveRatio(true);
+        imageView.setFitWidth(54);
+    }
+
+    public String getNextPlayerImagePath() {
+        return nextPlayerImagePath.toString();
+    }
+
+    public String getSpriteImagePath() {
+        return spriteImagePath.toString();
+    }
+
 
     public String getName() {
         return name;

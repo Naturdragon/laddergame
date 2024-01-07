@@ -19,10 +19,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerSelectionScreen extends Application {
+public class PlayerSelectionScreen {
     private static final double SCREEN_WIDTH = 1422;
     private static final double SCREEN_HEIGHT = 800;
     private static final int NUM_COLUMNS = 3;
@@ -47,27 +48,6 @@ public class PlayerSelectionScreen extends Application {
 
     static Color brown = Color.rgb(120, 98, 68);
 
-    @Override
-    public void start(Stage primaryStage) {
-        VBox instructionsBox = createInstructionsBox();
-        charactersGrid = createCharactersGrid();
-
-        HBox mainLayout = new HBox(instructionsBox, charactersGrid);
-        mainLayout.setAlignment(Pos.CENTER);
-        mainLayout.setSpacing(SPACING_VALUE);
-        mainLayout.setFillHeight(false);
-
-        String backgroundImage = "images/player_select_screen/Player_Selection_Screen.png";
-        mainLayout.setStyle("-fx-background-image: url('" + backgroundImage + "'); -fx-background-size: cover;");
-
-        Scene scene = new Scene(mainLayout, SCREEN_WIDTH, SCREEN_HEIGHT);
-        primaryStage.setTitle("Player Selection Screen");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-
-    /*
-
     public static Scene createPlayerSelectionScreen() {
         VBox instructionsBox = createInstructionsBox();
         charactersGrid = createCharactersGrid();
@@ -82,8 +62,6 @@ public class PlayerSelectionScreen extends Application {
 
         return new Scene(mainLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
     }
-
-     */
 
     private static VBox createInstructionsBox() {
 
@@ -366,21 +344,52 @@ public class PlayerSelectionScreen extends Application {
         System.out.println();
     }
 
-    /*
-    private static void createPlayerList() {
+    public static List<com.example.theos.Player> createPlayerList() {
         List<com.example.theos.Player> selectedPlayers = new ArrayList<>();
 
         for (int i = 0; i < players.length; i++) {
-
             if (players[i].playerNumber > 0) {
-                com.example.theos.Player newPlayer = new com.example.theos.Player(players[i].selectedCharacter.getName(), )
-
-                selectedPlayers.add();
+                if (i == 0) {
+                    com.example.theos.Player player = new com.example.theos.Player("Diva O'Hara", new int[]{-3,-3,6,6,7}, Paths.get("images/player_icons/Icon_1.PNG"), Paths.get("images/winning_screen/Win_1.PNG"), Paths.get("images/gameboard_screen/Game_O_1.PNG"), Paths.get("images/sprites/Sprites_1.png"));
+                    Field spawn = new Field(Field.fieldType.NormalField, 4.8, 60.1); // 1 = Diva O'Hara
+                    player.setCurrentField(spawn);
+                    selectedPlayers.add(player);
+                }
+                if (i == 1) {
+                    com.example.theos.Player player = new com.example.theos.Player("Y'Olanda", new int[]{1,1,2,4,6,6}, Paths.get("images/player_icons/Icon_2.PNG"), Paths.get("images/winning_screen/Win_2.PNG"), Paths.get("images/gameboard_screen/Game_O_2.PNG"), Paths.get("images/sprites/Sprites_2.png"));
+                    Field spawn = new Field(Field.fieldType.NormalField, 8.3, 56.6); // 2 = Y'Olanda
+                    player.setCurrentField(spawn);
+                    selectedPlayers.add(player);
+                }
+                if (i == 2) {
+                    com.example.theos.Player player = new com.example.theos.Player("Kidd'O", new int[]{-2,-1,4,5,6,6}, Paths.get("images/player_icons/Icon_3.PNG"), Paths.get("images/winning_screen/Win_3.PNG"), Paths.get("images/gameboard_screen/Game_O_3.PNG"), Paths.get("images/sprites/Sprites_3.png"));
+                    Field spawn = new Field(Field.fieldType.NormalField, 11.6, 53.1); // 3 = Kidd'O
+                    player.setCurrentField(spawn);
+                    selectedPlayers.add(player);
+                }
+                if (i == 3) {
+                    com.example.theos.Player player = new com.example.theos.Player("Mint'O Lint", new int[]{1,1,2,2,2,7}, Paths.get("images/player_icons/Icon_4.PNG"), Paths.get("images/winning_screen/Win_4.PNG"), Paths.get("images/gameboard_screen/Game_O_4.PNG"), Paths.get("images/sprites/Sprites_4.png"));
+                    Field spawn = new Field(Field.fieldType.NormalField, 8.3, 63.9); // 4 = Mint'O Lint
+                    player.setCurrentField(spawn);
+                    selectedPlayers.add(player);
+                }
+                if (i == 4) {
+                    com.example.theos.Player player = new com.example.theos.Player("Brooke O'Let", new int[]{2,2,3,4,4,5}, Paths.get("images/player_icons/Icon_5.PNG"), Paths.get("images/winning_screen/Win_5.PNG"), Paths.get("images/gameboard_screen/Game_O_5.PNG"), Paths.get("images/sprites/Sprites_5.png"));
+                    Field spawn = new Field(Field.fieldType.NormalField, 11.9, 60.3); // 5 = Brooke O'Let
+                    player.setCurrentField(spawn);
+                    selectedPlayers.add(player);
+                }
+                if (i == 5) {
+                    com.example.theos.Player player = new com.example.theos.Player("O'Fitz", new int[]{-1,0,2,3,4,7}, Paths.get("images/player_icons/Icon_6.PNG"), Paths.get("images/winning_screen/Win_6.PNG"), Paths.get("images/gameboard_screen/Game_O_6.PNG"), Paths.get("images/sprites/Sprites_6.png"));
+                    Field spawn = new Field(Field.fieldType.NormalField, 15.2, 56.9); // 6 = O'Fitz
+                    player.setCurrentField(spawn);
+                    selectedPlayers.add(player);
+                }
             }
         }
-    }
 
-     */
+        return selectedPlayers;
+    }
 
     private static class Character {
         private String name;

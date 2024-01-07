@@ -264,7 +264,7 @@ public class DiceUI extends AnchorPane {
             List<Player> finishedPlayers = Arrays.asList(player5, player2, player3, player1, player6, player4);
 
             // if (gameBoard.isAllPlayersFinished()) => when all players are finished the winning screen is shown here
-            SceneController.showWinningSceen(finishedPlayers);
+            //SceneController.showWinningSceen(finishedPlayers);
 
             updateUI(nextPlayer);
             selectNormalDie();
