@@ -1,14 +1,9 @@
 package com.example.theos;
 
 import com.example.theos.BordGameGraph.BoardGraph;
-import javafx.animation.PathTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +14,8 @@ public class GameBoard {
     private List<Player> playerList;
     private Background background;
     private DiceUI diceUI;
+
+    private state gameState = state.PlayersPlaying;
 
     public GameBoard() {
 
@@ -54,8 +51,7 @@ public class GameBoard {
         return playerList;
     }
 
-    public Background getBackground()
-    {
+    public Background getBackground() {
         return background;
     }
 
@@ -86,18 +82,20 @@ public class GameBoard {
     Loads created path and character into PathTransitions and plays the animation.
     Returns nothing
     */
-    public void movePlayer(Player player, int fieldsToMove)
-    {
+    public void movePlayer(Player player, int fieldsToMove) {
         int animationOffsetX = 0;
         int animationOffsetY = 15;
 
-        SequentialTransition sequentialTransition = boardGraph.getAnimationPathFromGraph(player.getCurrentField(),fieldsToMove, animationOffsetX, animationOffsetY, player.getImageView());
+        player.playWalk();
+
+        SequentialTransition sequentialTransition = boardGraph.getAnimationPathFromGraph(player.getCurrentField(), fieldsToMove, animationOffsetX, animationOffsetY, player.getImageView());
         sequentialTransition.play();
-        sequentialTransition.setOnFinished(event ->player.playIdle());
+        sequentialTransition.setOnFinished(event -> {
+            diceUI.switchPlayerTurn(player, this);
+            player.playIdle();
+        });
 
-        player.setCurrentField(boardGraph.hopCountTraversal(player.getCurrentField(),fieldsToMove));
-
-
+        player.setCurrentField(boardGraph.hopCountTraversal(player.getCurrentField(), fieldsToMove));
 
 
         /*
@@ -137,6 +135,13 @@ public class GameBoard {
             diceUI.animatePlayerSwitch(player);
             player.playIdle();
         });
+
+         */
+    }
+
+    public enum state {
+        PlayersPlaying,
+        PlayersFinished
     }
 
 }

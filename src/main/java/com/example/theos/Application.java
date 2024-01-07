@@ -41,6 +41,7 @@ public class Application extends javafx.application.Application {
     static final Font CUSTOM_FONT_CAVEAT = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), 25);
 
     static boolean waitingForUserInput = true;
+    static int currentPlayerIndex = 0;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -549,10 +550,18 @@ public class Application extends javafx.application.Application {
         player1.getImageView().setX(spawn4.getX() - 27);
         player1.getImageView().setY(spawn4.getY() - 27 - 15);
 
-
         player1.playIdle();
         //player1.playWalk();
         //player1.playSlip();
+
+        int[] divaOHaraDie = {1, 1, 6, 6, 6, 7};
+        Player player2 = new Player("Diva O’Hara", divaOHaraDie, Paths.get("images"));
+        player2.setImageView(sprite1);
+        player2.setCurrentField(spawn1);
+        player2.getImageView().setX(spawn1.getX() - 27);
+        player2.getImageView().setY(spawn1.getY() - 27 - 15);
+
+        player2.playIdle();
 
         /* Überlegung Group und Pane als Parent Element für Scene:
         Group setzt kein fixes Layout für Elemente vor, daher kommen da die sich bewegenden Elemente wie Spieler rein
@@ -562,7 +571,7 @@ public class Application extends javafx.application.Application {
         für zusätliche Layout-Elemente wie Spieler- und Würfelanzeige.
          */
 
-        Group group = new Group(player1.getImageView());
+        Group group = new Group(player1.getImageView(), player2.getImageView());
 
         Pane root = new Pane(group);
 
@@ -577,12 +586,7 @@ public class Application extends javafx.application.Application {
         Scene scene = new Scene(root, sceneWidth, sceneHeight); // ich hab die Größe erstmal auf 1422x800 eingestellt da 1920x1080 für meinen Laptop-Bildschirm zu groß war
 
         scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.A) {
-                player1.playIdle();
-            }
-            if (event.getCode() == KeyCode.S) {
-                player1.playSlip();
-            }
+
             if (waitingForUserInput) {
                 if (event.getCode() == KeyCode.UP) {
                     gameBoard.getDiceUI().selectNormalDie();

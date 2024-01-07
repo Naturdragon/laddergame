@@ -9,7 +9,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -49,7 +48,7 @@ public class DiceUI extends AnchorPane {
     private Text specialDie4;
     private Text specialDie5;
 
-    private state uiState;
+    private state uiState; // used to be able to indentify which die to use in playerTurn() method
 
     /*
     Default constructor creates the interface and layouts it
@@ -228,9 +227,10 @@ public class DiceUI extends AnchorPane {
 
     /*
     Animates the DiceUI moving down and back up and updates all the data shown using updateUI()
+    !! THIS METHOD ALSO CHECKS IF THE GAME IS OVER (ALL PLAYERS REACHED THE LAST FIELD) !!
     Returns nothing
      */
-    public void animatePlayerSwitch(Player nextPlayer) {
+    public void switchPlayerTurn(Player nextPlayer, GameBoard gameBoard) {
         TranslateTransition translateDown = new TranslateTransition(Duration.millis(1000), this);
         translateDown.setByY(this.getHeight());
 
@@ -239,6 +239,7 @@ public class DiceUI extends AnchorPane {
 
         translateDown.play();
         translateDown.setOnFinished(event -> {
+
             updateUI(nextPlayer);
             selectNormalDie();
             translateUp.play();
@@ -277,14 +278,14 @@ public class DiceUI extends AnchorPane {
     Returns nothing (the animation is played from within the method)
      */
     public void animateRolledNumber(Player player, int numberRolled) {
-
-        ScaleTransition scale = new ScaleTransition(Duration.millis(200));
+        // first part of the animation is a scaletransition to 3x the original size
+        ScaleTransition scale = new ScaleTransition(Duration.millis(300));
         scale.setToX(3);
         scale.setToY(3);
-
-        FadeTransition fade = new FadeTransition(Duration.millis(400));
+        // second part of the animation is a fadetransition to 0 % opacity
+        FadeTransition fade = new FadeTransition(Duration.millis(500));
         fade.setToValue(0.0);
-
+        // the two transitions are played simultaneously
         ParallelTransition parallel = new ParallelTransition(scale, fade);
 
         if (uiState == state.NormalDieSelected) {
