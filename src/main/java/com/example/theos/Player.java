@@ -13,9 +13,11 @@ public class Player {
     private Dice basicDie;
     private Dice specialDie;
     private Path imagePath;
+    private Path winningImagePath;
     private Field currentField; // Current Field where the player is
     private SpriteAnimation currentAnimation;
     private ImageView imageView; //used to represent the character of the player on screen
+    private int turnCount;
 
     public Player(String characterName, int[] specialDiceArray, Path path) {
         name = characterName;
@@ -25,10 +27,12 @@ public class Player {
 
         iD = nextID;
         nextID++;
+        turnCount = 0;
     }
 
-    public Player(String characterName, int[] specialDiceArray, Path path, Field currentCharacterField) {
+    public Player(String characterName, int[] specialDiceArray, Path path,Path winningImagePath, Field currentCharacterField) {
         this(characterName, specialDiceArray, path);
+        this.winningImagePath = winningImagePath;
         currentField = currentCharacterField;
     }
 
@@ -66,6 +70,22 @@ public class Player {
 
     public void setImageView(ImageView imageView) {
         this.imageView = imageView;
+    }
+
+    public String getWinningImagePath() {
+        return  (winningImagePath != null) ? winningImagePath.toString() : "";
+    }
+
+    public String getImage() {
+        return imagePath.toString();
+    }
+
+    public int getTurnCount() {
+        return turnCount;
+    }
+
+    public void increaseTurns() {
+        turnCount++;
     }
 
     /*

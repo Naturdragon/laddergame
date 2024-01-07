@@ -1,9 +1,14 @@
 package com.example.theos;
 
 import com.example.theos.BordGameGraph.BoardGraph;
+import javafx.animation.PathTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +19,7 @@ public class GameBoard {
     private List<Player> playerList;
     private Background background;
     private DiceUI diceUI;
+    private List<Player> finishedPlayers;
 
     private state gameState = state.PlayersPlaying;
 
@@ -51,7 +57,8 @@ public class GameBoard {
         return playerList;
     }
 
-    public Background getBackground() {
+    public Background getBackground()
+    {
         return background;
     }
 
@@ -98,6 +105,8 @@ public class GameBoard {
         player.setCurrentField(boardGraph.hopCountTraversal(player.getCurrentField(), fieldsToMove));
 
 
+
+
         /*
         Previous Code
 
@@ -134,6 +143,20 @@ public class GameBoard {
         transition.setOnFinished(event -> {
             diceUI.animatePlayerSwitch(player);
             player.playIdle();
+        });*/
+    }
+
+    public boolean addFinishedPlayer(Player player) {
+        Field lastField = boardGraph.hopCountTraversal(player.getCurrentField(), Integer.MAX_VALUE);
+
+        if (lastField != null && lastField.getType() != Field.fieldType.LadderField) {
+            if (boardGraph.hopCountTraversal(player.getCurrentField(), Integer.MAX_VALUE) != null) {
+                // Player has reached or passed the last field
+                finishedPlayers.add(player);
+                return true;
+            }
+        }
+        return false;
         });
 
          */
@@ -144,4 +167,23 @@ public class GameBoard {
         PlayersFinished
     }
 
+    public boolean checkWinningCondition() {
+        boolean allPlayersFinished = true;
+
+        for (Player player : playerList) {
+            Field lastField = boardGraph.hopCountTraversal(player.getCurrentField(), Integer.MAX_VALUE);
+
+            if (lastField != null && lastField.getType() != Field.fieldType.LadderField) {
+                // Check if the player has reached or passed the last field
+                if (boardGraph.hopCountTraversal(player.getCurrentField(), Integer.MAX_VALUE) != null) {
+                    player.increaseTurns(); // Increase turns for players who have reached or passed the last field
+                } else {
+                    allPlayersFinished = false; // At least one player hasn't reached the last field
+                }
+            } else {
+                allPlayersFinished = false; // One of the players is on a ladder, not finished
+            }
+        }
+        return allPlayersFinished;
+    }
 }

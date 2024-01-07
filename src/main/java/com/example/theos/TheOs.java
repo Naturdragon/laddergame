@@ -22,13 +22,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Application extends javafx.application.Application {
+public class TheOs extends javafx.application.Application {
 
     /* scene width and height are used for scene size and field class
        (–> x and y parameters of field constructor are in percent, useful for resizing)
         */
-    static final int sceneWidth = 1422;
-    static final int sceneHeight = 800;
+    static final int SCENE_WIDTH = 1422;
+    static final int SCENE_HEIGHT = 800;
 
     static boolean negativeInputForTesting = false;
 
@@ -37,8 +37,8 @@ public class Application extends javafx.application.Application {
     final static Color MINT_GREEN = Color.rgb(63, 139, 88);
 
     // accessing the custom font fix: https://stackoverflow.com/questions/30245085/javafx-embed-custom-font-not-working
-    static final Font CUSTOM_FONT_VARELA = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), 22);
-    static final Font CUSTOM_FONT_CAVEAT = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), 25);
+    static final Font CUSTOM_FONT_VARELA = Font.loadFont(TheOs.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), 22);
+    static final Font CUSTOM_FONT_CAVEAT = Font.loadFont(TheOs.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), 25);
 
     static boolean waitingForUserInput = true;
     static int currentPlayerIndex = 0;
@@ -550,18 +550,10 @@ public class Application extends javafx.application.Application {
         player1.getImageView().setX(spawn4.getX() - 27);
         player1.getImageView().setY(spawn4.getY() - 27 - 15);
 
+
         player1.playIdle();
         //player1.playWalk();
         //player1.playSlip();
-
-        int[] divaOHaraDie = {1, 1, 6, 6, 6, 7};
-        Player player2 = new Player("Diva O’Hara", divaOHaraDie, Paths.get("images"));
-        player2.setImageView(sprite1);
-        player2.setCurrentField(spawn1);
-        player2.getImageView().setX(spawn1.getX() - 27);
-        player2.getImageView().setY(spawn1.getY() - 27 - 15);
-
-        player2.playIdle();
 
         /* Überlegung Group und Pane als Parent Element für Scene:
         Group setzt kein fixes Layout für Elemente vor, daher kommen da die sich bewegenden Elemente wie Spieler rein
@@ -571,7 +563,7 @@ public class Application extends javafx.application.Application {
         für zusätliche Layout-Elemente wie Spieler- und Würfelanzeige.
          */
 
-        Group group = new Group(player1.getImageView(), player2.getImageView());
+        Group group = new Group(player1.getImageView());
 
         Pane root = new Pane(group);
 
@@ -583,10 +575,16 @@ public class Application extends javafx.application.Application {
 
         root.getChildren().addAll(gameBoard.getDiceUI());
 
-        Scene scene = new Scene(root, sceneWidth, sceneHeight); // ich hab die Größe erstmal auf 1422x800 eingestellt da 1920x1080 für meinen Laptop-Bildschirm zu groß war
+        Scene inGameScene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT); // ich hab die Größe erstmal auf 1422x800 eingestellt da 1920x1080 für meinen Laptop-Bildschirm zu groß war
+        Scene playerSelectScene = PlayerSelectionScreen.createPlayerSelectionScreen();
 
-        scene.setOnKeyPressed(event -> {
-
+        inGameScene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.A) {
+                player1.playIdle();
+            }
+            if (event.getCode() == KeyCode.S) {
+                player1.playSwim();
+            }
             if (waitingForUserInput) {
                 if (event.getCode() == KeyCode.UP) {
                     gameBoard.getDiceUI().selectNormalDie();
@@ -602,8 +600,20 @@ public class Application extends javafx.application.Application {
             }
         });
 
+        inGameScene.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                stage.setScene(playerSelectScene);
+            }
+        });
+
+        playerSelectScene.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                stage.setScene(inGameScene);
+            }
+        });
+
         stage.setTitle("The O’s");
-        stage.setScene(scene);
+        stage.setScene(inGameScene);
         stage.setResizable(false); // daweil mal ohne resizable
         stage.show();
     }
