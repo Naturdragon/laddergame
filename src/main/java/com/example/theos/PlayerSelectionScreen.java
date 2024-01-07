@@ -92,17 +92,17 @@ public class PlayerSelectionScreen extends Application {
         controls.setFill(brown);
 
         Text row1 = new Text("Clicking on a character" + System.lineSeparator() +
-                "adds a player" + System.lineSeparator());
+                "selects the player" + System.lineSeparator());
         row1.setFont(Font.font(VARELA.getFamily(), 28));
         row1.setFill(brown);
 
-        Text row2 = new Text("Clicking on the X" + System.lineSeparator() +
-                "above the character" + System.lineSeparator() +
-                "removes the player" + System.lineSeparator());
+        Text row2 = new Text("Clicking on a character" + System.lineSeparator() +
+                "after selection deselects" + System.lineSeparator() +
+                "the player" + System.lineSeparator());
         row2.setFont(Font.font(VARELA.getFamily(), 28));
         row2.setFill(brown);
 
-        Text row3 = new Text(" Dice" + System.lineSeparator() +
+        Text row3 = new Text("Dice" + System.lineSeparator() +
                 "select");
         row3.setFont(Font.font(VARELA.getFamily(), 30));
         row3.setFill(brown);
@@ -153,23 +153,23 @@ public class PlayerSelectionScreen extends Application {
         leftSide.setAlignment(Pos.CENTER);
         leftSide.setSpacing(100);
 
-        controls.setTranslateX(-31);
-        controls.setTranslateY(250);
+        controls.setTranslateX(-36);
+        controls.setTranslateY(254);
 
-        row1.setTranslateX(-31);
+        row1.setTranslateX(-43);
         row1.setTranslateY(190);
 
-        row2.setTranslateX(-48);
+        row2.setTranslateX(-36);
         row2.setTranslateY(100);
 
-        row3.setTranslateX(66);
-        row3.setTranslateY(30);
+        row3.setTranslateX(60);
+        row3.setTranslateY(3);
 
-        row4.setTranslateX(16);
-        row4.setTranslateY(-50);
+        row4.setTranslateX(-95);
+        row4.setTranslateY(-65);
 
-        row5.setTranslateX(71);
-        row5.setTranslateY(-115);
+        row5.setTranslateX(65);
+        row5.setTranslateY(-118);
 
         row6.setTranslateX(-107);
         row6.setTranslateY(-378);
@@ -187,7 +187,7 @@ public class PlayerSelectionScreen extends Application {
         charactersGrid = new GridPane();
         charactersGrid.setPadding(new Insets(PADDING_VALUE));
         charactersGrid.setHgap(-3);
-        charactersGrid.setVgap(10);
+        charactersGrid.setVgap(-10);
 
         characters = new Character[NUM_COLUMNS * 2];
         players = new Player[NUM_COLUMNS * 2];
