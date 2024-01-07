@@ -91,24 +91,24 @@ public class PlayerSelectionScreen extends Application {
         controls.setFont(Font.font(VARELA.getFamily(), 58));
         controls.setFill(brown);
 
-        Text row1 = new Text("Clicking on a character" + System.lineSeparator() +
-                "selects the player" + System.lineSeparator());
+        Text row1 = new Text("Clicking on a Character" + System.lineSeparator() +
+                "selects the Player" + System.lineSeparator());
         row1.setFont(Font.font(VARELA.getFamily(), 28));
         row1.setFill(brown);
 
-        Text row2 = new Text("Clicking on a character" + System.lineSeparator() +
-                "after selection deselects" + System.lineSeparator() +
-                "the player" + System.lineSeparator());
+        Text row2 = new Text("Clicking on a Character" + System.lineSeparator() +
+                "after Selection deselects" + System.lineSeparator() +
+                "the Player" + System.lineSeparator());
         row2.setFont(Font.font(VARELA.getFamily(), 28));
         row2.setFill(brown);
 
         Text row3 = new Text("Dice" + System.lineSeparator() +
-                "select");
+                "Select");
         row3.setFont(Font.font(VARELA.getFamily(), 30));
         row3.setFill(brown);
 
-        Text row4 = new Text("Player select" + System.lineSeparator() +
-                "Option select");
+        Text row4 = new Text("Player Select" + System.lineSeparator() +
+                "Option Select");
         row4.setFont(Font.font(VARELA.getFamily(), 30));
         row4.setFill(brown);
 
@@ -134,6 +134,8 @@ public class PlayerSelectionScreen extends Application {
                 double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.2, but not below 0.2
                 row6.setOpacity(newOpacity);
                 spaceButton.setOpacity(newOpacity);
+                row6.setTranslateY(-376);
+                spaceButton.setTranslateY(978);
             }
         });
 
@@ -143,6 +145,8 @@ public class PlayerSelectionScreen extends Application {
                 // Reset opacity to normal when the button is released
                 row6.setOpacity(1.0);
                 spaceButton.setOpacity(1.0);
+                row6.setTranslateY(-379);
+                spaceButton.setTranslateY(975);
             }
         });
 
@@ -172,7 +176,7 @@ public class PlayerSelectionScreen extends Application {
         row5.setTranslateY(-118);
 
         row6.setTranslateX(-107);
-        row6.setTranslateY(-378);
+        row6.setTranslateY(-379);
 
         spaceButton.setTranslateX(-107);
         spaceButton.setTranslateY(975);
