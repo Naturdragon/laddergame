@@ -11,19 +11,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class WinningScreen extends Application {
-    private double gameBoardWidth = 1422;
-    private double gameBoardHeight = 800;
-    Color brown = Color.rgb(120,98,68);
+public class WinningScreen {
 
     static final Font VARELA = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), -1);
 
@@ -31,7 +26,7 @@ public class WinningScreen extends Application {
      * primaryStage    The primary stage of the JavaFX application.
      * finishedPlayers List of players who have completed the game.
      */
-    void showWinningScreen(Stage primaryStage, List<Player> finishedPlayers) {
+    public static Scene createWinningScreen(List<Player> finishedPlayers) {
         // Extract the winner
         Player winner = finishedPlayers.get(0);
 
@@ -47,11 +42,11 @@ public class WinningScreen extends Application {
         //Text shown on Screen above the SPACE Button
         Text returnToMenu = new Text("Return to Main Menu");
         returnToMenu.setFont(Font.font(VARELA.getFamily(), 30));
-        returnToMenu.setFill(brown);
+        returnToMenu.setFill(TheOs.BROWN);
 
         Text spaceText = new Text("SPACE");
         spaceText.setFont(Font.font(VARELA.getFamily(), 32));
-        spaceText.setFill(brown);
+        spaceText.setFill(TheOs.BROWN);
 
         ImageView menuButton = new ImageView(new Image("images/option_button_extras/Button_Space_Big.PNG"));
         menuButton.setPreserveRatio(true);
@@ -123,11 +118,11 @@ public class WinningScreen extends Application {
         // Add header
         Text rankingTitle = new Text("RANKING");
         rankingTitle.setFont(Font.font(VARELA.getFamily(), 60)); // Increased font size
-        rankingTitle.setFill(brown);
+        rankingTitle.setFill(TheOs.BROWN);
         leaderboardGrid.add(rankingTitle, 0, 0, 4, 1); // Span 4 columns for the bigger header
         Text turnsTitle = new Text("Turns");
         turnsTitle.setFont(Font.font(VARELA.getFamily(), 30));
-        turnsTitle.setFill(brown);
+        turnsTitle.setFill(TheOs.BROWN);
         leaderboardGrid.add(turnsTitle, 4, 0);
 
         // Add player data to the leaderboard
@@ -138,13 +133,13 @@ public class WinningScreen extends Application {
 
             Text rankingText = new Text(String.valueOf(i + 1)); // Ranking starts from 1
             rankingText.setFont(Font.font(VARELA.getFamily(), 36));
-            rankingText.setFill(brown);
+            rankingText.setFill(TheOs.BROWN);
             Text playerNameText = new Text(players.get(i).getName());
             playerNameText.setFont(Font.font(VARELA.getFamily(), 36));
-            playerNameText.setFill(brown);
+            playerNameText.setFill(TheOs.BROWN);
             Text turnsText = new Text(String.valueOf(players.get(i).getTurnCount()));
             turnsText.setFont(Font.font(VARELA.getFamily(), 36)); // Adjust the font size
-            turnsText.setFill(brown);
+            turnsText.setFill(TheOs.BROWN);
 
             leaderboardGrid.add(rankingText, 0, i + 1);
             leaderboardGrid.add(characterImageView, 1, i + 1);
@@ -169,19 +164,7 @@ public class WinningScreen extends Application {
         mainLayout.setStyle("-fx-background-image: " + backgroundImage + "; " +
                 "-fx-background-size: cover;");
 
-        // Creating the scene and setting it to the stage
-        Scene scene = new Scene(mainLayout, 1422, 800);
-        primaryStage.setTitle("Game Winning Screen");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-
+        // Creating the scene and returning it
+        return new Scene(mainLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
     }
 }

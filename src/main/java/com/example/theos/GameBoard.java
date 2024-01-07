@@ -3,6 +3,8 @@ package com.example.theos;
 import com.example.theos.BordGameGraph.BoardGraph;
 import javafx.animation.PathTransition;
 import javafx.animation.SequentialTransition;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.shape.LineTo;
@@ -21,7 +23,7 @@ public class GameBoard {
     private DiceUI diceUI;
     private List<Player> finishedPlayers;
 
-    private state gameState = state.PlayersPlaying;
+    private boolean allPlayersFinished = false;
 
     public GameBoard() {
 
@@ -32,7 +34,7 @@ public class GameBoard {
         BackgroundImage backgroundImg = new BackgroundImage(
                 new Image("images/gameboard_screen/Game_BG.PNG"),
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-                new BackgroundSize(Application.sceneWidth, Application.sceneHeight, false, false, true, true));
+                new BackgroundSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT, false, false, true, true));
 
         background = new Background(backgroundImg);
 
@@ -53,13 +55,49 @@ public class GameBoard {
         return diceUI;
     }
 
+    public void setPlayerList(List<Player> playerList) {
+        this.playerList = playerList;
+    }
+
     public List<Player> getPlayerList() {
         return playerList;
     }
 
-    public Background getBackground()
-    {
+    public Background getBackground() {
         return background;
+    }
+
+    public boolean isAllPlayersFinished() {
+        return allPlayersFinished;
+    }
+
+    public void setAllPlayersFinished(boolean allPlayersFinished) {
+        this.allPlayersFinished = allPlayersFinished;
+    }
+
+    public List<Player> getFinishedPlayers() {
+        return finishedPlayers;
+    }
+
+    /*
+        Creates the scene/screen view of the gameboard
+        Returns a scene object, which can be used for the stage object in TheOs start() method
+         */
+    public Scene createGameBoardScreen() {
+        Pane root = new Pane();
+
+        root.setBackground(background);
+
+        // Placing the diceUI on the sceen
+        diceUI.setTranslateX(40);
+        diceUI.setTranslateY(800 - 215);
+        root.getChildren().add(diceUI);
+
+        for (Player player : playerList) {
+            root.getChildren().add(player.getImageView());
+        }
+
+        return new Scene(root, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
     }
 
     /*
@@ -103,9 +141,6 @@ public class GameBoard {
         });
 
         player.setCurrentField(boardGraph.hopCountTraversal(player.getCurrentField(), fieldsToMove));
-
-
-
 
         /*
         Previous Code
@@ -157,14 +192,6 @@ public class GameBoard {
             }
         }
         return false;
-        });
-
-         */
-    }
-
-    public enum state {
-        PlayersPlaying,
-        PlayersFinished
     }
 
     public boolean checkWinningCondition() {
