@@ -330,7 +330,7 @@ public class DiceUI extends AnchorPane {
                 return;
             }
 
-            System.out.println(gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1).getName()); // for debugging
+            System.out.println(gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1).getName()); // TODO only for debugging
 
             updateUI(gameBoard.getPlayerList());
             selectNormalDie();

@@ -358,7 +358,7 @@ public class GameBoard {
         Field field206 = new Field(Field.fieldType.NormalField, 49.5, 53.3);
         Field field207 = new Field(Field.fieldType.NormalField, 50.3, 57.5);
         Field field208 = new Field(Field.fieldType.NormalField, 51.8, 60.7);
-        Field field209 = new Field(Field.fieldType.NormalField, 53.8, 62.5);
+        Field field209 = new Field(Field.fieldType.NormalField, 53.8, 62.5); // TODO for the beta test field type was changed to NormalField, later change it back to CrossingField
         Field field210 = new Field(Field.fieldType.LadderField, 55.9, 63.1);
 
         Field field211 = new Field(Field.fieldType.SpecialChargeField, 58.4, 62.2);
