@@ -160,7 +160,7 @@ public class GameBoard {
         Field field146 = new Field(Field.fieldType.NormalField, 38.2, 36.6);
         Field field147 = new Field(Field.fieldType.NormalField, 40.8, 36.9);
         Field field148 = new Field(Field.fieldType.NormalField, 43.6, 36.4);
-        Field field149 = new Field(Field.fieldType.CrossoverField, 45.9, 34.5);
+        Field field149 = new Field(Field.fieldType.NormalField, 45.9, 34.5); // TODO Chanche to Crossing Field
         Field field150 = new Field(Field.fieldType.NormalField, 43.8, 32.7);
 
         Field field151 = new Field(Field.fieldType.NormalField, 42, 30.7);
@@ -504,8 +504,8 @@ public class GameBoard {
         getBoardGraph().addOneDirectionalEdge(field127, field135, 2500, BoardGraph.edgeType.LadderEdge);
         getBoardGraph().addOneDirectionalEdge(field143, field124, 2500, BoardGraph.edgeType.LadderEdge);
         getBoardGraph().addOneDirectionalEdge(field154, field165, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field170, field202, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field171, field203, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdge(field170, field202, 2500, BoardGraph.edgeType.LadderEdge);    // water fall
+        getBoardGraph().addOneDirectionalEdge(field171, field203, 2500, BoardGraph.edgeType.LadderEdge);    // water fall
         getBoardGraph().addOneDirectionalEdge(field177, field182, 2500, BoardGraph.edgeType.LadderEdge);
         getBoardGraph().addOneDirectionalEdge(field184, field174, 2500, BoardGraph.edgeType.LadderEdge);
         getBoardGraph().addOneDirectionalEdge(field194, field322, 2500, BoardGraph.edgeType.LadderEdge);
@@ -535,18 +535,18 @@ public class GameBoard {
         getBoardGraph().addVertex(win5);
         getBoardGraph().addVertex(win6);
 
-        getBoardGraph().addOneDirectionalEdge(field195, win1, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdge(field347, win1, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdge(field195, win2, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdge(field347, win2, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdge(field195, win3, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdge(field347, win3, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdge(field195, win4, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdge(field347, win4, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdge(field195, win5, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdge(field347, win5, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdge(field195, win6, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdge(field347, win6, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field195, win1, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field347, win1, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field195, win2, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field347, win2, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field195, win3, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field347, win3, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field195, win4, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field347, win4, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field195, win5, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field347, win5, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field195, win6, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field347, win6, 500, BoardGraph.edgeType.NormalEdge);
     }
 
     /*
@@ -585,52 +585,15 @@ public class GameBoard {
 
         player.playWalk();
 
-        SequentialTransition sequentialTransition = boardGraph.getAnimationPathFromGraph(player.getCurrentField(), fieldsToMove, animationOffsetX, animationOffsetY, player.getImageView());
+        SequentialTransition sequentialTransition = boardGraph.getAnimationPathFromGraph(player.getCurrentField(), fieldsToMove, animationOffsetX, animationOffsetY, player);
+        sequentialTransition.setNode(player.getImageView());
         sequentialTransition.play();
+        player.setCurrentField(boardGraph.hopCountTraversal(player.getCurrentField(), fieldsToMove));
+
         sequentialTransition.setOnFinished(event -> {
             diceUI.switchPlayerTurn(this);
             player.playIdle();
         });
-
-        player.setCurrentField(boardGraph.hopCountTraversal(player.getCurrentField(), fieldsToMove));
-
-        /*
-        Previous Code
-
-        int animationOffsetX = 0;
-        int animationOffsetY = 15;
-
-        Path standardPath = new Path();
-        standardPath.getElements().add(new MoveTo(player.getCurrentField().getX() - animationOffsetX, player.getCurrentField().getY() - animationOffsetY));
-
-        Path ladderPath = new Path();
-
-        for (int i = 0; i < fieldsToMove; i++) {
-            Field nextField = boardGraph.hopCountTraversal(player.getCurrentField(), 1);
-            standardPath.getElements().add(new LineTo(nextField.getX() - animationOffsetX, nextField.getY() - animationOffsetY));
-
-            player.setCurrentField(nextField);
-        }
-
-
-
-        //if (player.getCurrentField().getType() == Field.fieldType.LadderField) {}
-
-        int duration = 500 * fieldsToMove; // Duration should be stored in the weight of the Edges that are traversed; how can that information be accessed by this method?
-
-
-
-        player.playWalk();
-
-        PathTransition transition = new PathTransition();
-        transition.setDuration(Duration.millis(duration));
-        transition.setPath(standardPath);
-        transition.setNode(player.getImageView());
-        transition.play();
-        transition.setOnFinished(event -> {
-            diceUI.animatePlayerSwitch(player);
-            player.playIdle();
-        });*/
     }
 
     public boolean addFinishedPlayer(Player player) {

@@ -2,6 +2,7 @@ package com.example.theos.BordGameGraph;
 
 import Graph.*;
 import com.example.theos.Field;
+import com.example.theos.Player;
 import javafx.animation.PathTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
@@ -64,6 +65,23 @@ public class BoardGraph {
         backwardGraph.addOneDirectionalEdge(target, source, new Weight(weight, type));
     }
 
+    public <T> void addOneDirectionalEdgeForward(T source, T target)
+    {
+        forwardGraph.addOneDirectionalEdge(source, target);
+        backwardGraph.addOneDirectionalEdge(target, source);
+    }
+
+    public <T> void addOneDirectionalEdgeForward(T source, T target, T weight)
+    {
+        forwardGraph.addOneDirectionalEdge(source, target, weight);
+        backwardGraph.addOneDirectionalEdge(target, source, weight);
+    }
+
+    public <T> void addOneDirectionalEdgeForward(T source, T target, T weight, edgeType type)
+    {
+        forwardGraph.addOneDirectionalEdge(source, target, new Weight(weight, type));
+    }
+
     /*
     Removes a Edge
     The Data from the two Vertexes of which the edge should be deleted
@@ -102,7 +120,8 @@ public class BoardGraph {
                         // TODO: Implementing the Crossing selection
                         System.out.println("Crosing selection is not implemented jet!");
                     } else {
-                        if (vertexData.getType() == Field.fieldType.LadderField) System.out.println("!! This should not Happen !!");
+                        if (vertexData.getType() == Field.fieldType.LadderField)
+                            System.out.println("!! This should not Happen !!");
                         for (var item : forwardGraph.getAdjacenctVertexEdges(vertexData)) {
                             tmpWeigth = (Weight) item.getWeight();
                             if (tmpWeigth.getType() == edgeType.NormalEdge) {
@@ -149,15 +168,14 @@ public class BoardGraph {
         }
     }
 
-    public SequentialTransition getAnimationPathFromGraph(Field root, int hops, int animationOffsetX, int animationOffsetY, ImageView img)
+    public SequentialTransition getAnimationPathFromGraph(Field root, int hops, int animationOffsetX, int animationOffsetY, Player player)
     {
         SequentialTransition seqtrans = new SequentialTransition();
 
         // see below code block
         PathTransition pathTrans = new PathTransition();
-        pathTrans.setPath(new Line(root.getX()-animationOffsetX, root.getY()-animationOffsetY, root.getX()-animationOffsetX, root.getY()-animationOffsetY));
+        pathTrans.setPath(new Line(root.getX() - animationOffsetX, root.getY() - animationOffsetY, root.getX() - animationOffsetX, root.getY() - animationOffsetY));
         pathTrans.setDuration(Duration.ZERO);
-        pathTrans.setNode(img);
         seqtrans.getChildren().add(pathTrans);
         // Adds a basic non Moving Transsition. This allows the returning of the seqtrans at any point after the code block above.
 
@@ -183,11 +201,15 @@ public class BoardGraph {
                     } else {
                         if (vertexData.getType() == Field.fieldType.LadderField)
                             System.out.println("!! This should not Happen !!");
+
+                        // TODO Choose a Normal Field at random if several Normal Fields are connectet to this field
+
+
                         for (var item : forwardGraph.getAdjacenctVertexEdges(vertexData)) {
                             tmpWeigth = (Weight) item.getWeight();
                             if (tmpWeigth.getType() == edgeType.NormalEdge) {
                                 var nextVertexData = (item.getSource() == vertexData) ? (Field) item.getTarget() : (Field) item.getSource();
-                                standartPath.getElements().add(new LineTo(nextVertexData.getX()-animationOffsetX,nextVertexData.getY()-animationOffsetY));
+                                standartPath.getElements().add(new LineTo(nextVertexData.getX() - animationOffsetX, nextVertexData.getY() - animationOffsetY));
                                 standartDurration = standartDurration + (Integer) tmpWeigth.getData();
                                 vertexData = nextVertexData;
                                 break;
@@ -200,38 +222,48 @@ public class BoardGraph {
                             for (var item : forwardGraph.getAdjacenctVertexEdges(vertexData)) {
                                 tmpWeigth = (Weight) item.getWeight();
                                 if (tmpWeigth.getType() == edgeType.LadderEdge) {
+                                    if (vertexData.getId() == 71 || vertexData.getId() == 72)
+                                        player.playFallOpaque(); // Special Fall on the Watter fall
                                     ladderPath.getElements().add(new MoveTo(vertexData.getX() - animationOffsetX, vertexData.getY() - animationOffsetY));
                                     var nextVertexData = (item.getSource() == vertexData) ? (Field) item.getTarget() : (Field) item.getSource();
-                                    ladderPath.getElements().add(new LineTo(nextVertexData.getX()-animationOffsetX,nextVertexData.getY()-animationOffsetY));
+                                    ladderPath.getElements().add(new LineTo(nextVertexData.getX() - animationOffsetX, nextVertexData.getY() - animationOffsetY));
                                     ladderDurration = ladderDurration + (Integer) tmpWeigth.getData();
                                     vertexData = nextVertexData;
                                     break;
                                 }
                             }
                         }
-                        /*
+
+                    }
+                } else {
+                    if (standartPath.getElements().size() > 0) {
+                        PathTransition standartPathTransition = new PathTransition();
+                        standartPathTransition.setPath(standartPath);
+                        standartPathTransition.setDuration(Duration.millis(standartDurration));
+                        seqtrans.getChildren().add(standartPathTransition);
+                    }
+
+                    if (ladderPath.getElements().size() > 0) {
                         PathTransition ladderPathTransition = new PathTransition();
                         ladderPathTransition.setPath(ladderPath);
                         ladderPathTransition.setDuration(Duration.millis(ladderDurration));
-                        ladderPathTransition.setNode(img);
                         seqtrans.getChildren().add(ladderPathTransition);
-                         */
                     }
-                } else {
                     return seqtrans;   // End of Graph
                 }
             }
+
             PathTransition standartPathTransition = new PathTransition();
             standartPathTransition.setPath(standartPath);
             standartPathTransition.setDuration(Duration.millis(standartDurration));
-            standartPathTransition.setNode(img);
             seqtrans.getChildren().add(standartPathTransition);
 
-            PathTransition ladderPathTransition = new PathTransition();
-            ladderPathTransition.setPath(ladderPath);
-            ladderPathTransition.setDuration(Duration.millis(ladderDurration));
-            ladderPathTransition.setNode(img);
-            //seqtrans.getChildren().add(ladderPathTransition);
+            if (ladderPath.getElements().size() > 0) {
+                PathTransition ladderPathTransition = new PathTransition();
+                ladderPathTransition.setPath(ladderPath);
+                ladderPathTransition.setDuration(Duration.millis(ladderDurration));
+                seqtrans.getChildren().add(ladderPathTransition);
+            }
 
             return seqtrans;
         } else {
@@ -245,6 +277,21 @@ public class BoardGraph {
 
                         vertexData = backwardGraph.getAdjacenctVertex(vertexData).get(0);   // One way back
                     }
+
+                    /*
+                    ladderPath.getElements().add(new MoveTo(vertexData.getX() - animationOffsetX, vertexData.getY() - animationOffsetY));
+                    var nextVertexData = (item.getSource() == vertexData) ? (Field) item.getTarget() : (Field) item.getSource();
+                    ladderPath.getElements().add(new LineTo(nextVertexData.getX()-animationOffsetX,nextVertexData.getY()-animationOffsetY));
+                    ladderDurration = ladderDurration + (Integer) tmpWeigth.getData();
+                    vertexData = nextVertexData;
+
+                     */
+
+                    PathTransition standartPathTransition = new PathTransition();
+                    standartPathTransition.setPath(standartPath);
+                    standartPathTransition.setDuration(Duration.millis(standartDurration));
+                    seqtrans.getChildren().add(standartPathTransition);
+
                 } else {
                     return seqtrans;  // End of Graph
                 }
