@@ -351,7 +351,7 @@ public class PlayerSelectionScreen {
         System.out.println();
     }
 
-    public static List<com.example.theos.Player> createPlayerList() {
+    public static List<com.example.theos.Player> createPlayerList() {  // TODO: correct the order of the created list to be in the order the characters where selected
         List<com.example.theos.Player> selectedPlayers = new ArrayList<>();
 
         for (int i = 0; i < players.length; i++) {

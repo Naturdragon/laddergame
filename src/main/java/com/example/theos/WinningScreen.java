@@ -21,7 +21,7 @@ import java.util.List;
 import static com.example.theos.TitleScreen.animateButtons;
 import static javafx.application.Application.launch;
 
-public class WinningScreen extends Application{
+public class WinningScreen {
 
     static final Font VARELA = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), -1);
 
@@ -29,7 +29,7 @@ public class WinningScreen extends Application{
      * primaryStage    The primary stage of the JavaFX application.
      * finishedPlayers List of players who have completed the game.
      */
-    void createWinningScreen(Stage primaryStage, List<Player> finishedPlayers) {
+    public static Scene createWinningScreen(List<Player> finishedPlayers) {
         // Extract the winner
         Player winner = finishedPlayers.get(0);
 
@@ -78,6 +78,8 @@ public class WinningScreen extends Application{
                 // Reset opacity to normal when the button is released
                 spaceText.setOpacity(1.0);
                 menuButton.setOpacity(1.0);
+
+                SceneController.showTitleScreen();
             }
         });
 
@@ -169,19 +171,7 @@ public class WinningScreen extends Application{
         mainLayout.setStyle("-fx-background-image: " + backgroundImage + "; " +
                 "-fx-background-size: cover;");
 
-        // Creating the scene and setting it to the stage
-        Scene scene = new Scene(mainLayout, 1422, 800);
-        primaryStage.setTitle("Game Winning Screen");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-
+        // Creating the scene and returning it to be set for the stage
+        return new Scene(mainLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
     }
 }

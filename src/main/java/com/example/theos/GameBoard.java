@@ -1,16 +1,10 @@
 package com.example.theos;
 
 import com.example.theos.BordGameGraph.BoardGraph;
-import javafx.animation.PathTransition;
 import javafx.animation.SequentialTransition;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +17,9 @@ public class GameBoard {
     private DiceUI diceUI;
     private List<Player> finishedPlayers;
 
-    private boolean allPlayersFinished = false;
+    private List<Field> winningFields;
+
+    private boolean gameDone = false;
 
     public GameBoard() {
 
@@ -39,6 +35,10 @@ public class GameBoard {
         background = new Background(backgroundImg);
 
         diceUI = new DiceUI();
+
+        winningFields = new ArrayList<>();
+
+        finishedPlayers = new ArrayList<>();
     }
 
     public GameBoard(BoardGraph boardGraph, List<Player> playerList, Background background) {
@@ -67,16 +67,20 @@ public class GameBoard {
         return background;
     }
 
-    public boolean isAllPlayersFinished() {
-        return allPlayersFinished;
+    public boolean isGameDone() {
+        return gameDone;
     }
 
-    public void setAllPlayersFinished(boolean allPlayersFinished) {
-        this.allPlayersFinished = allPlayersFinished;
+    public void setGameDone(boolean gameDone) {
+        this.gameDone = gameDone;
     }
 
     public List<Player> getFinishedPlayers() {
         return finishedPlayers;
+    }
+
+    public List<Field> getWinningFields() {
+        return winningFields;
     }
 
     /*
@@ -94,6 +98,7 @@ public class GameBoard {
         diceUI.setTranslateY(800 - 215);
         root.getChildren().add(diceUI);
 
+        // the ImageViews of all players in playerList are placed on screen at the coordinates of their spawnfield
         for (Player player : playerList) {
             root.getChildren().add(player.getImageView());
             player.getImageView().setX(player.getCurrentField().getX() - 27);
@@ -105,7 +110,7 @@ public class GameBoard {
     }
 
     public void fillGraphData() {
-        List<Field> fieldList = new ArrayList<>();
+        List<Field> fieldListUpperPath = new ArrayList<>();
 
         // Fields on main path
         Field field101 = new Field(Field.fieldType.NormalField, 17.3, 50.1);
@@ -213,112 +218,114 @@ public class GameBoard {
         Field field194 = new Field(Field.fieldType.LadderField, 79.5, 44.7);
         Field field195 = new Field(Field.fieldType.NormalField, 81.1, 42.3);
 
-        fieldList.add(field101);
-        fieldList.add(field102);
-        fieldList.add(field103);
-        fieldList.add(field104);
-        fieldList.add(field105);
-        fieldList.add(field106);
-        fieldList.add(field107);
-        fieldList.add(field108);
-        fieldList.add(field109);
-        fieldList.add(field110);
+        fieldListUpperPath.add(field101);
+        fieldListUpperPath.add(field102);
+        fieldListUpperPath.add(field103);
+        fieldListUpperPath.add(field104);
+        fieldListUpperPath.add(field105);
+        fieldListUpperPath.add(field106);
+        fieldListUpperPath.add(field107);
+        fieldListUpperPath.add(field108);
+        fieldListUpperPath.add(field109);
+        fieldListUpperPath.add(field110);
 
-        fieldList.add(field111);
-        fieldList.add(field112);
-        fieldList.add(field113);
-        fieldList.add(field114);
-        fieldList.add(field115);
-        fieldList.add(field116);
-        fieldList.add(field117);
-        fieldList.add(field118);
-        fieldList.add(field119);
-        fieldList.add(field120);
+        fieldListUpperPath.add(field111);
+        fieldListUpperPath.add(field112);
+        fieldListUpperPath.add(field113);
+        fieldListUpperPath.add(field114);
+        fieldListUpperPath.add(field115);
+        fieldListUpperPath.add(field116);
+        fieldListUpperPath.add(field117);
+        fieldListUpperPath.add(field118);
+        fieldListUpperPath.add(field119);
+        fieldListUpperPath.add(field120);
 
-        fieldList.add(field121);
-        fieldList.add(field122);
-        fieldList.add(field123);
-        fieldList.add(field124);
-        fieldList.add(field125);
-        fieldList.add(field126);
-        fieldList.add(field127);
-        fieldList.add(field128);
-        fieldList.add(field129);
-        fieldList.add(field130);
+        fieldListUpperPath.add(field121);
+        fieldListUpperPath.add(field122);
+        fieldListUpperPath.add(field123);
+        fieldListUpperPath.add(field124);
+        fieldListUpperPath.add(field125);
+        fieldListUpperPath.add(field126);
+        fieldListUpperPath.add(field127);
+        fieldListUpperPath.add(field128);
+        fieldListUpperPath.add(field129);
+        fieldListUpperPath.add(field130);
 
-        fieldList.add(field131);
-        fieldList.add(field132);
-        fieldList.add(field133);
-        fieldList.add(field134);
-        fieldList.add(field135);
-        fieldList.add(field136);
-        fieldList.add(field137);
-        fieldList.add(field138);
-        fieldList.add(field139);
-        fieldList.add(field140);
+        fieldListUpperPath.add(field131);
+        fieldListUpperPath.add(field132);
+        fieldListUpperPath.add(field133);
+        fieldListUpperPath.add(field134);
+        fieldListUpperPath.add(field135);
+        fieldListUpperPath.add(field136);
+        fieldListUpperPath.add(field137);
+        fieldListUpperPath.add(field138);
+        fieldListUpperPath.add(field139);
+        fieldListUpperPath.add(field140);
 
-        fieldList.add(field141);
-        fieldList.add(field142);
-        fieldList.add(field143);
-        fieldList.add(field144);
-        fieldList.add(field145);
-        fieldList.add(field146);
-        fieldList.add(field147);
-        fieldList.add(field148);
-        fieldList.add(field149);
-        fieldList.add(field150);
+        fieldListUpperPath.add(field141);
+        fieldListUpperPath.add(field142);
+        fieldListUpperPath.add(field143);
+        fieldListUpperPath.add(field144);
+        fieldListUpperPath.add(field145);
+        fieldListUpperPath.add(field146);
+        fieldListUpperPath.add(field147);
+        fieldListUpperPath.add(field148);
+        fieldListUpperPath.add(field149);
+        fieldListUpperPath.add(field150);
 
-        fieldList.add(field151);
-        fieldList.add(field152);
-        fieldList.add(field153);
-        fieldList.add(field154);
-        fieldList.add(field155);
-        fieldList.add(field156);
-        fieldList.add(field157);
-        fieldList.add(field158);
-        fieldList.add(field159);
-        fieldList.add(field160);
+        fieldListUpperPath.add(field151);
+        fieldListUpperPath.add(field152);
+        fieldListUpperPath.add(field153);
+        fieldListUpperPath.add(field154);
+        fieldListUpperPath.add(field155);
+        fieldListUpperPath.add(field156);
+        fieldListUpperPath.add(field157);
+        fieldListUpperPath.add(field158);
+        fieldListUpperPath.add(field159);
+        fieldListUpperPath.add(field160);
 
-        fieldList.add(field161);
-        fieldList.add(field162);
-        fieldList.add(field163);
-        fieldList.add(field164);
-        fieldList.add(field165);
-        fieldList.add(field166);
-        fieldList.add(field167);
-        fieldList.add(field168);
-        fieldList.add(field169);
-        fieldList.add(field170);
+        fieldListUpperPath.add(field161);
+        fieldListUpperPath.add(field162);
+        fieldListUpperPath.add(field163);
+        fieldListUpperPath.add(field164);
+        fieldListUpperPath.add(field165);
+        fieldListUpperPath.add(field166);
+        fieldListUpperPath.add(field167);
+        fieldListUpperPath.add(field168);
+        fieldListUpperPath.add(field169);
+        fieldListUpperPath.add(field170);
 
-        fieldList.add(field171);
-        fieldList.add(field172);
-        fieldList.add(field173);
-        fieldList.add(field174);
-        fieldList.add(field175);
-        fieldList.add(field176);
-        fieldList.add(field177);
-        fieldList.add(field178);
-        fieldList.add(field179);
-        fieldList.add(field180);
+        fieldListUpperPath.add(field171);
+        fieldListUpperPath.add(field172);
+        fieldListUpperPath.add(field173);
+        fieldListUpperPath.add(field174);
+        fieldListUpperPath.add(field175);
+        fieldListUpperPath.add(field176);
+        fieldListUpperPath.add(field177);
+        fieldListUpperPath.add(field178);
+        fieldListUpperPath.add(field179);
+        fieldListUpperPath.add(field180);
 
-        fieldList.add(field181);
-        fieldList.add(field182);
-        fieldList.add(field183);
-        fieldList.add(field184);
-        fieldList.add(field185);
-        fieldList.add(field186);
-        fieldList.add(field187);
-        fieldList.add(field188);
-        fieldList.add(field189);
-        fieldList.add(field190);
+        fieldListUpperPath.add(field181);
+        fieldListUpperPath.add(field182);
+        fieldListUpperPath.add(field183);
+        fieldListUpperPath.add(field184);
+        fieldListUpperPath.add(field185);
+        fieldListUpperPath.add(field186);
+        fieldListUpperPath.add(field187);
+        fieldListUpperPath.add(field188);
+        fieldListUpperPath.add(field189);
+        fieldListUpperPath.add(field190);
 
-        fieldList.add(field191);
-        fieldList.add(field192);
-        fieldList.add(field193);
-        fieldList.add(field194);
-        fieldList.add(field195);
+        fieldListUpperPath.add(field191);
+        fieldListUpperPath.add(field192);
+        fieldListUpperPath.add(field193);
+        fieldListUpperPath.add(field194);
+        fieldListUpperPath.add(field195);
 
         // Fields on shortest path
+        List<Field> fieldListMiddlePath = new ArrayList<>();
+
         Field field201 = new Field(Field.fieldType.NormalField, 48.2, 37.2);
         Field field202 = new Field(Field.fieldType.NormalField, 50.7, 39.6);
         Field field203 = new Field(Field.fieldType.NormalField, 53, 42);
@@ -344,32 +351,34 @@ public class GameBoard {
         Field field221 = new Field(Field.fieldType.NormalField, 60.2, 35.1);
         Field field222 = new Field(Field.fieldType.NormalField, 62.2, 37.1);
 
-        fieldList.add(field201);
-        fieldList.add(field202);
-        fieldList.add(field203);
-        fieldList.add(field204);
-        fieldList.add(field205);
-        fieldList.add(field206);
-        fieldList.add(field207);
-        fieldList.add(field208);
-        fieldList.add(field209);
-        fieldList.add(field210);
+        fieldListMiddlePath.add(field201);
+        fieldListMiddlePath.add(field202);
+        fieldListMiddlePath.add(field203);
+        fieldListMiddlePath.add(field204);
+        fieldListMiddlePath.add(field205);
+        fieldListMiddlePath.add(field206);
+        fieldListMiddlePath.add(field207);
+        fieldListMiddlePath.add(field208);
+        fieldListMiddlePath.add(field209);
+        fieldListMiddlePath.add(field210);
 
-        fieldList.add(field211);
-        fieldList.add(field212);
-        fieldList.add(field213);
-        fieldList.add(field214);
-        fieldList.add(field215);
-        fieldList.add(field216);
-        fieldList.add(field217);
-        fieldList.add(field218);
-        fieldList.add(field219);
-        fieldList.add(field220);
+        fieldListMiddlePath.add(field211);
+        fieldListMiddlePath.add(field212);
+        fieldListMiddlePath.add(field213);
+        fieldListMiddlePath.add(field214);
+        fieldListMiddlePath.add(field215);
+        fieldListMiddlePath.add(field216);
+        fieldListMiddlePath.add(field217);
+        fieldListMiddlePath.add(field218);
+        fieldListMiddlePath.add(field219);
+        fieldListMiddlePath.add(field220);
 
-        fieldList.add(field221);
-        fieldList.add(field222);
+        fieldListMiddlePath.add(field221);
+        fieldListMiddlePath.add(field222);
 
         // Fields on longest path
+        List<Field> fieldListLowerPath = new ArrayList<>();
+
         Field field301 = new Field(Field.fieldType.NormalField, 52.5, 67.1);
         Field field302 = new Field(Field.fieldType.NormalField, 51.1, 71.7);
         Field field303 = new Field(Field.fieldType.NormalField, 50.3, 76.3);
@@ -422,57 +431,57 @@ public class GameBoard {
         Field field346 = new Field(Field.fieldType.LadderField, 82, 53.2);
         Field field347 = new Field(Field.fieldType.NormalField, 82.7, 49.7);
 
-        fieldList.add(field301);
-        fieldList.add(field302);
-        fieldList.add(field303);
-        fieldList.add(field304);
-        fieldList.add(field305);
-        fieldList.add(field306);
-        fieldList.add(field307);
-        fieldList.add(field308);
-        fieldList.add(field309);
-        fieldList.add(field310);
+        fieldListLowerPath.add(field301);
+        fieldListLowerPath.add(field302);
+        fieldListLowerPath.add(field303);
+        fieldListLowerPath.add(field304);
+        fieldListLowerPath.add(field305);
+        fieldListLowerPath.add(field306);
+        fieldListLowerPath.add(field307);
+        fieldListLowerPath.add(field308);
+        fieldListLowerPath.add(field309);
+        fieldListLowerPath.add(field310);
 
-        fieldList.add(field311);
-        fieldList.add(field312);
-        fieldList.add(field313);
-        fieldList.add(field314);
-        fieldList.add(field315);
-        fieldList.add(field316);
-        fieldList.add(field317);
-        fieldList.add(field318);
-        fieldList.add(field319);
-        fieldList.add(field320);
+        fieldListLowerPath.add(field311);
+        fieldListLowerPath.add(field312);
+        fieldListLowerPath.add(field313);
+        fieldListLowerPath.add(field314);
+        fieldListLowerPath.add(field315);
+        fieldListLowerPath.add(field316);
+        fieldListLowerPath.add(field317);
+        fieldListLowerPath.add(field318);
+        fieldListLowerPath.add(field319);
+        fieldListLowerPath.add(field320);
 
-        fieldList.add(field321);
-        fieldList.add(field322);
-        fieldList.add(field323);
-        fieldList.add(field324);
-        fieldList.add(field325);
-        fieldList.add(field326);
-        fieldList.add(field327);
-        fieldList.add(field328);
-        fieldList.add(field329);
-        fieldList.add(field330);
+        fieldListLowerPath.add(field321);
+        fieldListLowerPath.add(field322);
+        fieldListLowerPath.add(field323);
+        fieldListLowerPath.add(field324);
+        fieldListLowerPath.add(field325);
+        fieldListLowerPath.add(field326);
+        fieldListLowerPath.add(field327);
+        fieldListLowerPath.add(field328);
+        fieldListLowerPath.add(field329);
+        fieldListLowerPath.add(field330);
 
-        fieldList.add(field331);
-        fieldList.add(field332);
-        fieldList.add(field333);
-        fieldList.add(field334);
-        fieldList.add(field335);
-        fieldList.add(field336);
-        fieldList.add(field337);
-        fieldList.add(field338);
-        fieldList.add(field339);
-        fieldList.add(field340);
+        fieldListLowerPath.add(field331);
+        fieldListLowerPath.add(field332);
+        fieldListLowerPath.add(field333);
+        fieldListLowerPath.add(field334);
+        fieldListLowerPath.add(field335);
+        fieldListLowerPath.add(field336);
+        fieldListLowerPath.add(field337);
+        fieldListLowerPath.add(field338);
+        fieldListLowerPath.add(field339);
+        fieldListLowerPath.add(field340);
 
-        fieldList.add(field341);
-        fieldList.add(field342);
-        fieldList.add(field343);
-        fieldList.add(field344);
-        fieldList.add(field345);
-        fieldList.add(field346);
-        fieldList.add(field347);
+        fieldListLowerPath.add(field341);
+        fieldListLowerPath.add(field342);
+        fieldListLowerPath.add(field343);
+        fieldListLowerPath.add(field344);
+        fieldListLowerPath.add(field345);
+        fieldListLowerPath.add(field346);
+        fieldListLowerPath.add(field347);
 
         // Fields for winning area
         Field win1 = new Field(Field.fieldType.NormalField, 82.4, 29.1);
@@ -482,16 +491,39 @@ public class GameBoard {
         Field win5 = new Field(Field.fieldType.NormalField, 88.4, 26.5);
         Field win6 = new Field(Field.fieldType.NormalField, 88.9, 31.1);
 
-        for (int i = 0; i < fieldList.size(); i++) {
-            getBoardGraph().addVertex(fieldList.get(i));
+        // TODO: add all winning fields to this list
+        winningFields.add(win1);
+
+        for (int i = 0; i < fieldListUpperPath.size(); i++) {
+            getBoardGraph().addVertex(fieldListUpperPath.get(i));
         }
 
-        for (int i = 0; i < fieldList.size() - 1; i++) {
-            getBoardGraph().addOneDirectionalEdge(fieldList.get(i), fieldList.get(i + 1), 500, BoardGraph.edgeType.NormalEdge);
+        for (int i = 0; i < fieldListUpperPath.size() - 1; i++) {
+            getBoardGraph().addOneDirectionalEdge(fieldListUpperPath.get(i), fieldListUpperPath.get(i + 1), 500, BoardGraph.edgeType.NormalEdge);
         }
+
+        for (int i = 0; i < fieldListMiddlePath.size(); i++) {
+            getBoardGraph().addVertex(fieldListMiddlePath.get(i));
+        }
+
+        for (int i = 0; i < fieldListMiddlePath.size() - 1; i++) {
+            getBoardGraph().addOneDirectionalEdge(fieldListMiddlePath.get(i), fieldListMiddlePath.get(i + 1), 500, BoardGraph.edgeType.NormalEdge);
+        }
+
+        for (int i = 0; i < fieldListLowerPath.size(); i++) {
+            getBoardGraph().addVertex(fieldListLowerPath.get(i));
+        }
+
+        for (int i = 0; i < fieldListLowerPath.size() - 1; i++) {
+            getBoardGraph().addOneDirectionalEdge(fieldListLowerPath.get(i), fieldListLowerPath.get(i + 1), 500, BoardGraph.edgeType.NormalEdge);
+        }
+
+        // Add edges between three main paths
+        boardGraph.addOneDirectionalEdge(field149, field201, 500, BoardGraph.edgeType.NormalEdge);
+        boardGraph.addOneDirectionalEdge(field209, field301, 500, BoardGraph.edgeType.NormalEdge);
+        boardGraph.addOneDirectionalEdge(field222, field187, 500, BoardGraph.edgeType.NormalEdge);
 
         // Add normal edges from spawn area to first field
-
         for (Player player : playerList) {
             boardGraph.addVertex(player.getCurrentField());
             boardGraph.addOneDirectionalEdge(player.getCurrentField(), field101, 500, BoardGraph.edgeType.NormalEdge);
@@ -529,6 +561,10 @@ public class GameBoard {
 
         // Add normal edges from last fields to winning area
         getBoardGraph().addVertex(win1);
+
+        getBoardGraph().addOneDirectionalEdge(field195, win1, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdge(field347, win1, 500, BoardGraph.edgeType.NormalEdge);
+
         getBoardGraph().addVertex(win2);
         getBoardGraph().addVertex(win3);
         getBoardGraph().addVertex(win4);
@@ -591,6 +627,7 @@ public class GameBoard {
         player.setCurrentField(boardGraph.hopCountTraversal(player.getCurrentField(), fieldsToMove));
 
         sequentialTransition.setOnFinished(event -> {
+            player.increaseTurns();
             diceUI.switchPlayerTurn(this);
             player.playIdle();
         });

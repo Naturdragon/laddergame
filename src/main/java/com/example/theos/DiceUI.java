@@ -212,12 +212,12 @@ public class DiceUI extends AnchorPane {
                 specialDie4.setFill(TheOs.DIVA_PINK);
                 specialDie5.setFill(TheOs.DIVA_PINK);
 
-                HBox.setMargin(specialDie0, new Insets(0,0,0,-3.5));
-                HBox.setMargin(specialDie1, new Insets(0,0,0,-9));
-                HBox.setMargin(specialDie2, new Insets(0,0,0,-4));
-                HBox.setMargin(specialDie3, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie4, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie5, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie0, new Insets(0, 0, 0, -3.5));
+                HBox.setMargin(specialDie1, new Insets(0, 0, 0, -9));
+                HBox.setMargin(specialDie2, new Insets(0, 0, 0, -4));
+                HBox.setMargin(specialDie3, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie4, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie5, new Insets(0, 0, 0, 0));
             }
             case "Y'Olanda" -> {
                 specialDieBG.setImage(new Image("images/gameboard_screen/Game_Die_2.PNG"));
@@ -228,12 +228,12 @@ public class DiceUI extends AnchorPane {
                 specialDie4.setFill(TheOs.OLANDA_RED);
                 specialDie5.setFill(TheOs.OLANDA_RED);
 
-                HBox.setMargin(specialDie0, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie1, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie2, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie3, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie4, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie5, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie0, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie1, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie2, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie3, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie4, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie5, new Insets(0, 0, 0, 0));
             }
             case "Kidd'O" -> {
                 specialDieBG.setImage(new Image("images/gameboard_screen/Game_Die_3.PNG"));
@@ -244,12 +244,12 @@ public class DiceUI extends AnchorPane {
                 specialDie4.setFill(TheOs.KIDD_YELLOW);
                 specialDie5.setFill(TheOs.KIDD_YELLOW);
 
-                HBox.setMargin(specialDie0, new Insets(0,0,0,-3.5));
-                HBox.setMargin(specialDie1, new Insets(0,0,0,-9));
-                HBox.setMargin(specialDie2, new Insets(0,0,0,-5));
-                HBox.setMargin(specialDie3, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie4, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie5, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie0, new Insets(0, 0, 0, -3.5));
+                HBox.setMargin(specialDie1, new Insets(0, 0, 0, -9));
+                HBox.setMargin(specialDie2, new Insets(0, 0, 0, -5));
+                HBox.setMargin(specialDie3, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie4, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie5, new Insets(0, 0, 0, 0));
             }
             case "Mint'O Lint" -> {
                 specialDieBG.setImage(new Image("images/gameboard_screen/Game_Die_4.PNG"));
@@ -260,12 +260,12 @@ public class DiceUI extends AnchorPane {
                 specialDie4.setFill(TheOs.MINT_GREEN);
                 specialDie5.setFill(TheOs.MINT_GREEN);
 
-                HBox.setMargin(specialDie0, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie1, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie2, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie3, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie4, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie5, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie0, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie1, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie2, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie3, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie4, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie5, new Insets(0, 0, 0, 0));
             }
             case "Brooke O'Let" -> {
                 specialDieBG.setImage(new Image("images/gameboard_screen/Game_Die_5.PNG"));
@@ -276,12 +276,12 @@ public class DiceUI extends AnchorPane {
                 specialDie4.setFill(TheOs.BROOKE_BLUE);
                 specialDie5.setFill(TheOs.BROOKE_BLUE);
 
-                HBox.setMargin(specialDie0, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie1, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie2, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie3, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie4, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie5, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie0, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie1, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie2, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie3, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie4, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie5, new Insets(0, 0, 0, 0));
             }
             case "O'Fitz" -> {
                 specialDieBG.setImage(new Image("images/gameboard_screen/Game_Die_6.PNG"));
@@ -292,12 +292,12 @@ public class DiceUI extends AnchorPane {
                 specialDie4.setFill(TheOs.FITZ_PURPLE);
                 specialDie5.setFill(TheOs.FITZ_PURPLE);
 
-                HBox.setMargin(specialDie0, new Insets(0,0,0,-4));
-                HBox.setMargin(specialDie1, new Insets(0,0,0,-5));
-                HBox.setMargin(specialDie2, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie3, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie4, new Insets(0,0,0,0));
-                HBox.setMargin(specialDie5, new Insets(0,0,0,0));
+                HBox.setMargin(specialDie0, new Insets(0, 0, 0, -4));
+                HBox.setMargin(specialDie1, new Insets(0, 0, 0, -5));
+                HBox.setMargin(specialDie2, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie3, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie4, new Insets(0, 0, 0, 0));
+                HBox.setMargin(specialDie5, new Insets(0, 0, 0, 0));
             }
             default -> System.out.println("Character not found"); // only the names in the above ifs should be possible
         }
@@ -317,6 +317,21 @@ public class DiceUI extends AnchorPane {
 
         translateDown.play();
         translateDown.setOnFinished(event -> {
+
+            // check if the current player reached the final field
+            if (gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1).getCurrentField() == gameBoard.getWinningFields().get(0)) {
+                gameBoard.addFinishedPlayer(gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1));
+                gameBoard.getPlayerList().remove(gameBoard.getPlayerList().size() - 1);
+            }
+
+            // if gameboards playerList is empty then all players are finished => winning screen is started
+            if (gameBoard.getPlayerList().isEmpty()) {
+                SceneController.showWinningScreen(gameBoard.getFinishedPlayers());
+                return;
+            }
+
+            System.out.println(gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1).getName()); // for debugging
+
             updateUI(gameBoard.getPlayerList());
             selectNormalDie();
             translateUp.play();
