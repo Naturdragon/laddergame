@@ -35,7 +35,7 @@ public class PlayerSelectionScreen {
     private static final double DESELECT_BUTTON_OFFSET_X = 50; // Adjust this value
     private static final double DESELECT_BUTTON_OFFSET_Y = 50;  // Adjust this value
 
-    static private String[] selectedCharacters;
+    static private String[] selectedCharacters; // this doesnt really serve any purpose in the current state of the code
     private static GridPane charactersGrid;
     static private BooleanProperty[] playerSelectedProperties;
     private static Character[] characters;
@@ -126,7 +126,8 @@ public class PlayerSelectionScreen {
                 row6.setTranslateY(-379);
                 spaceButton.setTranslateY(975);
 
-                SceneController.showGameBoardSceen(PlayerSelectionScreen.createPlayerList());
+                // The scene is switched to the GameBoard with the current list of selected characters if at least 2 characters are selected
+                if (allowPlayability()) SceneController.showGameBoardSceen(PlayerSelectionScreen.createPlayerList());
             }
         });
 
@@ -335,8 +336,8 @@ public class PlayerSelectionScreen {
 
     private static int countSelectedPlayers() {
         int count = 0;
-        for (String character : selectedCharacters) {
-            if (character != null) {
+        for (Player player : players) {
+            if (player.getPlayerNumber() > 0) {
                 count++;
             }
         }
