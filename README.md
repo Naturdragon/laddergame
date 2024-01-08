@@ -5,6 +5,8 @@ Rolling the dice -- both normal and special -- to the finish line is the name of
 Once all players reach the end, a ranking based on their turns will be displayed, with the winning O taking charge of the cereal bowl *(Winning Screen)*.
 
 For the **Beta Version**, all screens have been connected.
+> To start the game, you must run TheOs.java!
+
 To get from the **Title Screen** to the Player Selection Screen, you must press the SPACE bar.
 To get from the **Player Selection Screen** to the Game Board Screen, you must select at least 2 players to be able to press the SPACE bar.
 To get from the **Game Board Screen** to the Winning Screen, you have to finish all turns until all players reach the finish line.
