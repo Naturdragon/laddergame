@@ -36,7 +36,7 @@ public class OptionButtons {
         return closeButtonBox;
     }
 
-    public static HBox createReturnToMainMenuButton(Stage stage, Scene TitleScreen) {
+    public static HBox createReturnToMainMenuButton() {
         ImageView returnImage = new ImageView(new Image("images/option_button_extras/Button_Main.PNG"));
         returnImage.setFitWidth(50);
         returnImage.setFitHeight(50);
@@ -46,8 +46,8 @@ public class OptionButtons {
         hitbox.setFill(Color.TRANSPARENT);
 
         // Set action on click for both the image and the hitbox
-        returnImage.setOnMouseClicked(event -> stage.setScene(TitleScreen));
-        hitbox.setOnMouseClicked(event -> stage.setScene(TitleScreen));
+        returnImage.setOnMouseClicked(event -> SceneController.showTitleScreen());
+        hitbox.setOnMouseClicked(event -> SceneController.showTitleScreen());
 
         // Use a StackPane to overlay the image and hitbox
         StackPane returnButtonPane = new StackPane(returnImage, hitbox);

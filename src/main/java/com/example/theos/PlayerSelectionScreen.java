@@ -48,7 +48,7 @@ public class PlayerSelectionScreen {
     static final Font VARELA = Font.loadFont(PlayerSelectionScreen.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), -1);
 
 
-    public static Scene createPlayerSelectionScreen(Stage primaryStage) {
+    public static Scene createPlayerSelectionScreen() {
         VBox instructionsBox = createInstructionsBox();
         charactersGrid = createCharactersGrid();
 
@@ -62,7 +62,7 @@ public class PlayerSelectionScreen {
 
         // Create close and return-to-main-menu buttons
         HBox closeButton = OptionButtons.createCloseAppButton();
-        HBox mainMenuButton = OptionButtons.createReturnToMainMenuButton(primaryStage, mainLayout.getScene());
+        HBox mainMenuButton = OptionButtons.createReturnToMainMenuButton();
         closeButton.setTranslateX(-386);
         closeButton.setTranslateY(-331);
         mainMenuButton.setTranslateX(-329);
