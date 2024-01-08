@@ -49,6 +49,8 @@ public class PlayerSelectionScreen {
 
 
     public static Scene createPlayerSelectionScreen() {
+        playerCounter = 1;
+
         VBox instructionsBox = createInstructionsBox();
         charactersGrid = createCharactersGrid();
 
