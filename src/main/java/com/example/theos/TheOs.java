@@ -2,7 +2,6 @@ package com.example.theos;
 
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import java.io.IOException;
 
 public class TheOs extends javafx.application.Application {
 
@@ -20,12 +19,10 @@ public class TheOs extends javafx.application.Application {
     static final Color MINT_GREEN = Color.rgb(63, 139, 88);
     static final Color BROOKE_BLUE = Color.rgb(106, 162, 194);
     static final Color FITZ_PURPLE = Color.rgb(58, 75, 156);
-
-    static boolean negativeInputForTesting = false;
     static boolean waitingForUserInput = true;
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage){
         SceneController.stage = stage;
         stage.setTitle("The O’s");
         stage.setResizable(false); // daweil mal ohne resizable
