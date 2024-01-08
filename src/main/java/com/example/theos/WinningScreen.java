@@ -115,7 +115,7 @@ public class WinningScreen {
 
         //Adjust the position of the SPACE Text
         spaceText.setTranslateX(117);
-        spaceText.setTranslateY(-133);
+        spaceText.setTranslateY(-135);
 
         //Adjust the position of the Button IMAGE
         menuButton.setTranslateX(120);
