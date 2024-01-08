@@ -39,8 +39,7 @@ public class TitleScreen {
         // Create the return to main menu button using the main menu scene
         HBox closeAppButton = OptionButtons.createCloseAppButton();
         closeAppButton.setTranslateX(-840);
-        closeAppButton.setTranslateY(-357);
-
+        closeAppButton.setTranslateY(-356);
 
         // Add the button to the main layout
         mainLayout.getChildren().add(closeAppButton);

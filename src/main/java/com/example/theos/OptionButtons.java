@@ -21,10 +21,6 @@ public class OptionButtons {
         Rectangle hitbox = new Rectangle(50, 50);
         hitbox.setFill(Color.TRANSPARENT);
 
-        // Set action on click for both the image and the hitbox
-        closeImage.setOnMouseClicked(event -> Platform.exit());
-        hitbox.setOnMouseClicked(event -> Platform.exit());
-
         // Use a StackPane to overlay the image and hitbox
         StackPane closeButtonPane = new StackPane(closeImage, hitbox);
 
@@ -32,6 +28,21 @@ public class OptionButtons {
         closeButtonBox.getStyleClass().add("app-button");
         closeButtonBox.setOnMouseEntered(event -> closeButtonBox.getStyleClass().add("hovered"));
         closeButtonBox.setOnMouseExited(event -> closeButtonBox.getStyleClass().remove("hovered"));
+
+        // Set action on mouse press for both the image and the hitbox
+        closeButtonBox.setOnMousePressed(event -> {
+            // Opacity and translation effect on press
+            double currentOpacity = closeButtonPane.getOpacity();
+            double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.5, but not below 0.5
+            closeButtonPane.setOpacity(newOpacity);
+            closeButtonPane.setTranslateY(newOpacity > 0.5 ? closeButtonPane.getTranslateY() - 5 : closeButtonPane.getTranslateY() + 5);
+        });
+
+        // Set action on mouse release for both the image and the hitbox
+        closeButtonBox.setOnMouseReleased(event -> {
+            // Perform exit action
+            Platform.exit();
+        });
 
         return closeButtonBox;
     }
@@ -46,8 +57,8 @@ public class OptionButtons {
         hitbox.setFill(Color.TRANSPARENT);
 
         // Set action on click for both the image and the hitbox
-        returnImage.setOnMouseClicked(event -> SceneController.showTitleScreen());
-        hitbox.setOnMouseClicked(event -> SceneController.showTitleScreen());
+        returnImage.setOnMouseReleased(event -> SceneController.showTitleScreen());
+        hitbox.setOnMouseReleased(event -> SceneController.showTitleScreen());
 
         // Use a StackPane to overlay the image and hitbox
         StackPane returnButtonPane = new StackPane(returnImage, hitbox);
@@ -56,6 +67,15 @@ public class OptionButtons {
         returnButtonBox.getStyleClass().add("app-button");
         returnButtonBox.setOnMouseEntered(event -> returnButtonBox.getStyleClass().add("hovered"));
         returnButtonBox.setOnMouseExited(event -> returnButtonBox.getStyleClass().remove("hovered"));
+
+        // Set action on mouse press for both the image and the hitbox
+        returnButtonBox.setOnMousePressed(event -> {
+            // Opacity and translation effect on press
+            double currentOpacity = returnButtonPane.getOpacity();
+            double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.5, but not below 0.5
+            returnButtonPane.setOpacity(newOpacity);
+            returnButtonPane.setTranslateY(newOpacity > 0.5 ? returnButtonPane.getTranslateY() - 5 : returnButtonPane.getTranslateY() + 5);
+        });
 
         return returnButtonBox;
     }

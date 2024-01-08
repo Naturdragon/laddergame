@@ -14,6 +14,7 @@ public class GameBoard {
     private BoardGraph boardGraph;
     private List<Player> playerList;
     private Background background;
+    private Background backgroundTop;
     private DiceUI diceUI;
     private List<Player> finishedPlayers;
 
@@ -33,6 +34,13 @@ public class GameBoard {
                 new BackgroundSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT, false, false, true, true));
 
         background = new Background(backgroundImg);
+
+        BackgroundImage backgroundImgTop = new BackgroundImage(
+                new Image("images/gameboard_screen/Game_BG_Top.PNG"),
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+                new BackgroundSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT, false, false, true, true));
+
+        backgroundTop = new Background(backgroundImgTop);
 
         diceUI = new DiceUI();
 
@@ -105,6 +113,22 @@ public class GameBoard {
             player.getImageView().setY(player.getCurrentField().getY() - 27 - 15);
             player.playIdle();
         }
+
+        // Placing the top background (water fall section)
+        Region backgroundTopRegion = new Region();
+        backgroundTopRegion.setBackground(backgroundTop);
+        backgroundTopRegion.setPrefSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
+        root.getChildren().add(backgroundTopRegion);
+
+        // Create option buttons
+        HBox closeAppButton = OptionButtons.createCloseAppButton();
+        HBox mainMenuButton = OptionButtons.createReturnToMainMenuButton();
+        closeAppButton.setTranslateX(20);
+        closeAppButton.setTranslateY(19);
+        mainMenuButton.setTranslateX(79);
+        mainMenuButton.setTranslateY(-31);
+        VBox buttonLayout = new VBox(closeAppButton, mainMenuButton);
+        root.getChildren().add(buttonLayout);
 
         return new Scene(root, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
     }

@@ -63,7 +63,7 @@ public class PlayerSelectionScreen {
         // Create close and return-to-main-menu buttons
         HBox closeButton = OptionButtons.createCloseAppButton();
         HBox mainMenuButton = OptionButtons.createReturnToMainMenuButton();
-        closeButton.setTranslateX(-386);
+        closeButton.setTranslateX(-388);
         closeButton.setTranslateY(-331);
         mainMenuButton.setTranslateX(-329);
         mainMenuButton.setTranslateY(-381);
