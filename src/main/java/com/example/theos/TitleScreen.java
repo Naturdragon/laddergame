@@ -36,6 +36,14 @@ public class TitleScreen {
         mainLayout.setStyle("-fx-background-image: " + backgroundImage + "; " +
                 "-fx-background-size: cover;");
 
+        // Create the return to main menu button using the main menu scene
+        HBox closeAppButton = OptionButtons.createCloseAppButton();
+        closeAppButton.setTranslateX(-840);
+        closeAppButton.setTranslateY(-357);
+
+
+        // Add the button to the main layout
+        mainLayout.getChildren().add(closeAppButton);
         return new Scene(mainLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
     }
 

@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.example.theos.OptionButtons.createCloseAppButton;
 import static com.example.theos.TitleScreen.animateButtons;
 import static javafx.application.Application.launch;
 
@@ -84,18 +85,27 @@ public class WinningScreen extends Application{
         returnButton.setFont(Font.font(VARELA.getFamily(), 30));
         returnButton.setOpacity(0);
 
-        //Vbox (left side)
-        VBox leftSide = new VBox(winningCharacterImage, returnButton, returnToMenu, spaceText, menuButton);
+        // Create the return to main menu button using the winning screen scene
+        HBox closeAppButton = OptionButtons.createCloseAppButton();
+
+        // Adjust the position of closeAppButton
+        closeAppButton.setAlignment(Pos.TOP_LEFT);
+        closeAppButton.setPadding(new Insets(20, 0, 0, 20)); // Adjust the values accordingly
+        closeAppButton.setTranslateX(52);
+        closeAppButton.setTranslateY(-94);
+
+        //Vbox (left side) with the added close button
+        VBox leftSide = new VBox(closeAppButton, winningCharacterImage, returnButton, returnToMenu, spaceText, menuButton);
         leftSide.setAlignment(Pos.CENTER);
         leftSide.setSpacing(100);
 
         // Adjust the position of winningCharacterImage
         winningCharacterImage.setTranslateX(120); // Translate pixels to the right
-        winningCharacterImage.setTranslateY(14); // Translate pixels down (for up use -)
+        winningCharacterImage.setTranslateY(-72); // Translate pixels down (for up use -)
 
         //Adjust the position of the Return to Main Menu Text
         returnToMenu.setTranslateX(122);
-        returnToMenu.setTranslateY(40);
+        returnToMenu.setTranslateY(-55);
 
         // Adjust the position of returnButton
         returnButton.setTranslateX(0);
@@ -103,11 +113,11 @@ public class WinningScreen extends Application{
 
         //Adjust the position of the SPACE Text
         spaceText.setTranslateX(117);
-        spaceText.setTranslateY(-40);
+        spaceText.setTranslateY(-133);
 
         //Adjust the position of the Button IMAGE
         menuButton.setTranslateX(120);
-        menuButton.setTranslateY(700);
+        menuButton.setTranslateY(777);
 
         spaceText.toFront(); // Bring spaceText to the front
         menuButton.toBack(); // Send menuButton to the back
