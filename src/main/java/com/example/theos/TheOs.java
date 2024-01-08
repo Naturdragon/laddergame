@@ -1,26 +1,8 @@
 package com.example.theos;
 
-import com.example.theos.BordGameGraph.BoardGraph;
-import javafx.animation.TranslateTransition;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TheOs extends javafx.application.Application {
 
@@ -47,7 +29,7 @@ public class TheOs extends javafx.application.Application {
         SceneController.stage = stage;
         stage.setTitle("The O’s");
         stage.setResizable(false); // daweil mal ohne resizable
-        SceneController.showPlayerSelectSceen();
+        SceneController.showTitleScreen();
     }
 
     public static void main(String[] args) {

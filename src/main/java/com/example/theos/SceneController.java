@@ -18,19 +18,15 @@ public class SceneController {
     static Stage stage;
 
     public static void showTitleScreen() {
+        Scene scene = TitleScreen.createTitleScreen();
+        stage.setScene(scene);
+        stage.show();
     }
-
 
     public static void showPlayerSelectSceen() {
         Scene scene = PlayerSelectionScreen.createPlayerSelectionScreen();
         stage.setScene(scene);
         stage.show();
-
-        scene.setOnKeyReleased(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                showGameBoardSceen(PlayerSelectionScreen.createPlayerList());
-            }
-        });
     }
 
     /*
@@ -63,6 +59,7 @@ public class SceneController {
         });
     }
 
+    /*
     public static void showWinningSceen(List<Player> finishedPlayers) {
         Scene scene = WinningScreen.createWinningScreen(finishedPlayers);
         stage.setScene(scene);
@@ -74,5 +71,7 @@ public class SceneController {
             }
         });
     }
+
+     */
 
 }

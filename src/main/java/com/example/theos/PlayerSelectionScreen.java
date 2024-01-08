@@ -125,6 +125,8 @@ public class PlayerSelectionScreen {
                 spaceButton.setOpacity(1.0);
                 row6.setTranslateY(-379);
                 spaceButton.setTranslateY(975);
+
+                SceneController.showGameBoardSceen(PlayerSelectionScreen.createPlayerList());
             }
         });
 

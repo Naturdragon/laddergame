@@ -18,15 +18,14 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
-public class TitleScreen extends Application {
+public class TitleScreen {
 
     static final Font VARELA = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), -1);
     static final ImageView SPACE_BUTTON = new ImageView(new Image("images/option_button_extras/Button_Space_Big.PNG"));
     static final Text START_GAME = new Text("Start Game");
     static final Text SPACE_TEXT = new Text("SPACE");
 
-    @Override
-    public void start(Stage primaryStage) {
+    public static Scene createTitleScreen() {
         VBox instructionsBox = createTitleBox();
 
         HBox mainLayout = new HBox(instructionsBox);
@@ -37,10 +36,7 @@ public class TitleScreen extends Application {
         mainLayout.setStyle("-fx-background-image: " + backgroundImage + "; " +
                 "-fx-background-size: cover;");
 
-        Scene scene = new Scene(mainLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
-        primaryStage.setTitle("Title Screen");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        return new Scene(mainLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
     }
 
     private static VBox createTitleBox() {
@@ -78,6 +74,7 @@ public class TitleScreen extends Application {
                 // Reset opacity to normal when the button is released
                 SPACE_TEXT.setOpacity(1.0);
                 SPACE_BUTTON.setOpacity(1.0);
+                SceneController.showPlayerSelectSceen();
             }
         });
 

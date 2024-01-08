@@ -35,7 +35,7 @@ public class TestWinningScreen extends Application {
         List<Player> finishedPlayers = Arrays.asList(player5, player2, player3, player1, player6, player4);
 
         // Create an instance of WinningScreen and call showWinningScreen
-        WinningScreen winningScreen = new WinningScreen();
-        winningScreen.createWinningScreen(finishedPlayers);
+        //WinningScreen winningScreen = new WinningScreen();
+        //winningScreen.createWinningScreen(finishedPlayers);
     }
 }
