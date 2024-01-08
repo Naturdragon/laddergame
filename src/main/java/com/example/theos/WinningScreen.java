@@ -93,8 +93,8 @@ public class WinningScreen {
         // Adjust the position of closeAppButton
         closeAppButton.setAlignment(Pos.TOP_LEFT);
         closeAppButton.setPadding(new Insets(20, 0, 0, 20)); // Adjust the values accordingly
-        closeAppButton.setTranslateX(52);
-        closeAppButton.setTranslateY(-94);
+        closeAppButton.setTranslateX(51);
+        closeAppButton.setTranslateY(-93);
 
         //Vbox (left side) with the added close button
         VBox leftSide = new VBox(closeAppButton, winningCharacterImage, returnButton, returnToMenu, spaceText, menuButton);
@@ -103,7 +103,7 @@ public class WinningScreen {
 
         // Adjust the position of winningCharacterImage
         winningCharacterImage.setTranslateX(120); // Translate pixels to the right
-        winningCharacterImage.setTranslateY(-72); // Translate pixels down (for up use -)
+        winningCharacterImage.setTranslateY(-71); // Translate pixels down (for up use -)
 
         //Adjust the position of the Return to Main Menu Text
         returnToMenu.setTranslateX(122);
