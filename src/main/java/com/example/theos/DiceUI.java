@@ -309,10 +309,10 @@ public class DiceUI extends AnchorPane {
     Returns nothing
      */
     public void switchPlayerTurn(GameBoard gameBoard) {
-        TranslateTransition translateDown = new TranslateTransition(Duration.millis(1000), this);
+        TranslateTransition translateDown = new TranslateTransition(Duration.millis(800), this);
         translateDown.setByY(this.getHeight());
 
-        TranslateTransition translateUp = new TranslateTransition(Duration.millis(1000), this);
+        TranslateTransition translateUp = new TranslateTransition(Duration.millis(800), this);
         translateUp.setByY(-this.getHeight());
 
         translateDown.play();

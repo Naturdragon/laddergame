@@ -49,6 +49,10 @@ public class SceneController {
                     gameBoard.playerTurn(gameBoard.getPlayerList().get(0));
                 }
             }
+
+            if (event.getCode() == KeyCode.ENTER) { // TODO: delete later, only there to quickly access the winning screen
+                showWinningScreen(gameBoard.getPlayerList());
+            }
         });
     }
 
