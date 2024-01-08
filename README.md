@@ -9,12 +9,11 @@ For the **Beta Version**, all screens have been connected.
 
 To get from the **Title Screen** to the Player Selection Screen, you must press the SPACE bar.
 To get from the **Player Selection Screen** to the Game Board Screen, you must select at least 2 players to be able to press the SPACE bar.
-To get from the **Game Board Screen** to the Winning Screen, you have to finish all turns until all players reach the finish line.
+To get from the **Game Board Screen** to the Winning Screen, you have to finish all turns until all players reach the finish line or preemptively end the game by pressing ENTER.
 To get from the **Winning Screen** to the Title Screen, you must press the SPACE bar.
-
 The game also features **Option Buttons** *(going back to the Title Screen & turning off the game)*.
 
-Furthermore, with the special die for characters using negative numbers, the turns don't work yet, so only positive numbers can be worked with so far.
+However, the turns including **special dice using negative numbers** don't work yet, so only positive numbers can be worked with so far. This will be fixed in the future.
 The player order in the game board must also be fixed.
 
 The **crossover fields** must also be fixed, since currently the player is unable to use them to take different paths other than the main path.
