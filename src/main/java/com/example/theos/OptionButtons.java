@@ -57,8 +57,8 @@ public class OptionButtons {
         hitbox.setFill(Color.TRANSPARENT);
 
         // Set action on click for both the image and the hitbox
-        returnImage.setOnMouseClicked(event -> SceneController.showTitleScreen());
-        hitbox.setOnMouseClicked(event -> SceneController.showTitleScreen());
+        returnImage.setOnMouseReleased(event -> SceneController.showTitleScreen());
+        hitbox.setOnMouseReleased(event -> SceneController.showTitleScreen());
 
         // Use a StackPane to overlay the image and hitbox
         StackPane returnButtonPane = new StackPane(returnImage, hitbox);
@@ -75,12 +75,6 @@ public class OptionButtons {
             double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.5, but not below 0.5
             returnButtonPane.setOpacity(newOpacity);
             returnButtonPane.setTranslateY(newOpacity > 0.5 ? returnButtonPane.getTranslateY() - 5 : returnButtonPane.getTranslateY() + 5);
-        });
-
-        // Set action on mouse release for both the image and the hitbox
-        returnButtonBox.setOnMouseReleased(event -> {
-            // Perform exit action
-            Platform.exit();
         });
 
         return returnButtonBox;
