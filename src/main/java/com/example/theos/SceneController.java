@@ -1,16 +1,9 @@
 package com.example.theos;
 
-import com.example.theos.BordGameGraph.BoardGraph;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SceneController {
@@ -56,22 +49,16 @@ public class SceneController {
                     gameBoard.playerTurn(gameBoard.getPlayerList().get(0));
                 }
             }
-        });
-    }
 
-    /*
-    public static void showWinningSceen(List<Player> finishedPlayers) {
-        Scene scene = WinningScreen.createWinningScreen(finishedPlayers);
-        stage.setScene(scene);
-        stage.show();
-
-        scene.setOnKeyReleased(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                showPlayerSelectSceen();
+            if (event.getCode() == KeyCode.ENTER) { // TODO: delete later, only there to quickly access the winning screen
+                showWinningScreen(gameBoard.getPlayerList());
             }
         });
     }
 
-     */
-
+    public static void showWinningScreen(List<Player> finishedPlayers) {
+        Scene scene = WinningScreen.createWinningScreen(finishedPlayers);
+        stage.setScene(scene);
+        stage.show();
+    }
 }

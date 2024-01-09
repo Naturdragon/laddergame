@@ -22,6 +22,9 @@ import javafx.stage.Stage;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import static com.example.theos.TheOs.BROWN;
 
 public class PlayerSelectionScreen {
     private static final double SCREEN_WIDTH = 1422;
@@ -43,12 +46,12 @@ public class PlayerSelectionScreen {
     private static int playerCounter = 1;
 
     static final Font CAVEAT = Font.loadFont(PlayerSelectionScreen.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), -1);
-
     static final Font VARELA = Font.loadFont(PlayerSelectionScreen.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), -1);
 
-    static Color brown = Color.rgb(120, 98, 68);
 
     public static Scene createPlayerSelectionScreen() {
+        playerCounter = 1;
+
         VBox instructionsBox = createInstructionsBox();
         charactersGrid = createCharactersGrid();
 
@@ -60,6 +63,19 @@ public class PlayerSelectionScreen {
         String backgroundImage = "images/player_select_screen/Player_Selection_Screen.PNG";
         mainLayout.setStyle("-fx-background-image: url('" + backgroundImage + "'); -fx-background-size: cover;");
 
+        // Create close and return-to-main-menu buttons
+        HBox closeButton = OptionButtons.createCloseAppButton();
+        HBox mainMenuButton = OptionButtons.createReturnToMainMenuButton();
+        closeButton.setTranslateX(-388);
+        closeButton.setTranslateY(-331);
+        mainMenuButton.setTranslateX(-329);
+        mainMenuButton.setTranslateY(-381);
+
+        // Add buttons to the layout
+        VBox buttonLayout = new VBox(closeButton, mainMenuButton);
+        mainLayout.getChildren().add(buttonLayout);
+        charactersGrid.toFront();
+
         return new Scene(mainLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
     }
 
@@ -67,36 +83,36 @@ public class PlayerSelectionScreen {
 
         Text controls = new Text("CONTROLS");
         controls.setFont(Font.font(VARELA.getFamily(), 58));
-        controls.setFill(brown);
+        controls.setFill(BROWN);
 
         Text row1 = new Text("Clicking on a Character" + System.lineSeparator() +
                 "selects the Player" + System.lineSeparator());
         row1.setFont(Font.font(VARELA.getFamily(), 28));
-        row1.setFill(brown);
+        row1.setFill(BROWN);
 
         Text row2 = new Text("Clicking on a Character" + System.lineSeparator() +
                 "after Selection deselects" + System.lineSeparator() +
                 "the Player" + System.lineSeparator());
         row2.setFont(Font.font(VARELA.getFamily(), 28));
-        row2.setFill(brown);
+        row2.setFill(BROWN);
 
         Text row3 = new Text("Dice" + System.lineSeparator() +
                 "Select");
         row3.setFont(Font.font(VARELA.getFamily(), 30));
-        row3.setFill(brown);
+        row3.setFill(BROWN);
 
         Text row4 = new Text("Player Select" + System.lineSeparator() +
                 "Option Select");
         row4.setFont(Font.font(VARELA.getFamily(), 30));
-        row4.setFill(brown);
+        row4.setFill(BROWN);
 
         Text row5 = new Text("Start");
         row5.setFont(Font.font(VARELA.getFamily(), 30));
-        row5.setFill(brown);
+        row5.setFill(BROWN);
 
         Text row6 = new Text("SPACE");
         row6.setFont(Font.font(VARELA.getFamily(), 28));
-        row6.setFill(brown);
+        row6.setFill(BROWN);
 
         ImageView spaceButton = new ImageView(new Image("images/option_button_extras/Button_Space_Small.PNG"));
         spaceButton.setPreserveRatio(true);
@@ -138,28 +154,28 @@ public class PlayerSelectionScreen {
         leftSide.setAlignment(Pos.CENTER);
         leftSide.setSpacing(100);
 
-        controls.setTranslateX(-36);
+        controls.setTranslateX(-8);
         controls.setTranslateY(254);
 
-        row1.setTranslateX(-43);
+        row1.setTranslateX(-13);
         row1.setTranslateY(190);
 
-        row2.setTranslateX(-36);
+        row2.setTranslateX(-6);
         row2.setTranslateY(100);
 
-        row3.setTranslateX(60);
+        row3.setTranslateX(90);
         row3.setTranslateY(3);
 
-        row4.setTranslateX(-95);
+        row4.setTranslateX(-65);
         row4.setTranslateY(-65);
 
-        row5.setTranslateX(65);
+        row5.setTranslateX(95);
         row5.setTranslateY(-118);
 
-        row6.setTranslateX(-107);
+        row6.setTranslateX(-77);
         row6.setTranslateY(-379);
 
-        spaceButton.setTranslateX(-107);
+        spaceButton.setTranslateX(-77);
         spaceButton.setTranslateY(975);
 
         spaceButton.toBack();
@@ -215,11 +231,11 @@ public class PlayerSelectionScreen {
 
             Text playerNameText = new Text(characters[i].getName());
             playerNameText.setFont(Font.font(CAVEAT.getFamily(), 28));
-            playerNameText.setFill(brown);
+            playerNameText.setFill(BROWN);
 
             Text playerInfoText = new Text();
             playerInfoText.setFont(Font.font(VARELA.getFamily(), 20));
-            playerInfoText.setFill(brown);
+            playerInfoText.setFill(BROWN);
             playerInfoText.textProperty().bind(players[i].playerInfoProperty()); // Bind the player info property
 
             VBox playerInfoBox = new VBox(characterImage, playerNameText, playerInfoText);
@@ -351,8 +367,17 @@ public class PlayerSelectionScreen {
         System.out.println();
     }
 
+     /*
+     Based on the information in  players[] array a (com.example.theos.)Player List is created and filled with the corresponding characters in the order they were selected
+     This list is used to initialized the playerList of the gameBoard
+     Returns a List<com.example.theos.Player>
+      */
     public static List<com.example.theos.Player> createPlayerList() {
         List<com.example.theos.Player> selectedPlayers = new ArrayList<>();
+
+        for (int i = 0; i < players.length; i++) { // the list is filled with null objects so when the players are added to the list they can be added at the correct index already
+            selectedPlayers.add(null);
+        }
 
         for (int i = 0; i < players.length; i++) {
             if (players[i].playerNumber > 0) {
@@ -360,40 +385,42 @@ public class PlayerSelectionScreen {
                     com.example.theos.Player player = new com.example.theos.Player("Diva O'Hara", new int[]{-3, -3, 6, 6, 6, 7}, Paths.get("images/player_icons/Icon_1.PNG"), Paths.get("images/winning_screen/Win_1.PNG"), Paths.get("images/gameboard_screen/Game_O_1.PNG"), Paths.get("images/sprites/Sprites_1.png"));
                     Field spawn = new Field(Field.fieldType.NormalField, 4.8, 60.1 - 1); // 1 = Diva O'Hara
                     player.setCurrentField(spawn);
-                    selectedPlayers.add(player);
+                    selectedPlayers.set(players[i].playerNumber - 1, player);
                 }
                 if (i == 1) {
                     com.example.theos.Player player = new com.example.theos.Player("Y'Olanda", new int[]{1, 1, 2, 4, 6, 6}, Paths.get("images/player_icons/Icon_2.PNG"), Paths.get("images/winning_screen/Win_2.PNG"), Paths.get("images/gameboard_screen/Game_O_2.PNG"), Paths.get("images/sprites/Sprites_2.png"));
                     Field spawn = new Field(Field.fieldType.NormalField, 8.3, 56.6 - 1); // 2 = Y'Olanda
                     player.setCurrentField(spawn);
-                    selectedPlayers.add(player);
+                    selectedPlayers.set(players[i].playerNumber - 1, player);
                 }
                 if (i == 2) {
                     com.example.theos.Player player = new com.example.theos.Player("Kidd'O", new int[]{-2, -1, 4, 5, 6, 6}, Paths.get("images/player_icons/Icon_3.PNG"), Paths.get("images/winning_screen/Win_3.PNG"), Paths.get("images/gameboard_screen/Game_O_3.PNG"), Paths.get("images/sprites/Sprites_3.png"));
                     Field spawn = new Field(Field.fieldType.NormalField, 11.6, 53.1 - 1); // 3 = Kidd'O
                     player.setCurrentField(spawn);
-                    selectedPlayers.add(player);
+                    selectedPlayers.set(players[i].playerNumber - 1, player);
                 }
                 if (i == 3) {
                     com.example.theos.Player player = new com.example.theos.Player("Mint'O Lint", new int[]{1, 1, 2, 2, 2, 7}, Paths.get("images/player_icons/Icon_4.PNG"), Paths.get("images/winning_screen/Win_4.PNG"), Paths.get("images/gameboard_screen/Game_O_4.PNG"), Paths.get("images/sprites/Sprites_4.png"));
                     Field spawn = new Field(Field.fieldType.NormalField, 8.3, 63.9 - 1); // 4 = Mint'O Lint
                     player.setCurrentField(spawn);
-                    selectedPlayers.add(player);
+                    selectedPlayers.set(players[i].playerNumber - 1, player);
                 }
                 if (i == 4) {
                     com.example.theos.Player player = new com.example.theos.Player("Brooke O'Let", new int[]{2, 2, 3, 4, 4, 5}, Paths.get("images/player_icons/Icon_5.PNG"), Paths.get("images/winning_screen/Win_5.PNG"), Paths.get("images/gameboard_screen/Game_O_5.PNG"), Paths.get("images/sprites/Sprites_5.png"));
                     Field spawn = new Field(Field.fieldType.NormalField, 11.9, 60.3 - 1); // 5 = Brooke O'Let
                     player.setCurrentField(spawn);
-                    selectedPlayers.add(player);
+                    selectedPlayers.set(players[i].playerNumber - 1, player);
                 }
                 if (i == 5) {
                     com.example.theos.Player player = new com.example.theos.Player("O'Fitz", new int[]{-1, 0, 2, 3, 4, 7}, Paths.get("images/player_icons/Icon_6.PNG"), Paths.get("images/winning_screen/Win_6.PNG"), Paths.get("images/gameboard_screen/Game_O_6.PNG"), Paths.get("images/sprites/Sprites_6.png"));
                     Field spawn = new Field(Field.fieldType.NormalField, 15.2, 56.9 - 1); // 6 = O'Fitz
                     player.setCurrentField(spawn);
-                    selectedPlayers.add(player);
+                    selectedPlayers.set(players[i].playerNumber - 1, player);
                 }
             }
         }
+
+        selectedPlayers.removeIf(Objects::isNull); // all null objects that are still in the list are shaved off
 
         return selectedPlayers;
     }

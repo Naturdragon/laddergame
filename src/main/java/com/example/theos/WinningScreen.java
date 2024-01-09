@@ -18,10 +18,11 @@ import javafx.stage.Stage;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.example.theos.OptionButtons.createCloseAppButton;
 import static com.example.theos.TitleScreen.animateButtons;
 import static javafx.application.Application.launch;
 
-public class WinningScreen extends Application{
+public class WinningScreen {
 
     static final Font VARELA = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), -1);
 
@@ -29,7 +30,7 @@ public class WinningScreen extends Application{
      * primaryStage    The primary stage of the JavaFX application.
      * finishedPlayers List of players who have completed the game.
      */
-    void createWinningScreen(Stage primaryStage, List<Player> finishedPlayers) {
+    public static Scene createWinningScreen(List<Player> finishedPlayers) {
         // Extract the winner
         Player winner = finishedPlayers.get(0);
 
@@ -78,24 +79,35 @@ public class WinningScreen extends Application{
                 // Reset opacity to normal when the button is released
                 spaceText.setOpacity(1.0);
                 menuButton.setOpacity(1.0);
+
+                SceneController.showTitleScreen();
             }
         });
 
         returnButton.setFont(Font.font(VARELA.getFamily(), 30));
         returnButton.setOpacity(0);
 
-        //Vbox (left side)
-        VBox leftSide = new VBox(winningCharacterImage, returnButton, returnToMenu, spaceText, menuButton);
+        // Create the return to main menu button using the winning screen scene
+        HBox closeAppButton = OptionButtons.createCloseAppButton();
+
+        // Adjust the position of closeAppButton
+        closeAppButton.setAlignment(Pos.TOP_LEFT);
+        closeAppButton.setPadding(new Insets(20, 0, 0, 20)); // Adjust the values accordingly
+        closeAppButton.setTranslateX(51);
+        closeAppButton.setTranslateY(-93);
+
+        //Vbox (left side) with the added close button
+        VBox leftSide = new VBox(closeAppButton, winningCharacterImage, returnButton, returnToMenu, spaceText, menuButton);
         leftSide.setAlignment(Pos.CENTER);
         leftSide.setSpacing(100);
 
         // Adjust the position of winningCharacterImage
         winningCharacterImage.setTranslateX(120); // Translate pixels to the right
-        winningCharacterImage.setTranslateY(14); // Translate pixels down (for up use -)
+        winningCharacterImage.setTranslateY(-71); // Translate pixels down (for up use -)
 
         //Adjust the position of the Return to Main Menu Text
         returnToMenu.setTranslateX(122);
-        returnToMenu.setTranslateY(40);
+        returnToMenu.setTranslateY(-55);
 
         // Adjust the position of returnButton
         returnButton.setTranslateX(0);
@@ -103,11 +115,11 @@ public class WinningScreen extends Application{
 
         //Adjust the position of the SPACE Text
         spaceText.setTranslateX(117);
-        spaceText.setTranslateY(-40);
+        spaceText.setTranslateY(-135);
 
         //Adjust the position of the Button IMAGE
         menuButton.setTranslateX(120);
-        menuButton.setTranslateY(700);
+        menuButton.setTranslateY(777);
 
         spaceText.toFront(); // Bring spaceText to the front
         menuButton.toBack(); // Send menuButton to the back
@@ -169,19 +181,7 @@ public class WinningScreen extends Application{
         mainLayout.setStyle("-fx-background-image: " + backgroundImage + "; " +
                 "-fx-background-size: cover;");
 
-        // Creating the scene and setting it to the stage
-        Scene scene = new Scene(mainLayout, 1422, 800);
-        primaryStage.setTitle("Game Winning Screen");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-
+        // Creating the scene and returning it to be set for the stage
+        return new Scene(mainLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
     }
 }
