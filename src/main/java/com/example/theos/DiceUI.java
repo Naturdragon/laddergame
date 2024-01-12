@@ -198,8 +198,13 @@ public class DiceUI extends AnchorPane {
 
         playerPortrait.setImage(new Image(playerList.get(0).getImage()));
 
+        for (ImageView icon : nextPlayerIconsList) {
+            icon.setOpacity(0.0);
+        }
+
         for (int i = 0; i < playerList.size() - 1; i++) {
             nextPlayerIconsList.get(i).setImage(new Image(playerList.get(i + 1).getNextPlayerImagePath()));
+            nextPlayerIconsList.get(i).setOpacity(1);
         }
 
         switch (playerList.get(0).getName()) {
@@ -309,15 +314,36 @@ public class DiceUI extends AnchorPane {
     Returns nothing
      */
     public void switchPlayerTurn(GameBoard gameBoard) {
-        TranslateTransition translateDown = new TranslateTransition(Duration.millis(800), this);
+        TranslateTransition translateDown = new TranslateTransition(Duration.millis(550), this);
         translateDown.setByY(this.getHeight());
 
-        TranslateTransition translateUp = new TranslateTransition(Duration.millis(800), this);
+        TranslateTransition translateUp = new TranslateTransition(Duration.millis(550), this);
         translateUp.setByY(-this.getHeight());
 
-        translateDown.play();
-        translateDown.setOnFinished(event -> {
+        if (gameBoard.getPlayerList().size() > 1) {
+            translateDown.play();
+            translateDown.setOnFinished(event -> {
 
+                // check if the current player reached the final field
+                if (gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1).getCurrentField() == gameBoard.getWinningFields().get(0)) {
+                    gameBoard.addFinishedPlayer(gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1));
+                    gameBoard.getPlayerList().remove(gameBoard.getPlayerList().size() - 1);
+                }
+
+                // if gameboards playerList is empty then all players are finished => winning screen is started
+                if (gameBoard.getPlayerList().isEmpty()) {
+                    SceneController.showWinningScreen(gameBoard.getFinishedPlayers());
+                    return;
+                }
+
+                System.out.println(gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1).getName()); // TODO only for debugging
+
+                updateUI(gameBoard.getPlayerList());
+                selectNormalDie();
+                translateUp.play();
+                translateUp.setOnFinished(event1 -> TheOs.waitingForUserInput = true);
+            });
+        } else {
             // check if the current player reached the final field
             if (gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1).getCurrentField() == gameBoard.getWinningFields().get(0)) {
                 gameBoard.addFinishedPlayer(gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1));
@@ -330,13 +356,11 @@ public class DiceUI extends AnchorPane {
                 return;
             }
 
-            System.out.println(gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1).getName()); // TODO only for debugging
-
             updateUI(gameBoard.getPlayerList());
             selectNormalDie();
-            translateUp.play();
-            translateUp.setOnFinished(event1 -> TheOs.waitingForUserInput = true);
-        });
+            System.out.println(gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1).getName());
+            TheOs.waitingForUserInput = true;
+        }
     }
 
     // updates the ui to show the normal die being selected, returns nothing

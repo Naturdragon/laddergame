@@ -1,5 +1,7 @@
 package com.example.theos;
 
+import javafx.scene.ImageCursor;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -10,6 +12,7 @@ public class TheOs extends javafx.application.Application {
         */
     static final int SCENE_WIDTH = 1422;
     static final int SCENE_HEIGHT = 800;
+    static final Image CURSOR_IMG = new Image("images/player_select_screen/Player_Mouse.PNG");
 
     // colors for texts
     static final Color BROWN = Color.rgb(120, 98, 68);
