@@ -5,8 +5,6 @@ import com.example.theos.Field;
 import com.example.theos.Player;
 import javafx.animation.PathTransition;
 import javafx.animation.SequentialTransition;
-import javafx.animation.Transition;
-import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
@@ -19,7 +17,7 @@ public class BoardGraph {
     private Graph forwardGraph;
     private Graph backwardGraph;
 
-    public Random rnd = new Random();
+    private Random rnd = new Random();
 
     public BoardGraph()
     {
@@ -278,6 +276,8 @@ public class BoardGraph {
                         vertexData = backwardGraph.getAdjacenctVertex(vertexData).get(0);   // One way back
                     }
 
+
+                    // TODO: Adding backwards animation
                     /*
                     ladderPath.getElements().add(new MoveTo(vertexData.getX() - animationOffsetX, vertexData.getY() - animationOffsetY));
                     var nextVertexData = (item.getSource() == vertexData) ? (Field) item.getTarget() : (Field) item.getSource();
@@ -293,6 +293,7 @@ public class BoardGraph {
                     seqtrans.getChildren().add(standartPathTransition);
 
                 } else {
+
                     return seqtrans;  // End of Graph
                 }
             }
@@ -303,6 +304,12 @@ public class BoardGraph {
 
     public void checkGraph()
     {
+        // TODO: (OPTONAL) Checking if the graph is a valide one.
+        /*
+        Forward Graph
+        Backward Graph
+         */
+
         System.out.println("!! NOT IMPLEMENTED JET !!");
     }
 

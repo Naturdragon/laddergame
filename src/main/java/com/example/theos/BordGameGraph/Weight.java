@@ -3,8 +3,8 @@ package com.example.theos.BordGameGraph;
 import com.example.theos.GameBoard;
 
 public class Weight <T>{
-    T data;
-    BoardGraph.edgeType type;
+    private T data;
+    private BoardGraph.edgeType type;
 
     public Weight(){
 

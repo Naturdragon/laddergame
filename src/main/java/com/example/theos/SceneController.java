@@ -1,5 +1,6 @@
 package com.example.theos;
 
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
@@ -12,12 +13,14 @@ public class SceneController {
 
     public static void showTitleScreen() {
         Scene scene = TitleScreen.createTitleScreen();
+        scene.setCursor(new ImageCursor(TheOs.CURSOR_IMG));
         stage.setScene(scene);
         stage.show();
     }
 
     public static void showPlayerSelectSceen() {
         Scene scene = PlayerSelectionScreen.createPlayerSelectionScreen();
+        scene.setCursor(new ImageCursor(TheOs.CURSOR_IMG));
         stage.setScene(scene);
         stage.show();
     }
@@ -32,6 +35,7 @@ public class SceneController {
         gameBoard.fillGraphData();
 
         Scene scene = gameBoard.createGameBoardScreen();
+        scene.setCursor(new ImageCursor(TheOs.CURSOR_IMG));
         stage.setScene(scene);
         stage.show();
 
@@ -58,6 +62,7 @@ public class SceneController {
 
     public static void showWinningScreen(List<Player> finishedPlayers) {
         Scene scene = WinningScreen.createWinningScreen(finishedPlayers);
+        scene.setCursor(new ImageCursor(TheOs.CURSOR_IMG));
         stage.setScene(scene);
         stage.show();
     }
