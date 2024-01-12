@@ -20,3 +20,6 @@ The **crossover fields** must also be fixed, since currently the player is unabl
 Because of this, many bugs can happen when being put into different path through ladders & snakes. These will be fixed in the final version.
 
 Lastly, more animations will be added in the future, to enhance the overall aesthetic of the game.
+
+Some of the commits have been done by one person, even though multiple people worked on the code, since we worked on it together & sometimes used the same device with multiple people.
+Additionally, Lisa Freund was unable to commit her code, so Marko Zdravkovic committed it for her on his device.

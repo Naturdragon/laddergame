@@ -1,9 +1,9 @@
 package Graph;
 
 public class Edge<T> {
-    T Source; // Vertex of the edge
-    T Target; // Vertex of the edge
-    T Weight; // Generic Variable where every thing can be stored attched to the edge
+    private T Source; // Vertex of the edge
+    private T Target; // Vertex of the edge
+    private T Weight; // Generic Variable where every thing can be stored attched to the edge
 
 
     // Base Edge with a sorce and a destination
