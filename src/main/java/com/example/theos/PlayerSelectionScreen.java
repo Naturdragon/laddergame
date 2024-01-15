@@ -272,8 +272,10 @@ public class PlayerSelectionScreen {
     }
 
     private static ImageView createCharacterImageView(String imagePath, int playerIndex) {
-        Image image = new Image(imagePath, CHARACTER_IMAGE_SIZE, CHARACTER_IMAGE_SIZE, true, true);
+        Image image = new Image(imagePath);
         ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(CHARACTER_IMAGE_SIZE); // changed resizing to be done on the ImageView, not the Image itself (looks better / less pixelated)
+        imageView.setPreserveRatio(true);
 
         imageView.setOnMouseClicked(event -> {
             togglePlayerSelection(playerIndex, imageView);
@@ -367,11 +369,11 @@ public class PlayerSelectionScreen {
         System.out.println();
     }
 
-     /*
-     Based on the information in  players[] array a (com.example.theos.)Player List is created and filled with the corresponding characters in the order they were selected
-     This list is used to initialized the playerList of the gameBoard
-     Returns a List<com.example.theos.Player>
-      */
+    /*
+    Based on the information in  players[] array a (com.example.theos.)Player List is created and filled with the corresponding characters in the order they were selected
+    This list is used to initialized the playerList of the gameBoard
+    Returns a List<com.example.theos.Player>
+     */
     public static List<com.example.theos.Player> createPlayerList() {
         List<com.example.theos.Player> selectedPlayers = new ArrayList<>();
 
