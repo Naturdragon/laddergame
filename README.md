@@ -13,13 +13,14 @@ To get from the **Game Board Screen** to the Winning Screen, you have to finish 
 To get from the **Winning Screen** to the Title Screen, you must press the SPACE bar.
 The game also features **Option Buttons** *(going back to the Title Screen & turning off the game)*.
 
+Currently, the game features a bug where once you finish a game and try to start another game without previously closing and running the application again, the players will be stuck and unable to move in the newly started game. This bug will be fixed.
+
 However, the turns including **special dice using negative numbers** don't work yet, so only positive numbers can be worked with so far. This will be fixed in the future.
-The player order in the game board must also be fixed.
 
 The **crossover fields** must also be fixed, since currently the player is unable to use them to take different paths other than the main path.
-Because of this, many bugs can happen when being put into different path through ladders & snakes. These will be fixed in the final version.
+These will be fixed in the final version.
 
-Lastly, more animations will be added in the future, to enhance the overall aesthetic of the game.
+Lastly, **more animations** will be added in the future, to enhance the overall aesthetic of the game.
 
 Some of the commits have been done by one person, even though multiple people worked on the code, since we worked on it together & sometimes used the same device with multiple people.
 Additionally, Lisa Freund was unable to commit her code, so Marko Zdravkovic committed it for her on his device.

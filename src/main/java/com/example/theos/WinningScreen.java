@@ -137,7 +137,7 @@ public class WinningScreen {
         rankingTitle.setFont(Font.font(VARELA.getFamily(), 60)); // Increased font size
         rankingTitle.setFill(TheOs.BROWN);
         leaderboardGrid.add(rankingTitle, 0, 0, 4, 1); // Span 4 columns for the bigger header
-        Text turnsTitle = new Text("Turns");
+        Text turnsTitle = new Text("    Turns");
         turnsTitle.setFont(Font.font(VARELA.getFamily(), 30));
         turnsTitle.setFill(TheOs.BROWN);
         leaderboardGrid.add(turnsTitle, 4, 0);
@@ -154,7 +154,7 @@ public class WinningScreen {
             Text playerNameText = new Text(players.get(i).getName());
             playerNameText.setFont(Font.font(VARELA.getFamily(), 36));
             playerNameText.setFill(TheOs.BROWN);
-            Text turnsText = new Text(String.valueOf(players.get(i).getTurnCount()));
+            Text turnsText = new Text("     " + players.get(i).getTurnCount());
             turnsText.setFont(Font.font(VARELA.getFamily(), 36)); // Adjust the font size
             turnsText.setFill(TheOs.BROWN);
 
