@@ -52,7 +52,8 @@ public class Dice {
             charge--;
         }
 
-        return dice[rnd.nextInt(dice.length - 1)];
+        return dice[rnd.nextInt(dice.length)];
+
     }
 
     // Types of die
