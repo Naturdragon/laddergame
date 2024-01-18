@@ -1,14 +1,12 @@
 package com.example.theos;
 
 import javafx.application.Platform;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 
 public class OptionButtons {
 
@@ -42,6 +40,35 @@ public class OptionButtons {
         closeButtonBox.setOnMouseReleased(event -> {
             // Perform exit action
             Platform.exit();
+        });
+
+        return closeButtonBox;
+    }
+
+    public static HBox createCloseInstructionsButton() {
+        ImageView closeImage = new ImageView(new Image("images/option_button_extras/Button_Exit.PNG"));
+        closeImage.setFitWidth(35);
+        closeImage.setFitHeight(35);
+
+        // Create an invisible hitbox (rectangle)
+        Rectangle hitbox = new Rectangle(35, 35);
+        hitbox.setFill(Color.TRANSPARENT);
+
+        // Use a StackPane to overlay the image and hitbox
+        StackPane closeButtonPane = new StackPane(closeImage, hitbox);
+
+        HBox closeButtonBox = new HBox(closeButtonPane);
+        closeButtonBox.getStyleClass().add("app-button");
+        closeButtonBox.setOnMouseEntered(event -> closeButtonBox.getStyleClass().add("hovered"));
+        closeButtonBox.setOnMouseExited(event -> closeButtonBox.getStyleClass().remove("hovered"));
+
+        // Set action on mouse press for both the image and the hitbox
+        closeButtonBox.setOnMousePressed(event -> {
+            // Opacity and translation effect on press
+            double currentOpacity = closeButtonPane.getOpacity();
+            double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.5, but not below 0.5
+            closeButtonPane.setOpacity(newOpacity);
+            closeButtonPane.setTranslateY(newOpacity > 0.5 ? closeButtonPane.getTranslateY() - 5 : closeButtonPane.getTranslateY() + 5);
         });
 
         return closeButtonBox;

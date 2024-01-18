@@ -51,8 +51,15 @@ public class SceneController {
                 if (event.getCode() == KeyCode.SPACE) {
                     TheOs.waitingForUserInput = false;
                     gameBoard.playerTurn(gameBoard.getPlayerList().get(0));
+                    gameBoard.hideInstructions();
                 }
             }
+            /* its possible to implement showing the instructions through a key press or option button in the future,
+            however, right now there is a visual bug with the close button similar to the one with the dice select arrow
+            if (event.getCode() == KeyCode.I) {
+                gameBoard.showInstructions();
+            }
+             */
 
             if (event.getCode() == KeyCode.ENTER) { // TODO: delete later, only there to quickly access the winning screen
                 showWinningScreen(gameBoard.getPlayerList());
