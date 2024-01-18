@@ -65,11 +65,10 @@ public class TitleScreen {
         startButton.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.SPACE) {
                 System.out.println("Start game");
-                // Implement logic to start game
 
                 // Toggle opacity for spaceText and menuButton
                 double currentOpacity = SPACE_TEXT.getOpacity();
-                double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.2, but not below 0.2
+                double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.5, but not below 0.5
                 SPACE_TEXT.setOpacity(newOpacity);
                 SPACE_BUTTON.setOpacity(newOpacity);
             }
