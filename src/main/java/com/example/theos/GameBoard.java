@@ -523,7 +523,7 @@ public class GameBoard {
         }
 
         for (int i = 0; i < fieldListUpperPath.size() - 1; i++) {
-            getBoardGraph().addOneDirectionalEdge(fieldListUpperPath.get(i), fieldListUpperPath.get(i + 1), 500, BoardGraph.edgeType.NormalEdge);
+            getBoardGraph().addEdge(fieldListUpperPath.get(i), fieldListUpperPath.get(i + 1), 500, BoardGraph.edgeType.NormalEdge);
         }
 
         for (int i = 0; i < fieldListMiddlePath.size(); i++) {
@@ -531,7 +531,7 @@ public class GameBoard {
         }
 
         for (int i = 0; i < fieldListMiddlePath.size() - 1; i++) {
-            getBoardGraph().addOneDirectionalEdge(fieldListMiddlePath.get(i), fieldListMiddlePath.get(i + 1), 500, BoardGraph.edgeType.NormalEdge);
+            getBoardGraph().addEdge(fieldListMiddlePath.get(i), fieldListMiddlePath.get(i + 1), 500, BoardGraph.edgeType.NormalEdge);
         }
 
         for (int i = 0; i < fieldListLowerPath.size(); i++) {
@@ -539,55 +539,55 @@ public class GameBoard {
         }
 
         for (int i = 0; i < fieldListLowerPath.size() - 1; i++) {
-            getBoardGraph().addOneDirectionalEdge(fieldListLowerPath.get(i), fieldListLowerPath.get(i + 1), 500, BoardGraph.edgeType.NormalEdge);
+            getBoardGraph().addEdge(fieldListLowerPath.get(i), fieldListLowerPath.get(i + 1), 500, BoardGraph.edgeType.NormalEdge);
         }
 
         // Add edges between three main paths
-        boardGraph.addOneDirectionalEdge(field149, field201, 500, BoardGraph.edgeType.NormalEdge);
-        boardGraph.addOneDirectionalEdge(field209, field301, 500, BoardGraph.edgeType.NormalEdge);
-        boardGraph.addOneDirectionalEdge(field222, field187, 500, BoardGraph.edgeType.NormalEdge);
+        boardGraph.addEdge(field149, field201, 500, BoardGraph.edgeType.NormalEdge);
+        boardGraph.addEdge(field209, field301, 500, BoardGraph.edgeType.NormalEdge);
+        boardGraph.addEdge(field222, field187, 500, BoardGraph.edgeType.NormalEdge);
 
         // Add normal edges from spawn area to first field
         for (Player player : playerList) {
             boardGraph.addVertex(player.getCurrentField());
-            boardGraph.addOneDirectionalEdge(player.getCurrentField(), field101, 500, BoardGraph.edgeType.NormalEdge);
+            boardGraph.addOneDirectionalEdgeForward(player.getCurrentField(), field101, 500, BoardGraph.edgeType.NormalEdge);
         }
 
         // Add ladder edges between the necessary fields (going from the main path)
-        getBoardGraph().addOneDirectionalEdge(field107, field117, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field121, field104, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field125, field140, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field127, field135, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field143, field124, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field154, field165, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field170, field202, 2500, BoardGraph.edgeType.LadderEdge);    // water fall
-        getBoardGraph().addOneDirectionalEdge(field171, field203, 2500, BoardGraph.edgeType.LadderEdge);    // water fall
-        getBoardGraph().addOneDirectionalEdge(field177, field182, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field184, field174, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field194, field322, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field107, field117, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field121, field104, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field125, field140, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field127, field135, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field143, field124, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field154, field165, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field170, field202, 2500, BoardGraph.edgeType.LadderEdge);    // water fall
+        getBoardGraph().addOneDirectionalEdgeForward(field171, field203, 2500, BoardGraph.edgeType.LadderEdge);    // water fall
+        getBoardGraph().addOneDirectionalEdgeForward(field177, field182, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field184, field174, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field194, field322, 2500, BoardGraph.edgeType.LadderEdge);
 
         // Add ladder edges between the necessary fields (going from the shortest path)
-        getBoardGraph().addOneDirectionalEdge(field210, field203, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field212, field204, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field213, field204, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field215, field206, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field210, field203, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field212, field204, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field213, field204, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field215, field206, 2500, BoardGraph.edgeType.LadderEdge);
 
         // Add ladder edges between the necessary fields (going from the longest path)
-        getBoardGraph().addOneDirectionalEdge(field312, field304, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field314, field330, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field316, field301, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field321, field189, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field324, field318, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field327, field344, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field332, field337, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field340, field328, 2500, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field346, field322, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field312, field304, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field314, field330, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field316, field301, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field321, field189, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field324, field318, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field327, field344, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field332, field337, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field340, field328, 2500, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field346, field322, 2500, BoardGraph.edgeType.LadderEdge);
 
         // Add normal edges from last fields to winning area
         getBoardGraph().addVertex(win1);
 
-        getBoardGraph().addOneDirectionalEdge(field195, win1, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdge(field347, win1, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field195, win1, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field347, win1, 500, BoardGraph.edgeType.NormalEdge);
 
         getBoardGraph().addVertex(win2);
         getBoardGraph().addVertex(win3);
