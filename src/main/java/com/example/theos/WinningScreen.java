@@ -120,24 +120,25 @@ public class WinningScreen {
 
         //Adjust the position of the Return to Main Menu Text
         returnToMenu.setTranslateX(122);
-        returnToMenu.setTranslateY(-55);
+        returnToMenu.setTranslateY(105);
 
         // Adjust the position of returnButton
         returnButton.setTranslateX(118);
-        returnButton.setTranslateY(150);
+        returnButton.setTranslateY(-123);
 
         //Adjust the position of the SPACE Text
         spaceText.setTranslateX(117);
-        spaceText.setTranslateY(-135);
+        spaceText.setTranslateY(26);
 
         //Adjust the position of the Button IMAGE
         menuButton.setTranslateX(120);
         menuButton.setTranslateY(777);
 
         spaceText.toFront(); // Bring spaceText to the front
+        returnButton.toFront();
         menuButton.toBack(); // Send menuButton to the back
 
-        animateButtons(returnToMenu, spaceText, menuButton, returnButton);
+        animateButtons(returnButton, returnToMenu, spaceText, menuButton);
 
         // Creating the right side with the leaderboard
         GridPane leaderboardGrid = new GridPane();

@@ -103,19 +103,20 @@ public class TitleScreen {
         startButton.setOpacity(0);
         startButton.setPrefWidth(346);
         startButton.setPrefSize(346, 70);
-        startButton.setTranslateY(233);
+        startButton.setTranslateY(95);
 
-        SPACE_TEXT.setTranslateY(80);
+        SPACE_TEXT.setTranslateY(250);
         SPACE_BUTTON.setTranslateY(545);
         START_GAME.setTranslateY(328);
-        animateButtons(SPACE_BUTTON, SPACE_TEXT, START_GAME, startButton);
+        animateButtons(startButton, SPACE_BUTTON, SPACE_TEXT, START_GAME);
 
         //Vbox
-        VBox frontPage = new VBox(START_GAME, SPACE_TEXT, startButton, SPACE_BUTTON);
+        VBox frontPage = new VBox(startButton,START_GAME, SPACE_TEXT, SPACE_BUTTON);
         frontPage.setAlignment(Pos.CENTER);
         frontPage.setSpacing(100);
 
         SPACE_TEXT.toFront();
+        startButton.toFront();
         SPACE_BUTTON.toBack();
 
         // Creating the main layout
