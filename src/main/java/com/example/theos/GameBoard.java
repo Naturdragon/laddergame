@@ -551,12 +551,12 @@ public class GameBoard {
         for (Player player : playerList) {
             boardGraph.addVertex(player.getCurrentField());
             switch (player.getName()) {
-                case "Diva O'Hara" -> boardGraph.addOneDirectionalEdge(player.getCurrentField(), field101, 2500, BoardGraph.edgeType.NormalEdge);
-                case "Y'Olanda" -> boardGraph.addOneDirectionalEdge(player.getCurrentField(), field101, 1750, BoardGraph.edgeType.NormalEdge);
-                case "Kidd'O" -> boardGraph.addOneDirectionalEdge(player.getCurrentField(), field101, 1100, BoardGraph.edgeType.NormalEdge);
-                case "Mint'O Lint" -> boardGraph.addOneDirectionalEdge(player.getCurrentField(), field101, 2250, BoardGraph.edgeType.NormalEdge);
-                case "Brooke O'Let" -> boardGraph.addOneDirectionalEdge(player.getCurrentField(), field101, 1500, BoardGraph.edgeType.NormalEdge);
-                case "O'Fitz" -> boardGraph.addOneDirectionalEdge(player.getCurrentField(), field101, 750, BoardGraph.edgeType.NormalEdge);
+                case "Diva O'Hara" -> boardGraph.addOneDirectionalEdge(player.getCurrentField(), field101, 2100, BoardGraph.edgeType.NormalEdge);
+                case "Y'Olanda" -> boardGraph.addOneDirectionalEdge(player.getCurrentField(), field101, 1500, BoardGraph.edgeType.NormalEdge);
+                case "Kidd'O" -> boardGraph.addOneDirectionalEdge(player.getCurrentField(), field101, 1000, BoardGraph.edgeType.NormalEdge);
+                case "Mint'O Lint" -> boardGraph.addOneDirectionalEdge(player.getCurrentField(), field101, 2000, BoardGraph.edgeType.NormalEdge);
+                case "Brooke O'Let" -> boardGraph.addOneDirectionalEdge(player.getCurrentField(), field101, 1400, BoardGraph.edgeType.NormalEdge);
+                case "O'Fitz" -> boardGraph.addOneDirectionalEdge(player.getCurrentField(), field101, 700, BoardGraph.edgeType.NormalEdge);
                 default -> boardGraph.addOneDirectionalEdge(player.getCurrentField(), field101, 500, BoardGraph.edgeType.NormalEdge);
             }
         }
