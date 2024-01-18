@@ -388,7 +388,7 @@ public class PlayerSelectionScreen {
 
                 switch (i) {
                     case 0:
-                        player = new com.example.theos.Player("Diva O'Hara", new int[]{-3, -3, 6, 6, 6, 7}, Paths.get("images/player_icons/Icon_1.PNG"), Paths.get("images/winning_screen/Win_1.PNG"), Paths.get("images/gameboard_screen/Game_O_1.PNG"), Paths.get("images/sprites/Sprites_1.png"));
+                        player = new com.example.theos.Player("Diva O'Hara", new int[]{-3, -3, 5, 6, 6, 7}, Paths.get("images/player_icons/Icon_1.PNG"), Paths.get("images/winning_screen/Win_1.PNG"), Paths.get("images/gameboard_screen/Game_O_1.PNG"), Paths.get("images/sprites/Sprites_1.png"));
                         spawn = new Field(Field.fieldType.NormalField, 4.8, 60.1 - 1);
                         break;
                     case 1:
@@ -400,7 +400,7 @@ public class PlayerSelectionScreen {
                         spawn = new Field(Field.fieldType.NormalField, 11.6, 53.1 - 1);
                         break;
                     case 3:
-                        player = new com.example.theos.Player("Mint'O Lint", new int[]{1, 1, 2, 2, 2, 7}, Paths.get("images/player_icons/Icon_4.PNG"), Paths.get("images/winning_screen/Win_4.PNG"), Paths.get("images/gameboard_screen/Game_O_4.PNG"), Paths.get("images/sprites/Sprites_4.png"));
+                        player = new com.example.theos.Player("Mint'O Lint", new int[]{1, 1, 2, 2, 3, 7}, Paths.get("images/player_icons/Icon_4.PNG"), Paths.get("images/winning_screen/Win_4.PNG"), Paths.get("images/gameboard_screen/Game_O_4.PNG"), Paths.get("images/sprites/Sprites_4.png"));
                         spawn = new Field(Field.fieldType.NormalField, 8.3, 63.9 - 1);
                         break;
                     case 4:
