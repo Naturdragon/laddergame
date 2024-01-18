@@ -151,7 +151,7 @@ public class DiceUI extends AnchorPane {
         StackPane spaceButton = new StackPane(SPACE_BAR_BG, SPACE_BUTTON_LABEL);
 
         VBox rightSide = new VBox(5, nextPlayerIcons, normalDieTexts, specialDieTexts, spaceButton);
-        VBox.setMargin(normalDieTexts, new Insets(25, 0, 0, 3));
+        VBox.setMargin(normalDieTexts, new Insets(25, 0, 0.5, 3));
         VBox.setMargin(specialDieTexts, new Insets(15, 0, 10, 3));
         VBox.setMargin(spaceButton, new Insets(0, 0, 0, -130));
 
@@ -217,7 +217,7 @@ public class DiceUI extends AnchorPane {
                 specialDie4.setFill(TheOs.DIVA_PINK);
                 specialDie5.setFill(TheOs.DIVA_PINK);
 
-                HBox.setMargin(specialDie0, new Insets(0, 0, 0, -3.5));
+                HBox.setMargin(specialDie0, new Insets(0, 0, 0, -5));
                 HBox.setMargin(specialDie1, new Insets(0, 0, 0, -9));
                 HBox.setMargin(specialDie2, new Insets(0, 0, 0, -4));
                 HBox.setMargin(specialDie3, new Insets(0, 0, 0, 0));
