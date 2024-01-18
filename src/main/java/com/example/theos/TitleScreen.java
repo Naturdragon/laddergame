@@ -3,6 +3,8 @@ package com.example.theos;
 import javafx.animation.Animation;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -58,40 +60,55 @@ public class TitleScreen {
         SPACE_BUTTON.setPreserveRatio(true);
         SPACE_BUTTON.setFitWidth(348);
 
-        //Button to start game
+        // Button to start the game
         Button startButton = new Button("Start game");
 
-        // Event handler for pressing SPACE key
+        // Event handler for pressing SPACE key or pressing the mouse
+        EventHandler<Event> pressHandler = event -> {
+            System.out.println("Start game");
+            // Implement logic to start the game
+
+            // Toggle opacity for SPACE_TEXT and SPACE_BUTTON
+            double currentOpacity = SPACE_TEXT.getOpacity();
+            double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.5, but not below 0.5
+            SPACE_TEXT.setOpacity(newOpacity);
+            SPACE_BUTTON.setOpacity(newOpacity);
+        };
+
+        // Event handler for releasing SPACE key or releasing the mouse
+        EventHandler<Event> releaseHandler = event -> {
+            // Reset opacity to normal
+            SPACE_TEXT.setOpacity(1.0);
+            SPACE_BUTTON.setOpacity(1.0);
+            SceneController.showPlayerSelectSceen();
+        };
+
+        // Set event handlers for both SPACE key and mouse
         startButton.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.SPACE) {
-                System.out.println("Start game");
-                // Implement logic to start game
-
-                // Toggle opacity for spaceText and menuButton
-                double currentOpacity = SPACE_TEXT.getOpacity();
-                double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.2, but not below 0.2
-                SPACE_TEXT.setOpacity(newOpacity);
-                SPACE_BUTTON.setOpacity(newOpacity);
+                pressHandler.handle(null); // Call the press handler
             }
         });
 
-        // Event handler for releasing SPACE key
         startButton.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.SPACE) {
-                // Reset opacity to normal when the button is released
-                SPACE_TEXT.setOpacity(1.0);
-                SPACE_BUTTON.setOpacity(1.0);
-                SceneController.showPlayerSelectSceen();
+                releaseHandler.handle(null); // Call the release handler
             }
         });
+
+        startButton.setOnMousePressed(pressHandler); // Call the press handler when the mouse is pressed
+        startButton.setOnMouseReleased(releaseHandler); // Call the release handler when the mouse is released
 
         startButton.setFont(Font.font(VARELA.getFamily(), 30));
         startButton.setOpacity(0);
+        startButton.setPrefWidth(346);
+        startButton.setPrefSize(346, 70);
+        startButton.setTranslateY(233);
 
-        SPACE_TEXT.setTranslateY(90);
+        SPACE_TEXT.setTranslateY(80);
         SPACE_BUTTON.setTranslateY(545);
         START_GAME.setTranslateY(328);
-        animateButtons(SPACE_BUTTON, SPACE_TEXT, START_GAME);
+        animateButtons(SPACE_BUTTON, SPACE_TEXT, START_GAME, startButton);
 
         //Vbox
         VBox frontPage = new VBox(START_GAME, SPACE_TEXT, startButton, SPACE_BUTTON);
