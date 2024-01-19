@@ -181,8 +181,6 @@ public class GameBoard {
 
         ImageView instructionsBG = new ImageView("images/gameboard_screen/Instructions_BG.png");
         instructionsBG.setOpacity(0.85);
-        instructionsBG.setFitWidth(580);
-        instructionsBG.setPreserveRatio(true);
 
         ImageView normalDieIMG = new ImageView("images/gameboard_screen/Game_Die_0.PNG");
         normalDieIMG.setFitWidth(140);
