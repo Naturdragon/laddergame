@@ -154,7 +154,7 @@ public class GameBoard {
         Text text1 = new Text("Landing on a        - Field makes your Character" + System.lineSeparator() + "take a shortcut");
         text1.setFont(DiceUI.CUSTOM_FONT_VARELA);
         text1.setFill(TheOs.BROWN);
-        Text text2 = new Text("Landing on a        - Field makes your Character " + System.lineSeparator() + "be set backwords, try to avoid them!");
+        Text text2 = new Text("Landing on a        - Field makes your Character " + System.lineSeparator() + "be set backwards, try to avoid them!");
         text2.setFont(DiceUI.CUSTOM_FONT_VARELA);
         text2.setFill(TheOs.BROWN);
         Text text3 = new Text("Every Character has a Normal Die" + System.lineSeparator() + "and a Special Die");
@@ -166,7 +166,7 @@ public class GameBoard {
         Text text5 = new Text("You can use your Special Die only 3 Times at" + System.lineSeparator() + "the Start");
         text5.setFont(DiceUI.CUSTOM_FONT_VARELA);
         text5.setFill(TheOs.BROWN);
-        Text text6 = new Text("Passing a        - Field increases your charges");
+        Text text6 = new Text("Passing a        - Field increases your Charges");
         text6.setFont(DiceUI.CUSTOM_FONT_VARELA);
         text6.setFill(TheOs.BROWN);
         Text text7 = new Text("Select which Die to use with");
