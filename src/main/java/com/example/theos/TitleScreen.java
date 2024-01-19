@@ -16,7 +16,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
@@ -80,7 +79,7 @@ public class TitleScreen {
             // Reset opacity to normal
             SPACE_TEXT.setOpacity(1.0);
             SPACE_BUTTON.setOpacity(1.0);
-            SceneController.showPlayerSelectSceen();
+            SceneController.showPlayerSelectScreen();
         };
 
         // Set event handlers for both SPACE key and mouse

@@ -1,6 +1,5 @@
 package com.example.theos;
 
-import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,7 +16,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -143,7 +141,7 @@ public class PlayerSelectionScreen {
                 spaceButton.setTranslateY(975);
 
                 // The scene is switched to the GameBoard with the current list of selected characters if at least 2 characters are selected
-                if (allowPlayability()) SceneController.showGameBoardSceen(PlayerSelectionScreen.createPlayerList());
+                if (allowPlayability()) SceneController.showGameBoardScreen(PlayerSelectionScreen.createPlayerList());
             }
         });
 

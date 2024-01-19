@@ -18,7 +18,7 @@ public class SceneController {
         stage.show();
     }
 
-    public static void showPlayerSelectSceen() {
+    public static void showPlayerSelectScreen() {
         Scene scene = PlayerSelectionScreen.createPlayerSelectionScreen();
         scene.setCursor(new ImageCursor(TheOs.CURSOR_IMG));
         stage.setScene(scene);
@@ -29,7 +29,7 @@ public class SceneController {
     Shows the gameboard screen, also:
     the instance of the gameboard which holds all data of the game (number of players, finished players, etc) is created here
      */
-    public static void showGameBoardSceen(List<Player> playerList) {
+    public static void showGameBoardScreen(List<Player> playerList) {
         GameBoard gameBoard = new GameBoard();
         gameBoard.setPlayerList(playerList);
         gameBoard.fillGraphData();

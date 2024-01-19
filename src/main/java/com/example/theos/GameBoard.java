@@ -106,7 +106,7 @@ public class GameBoard {
         rootLayout.setBackground(background);
 
         // Placing the diceUI on the sceen
-        diceUI.updateUI(playerList);
+        diceUI.updateNextPlayer(playerList);
         diceUI.setTranslateX(40);
         diceUI.setTranslateY(800 - 215);
         rootLayout.getChildren().add(diceUI);
@@ -765,6 +765,7 @@ public class GameBoard {
     /*
     Rolls the appropriate die of the player depending on which one is selected at the diceUI
     Calls animateRolledNumber method of diceUI and the movePlayer method
+    Updates the special die charges, so it can be seen when the player used the special die
     Returns nothing
      */
     public void playerTurn(Player player) {
@@ -778,6 +779,7 @@ public class GameBoard {
             rolled = player.rollDie(Dice.dieType.SpecialDie);
         }
 
+        diceUI.updateSpecialCharges(player);
         diceUI.animateRolledNumber(player, rolled);
 
         movePlayer(player, rolled);
