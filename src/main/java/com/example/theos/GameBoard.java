@@ -806,6 +806,11 @@ public class GameBoard {
         player.setCurrentField(boardGraph.hopCountTraversal(player.getCurrentField(), fieldsToMove));
 
         sequentialTransition.setOnFinished(event -> {
+            // Check if the new field of the player is a specialChargeField
+            if (player.getCurrentField().getType() == Field.fieldType.SpecialChargeField) {
+                player.getSpecialDie().addCharge();
+                diceUI.updateSpecialCharges(player);
+            }
             player.increaseTurns();
             diceUI.switchPlayerTurn(this);
             player.playIdle();
