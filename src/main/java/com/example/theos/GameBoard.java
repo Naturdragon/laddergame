@@ -116,7 +116,7 @@ public class GameBoard {
             rootLayout.getChildren().add(player.getImageView());
             player.getImageView().setX(player.getCurrentField().getX() - 27);
             player.getImageView().setY(player.getCurrentField().getY() - 27 - 15);
-            player.playIdle();
+            player.playSpawnAnimation(player, player.getCurrentField().getY());
         }
 
         // Placing the top background (water fall section)
@@ -227,7 +227,7 @@ public class GameBoard {
 
     /*
     Adds the instructions window to the rootLayout
-    Plays an animation of the instructins popping up
+    Plays an animation of the instructions popping up
     Returns nothing
      */
     public void showInstructions() {
