@@ -6,4 +6,5 @@ module com.example.theos {
 
     opens com.example.theos to javafx.fxml;
     exports com.example.theos;
+    requires java.desktop;
 }
