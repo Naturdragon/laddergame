@@ -6,7 +6,7 @@ import javafx.scene.media.MediaPlayer;
 public class SoundGame {
     private static MediaPlayer mediaPlayer;
 
-    public SoundGame(String filePath) { // plays music
+    public SoundGame(String filePath) { // Plays music
         Media media = new Media(getClass().getResource(filePath).toExternalForm());
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
@@ -17,7 +17,7 @@ public class SoundGame {
         mediaPlayer.setVolume(volume);
     }
 
-    public void stop() { // stops music
+    public void stop() { // Stops music
         mediaPlayer.stop();
     }
 }
