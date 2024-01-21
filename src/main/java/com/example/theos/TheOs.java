@@ -39,8 +39,6 @@ public class TheOs extends javafx.application.Application {
         soundGame.playLoop();
 
 
-
-
         // Setzen Sie das Application Icon
         Image icon = new Image("/images/application_icon/example.PNG");
         stage.getIcons().add(icon);
