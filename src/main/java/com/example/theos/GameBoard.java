@@ -212,7 +212,8 @@ public class GameBoard {
         playerArrowsIMG.setFitWidth(135);
         playerArrowsIMG.setPreserveRatio(true);
 
-        HBox closeButton = OptionButtons.createCloseInstructionsButton();
+        OptionButtons optionButtons = new OptionButtons(this);
+        HBox closeButton = optionButtons.createCloseInstructionsButton();
 
         AnchorPane instructionsWindow = new AnchorPane(instructionsBG, normalDieIMG, specialDieIMG, ladderFieldIMG, snakeFieldIMG, specialFieldIMG, playerArrowsIMG, instructionsText, closeButton);
         instructionsWindow.setTranslateX(700);
@@ -223,8 +224,8 @@ public class GameBoard {
         AnchorPane.setTopAnchor(normalDieIMG, 255.0);
         AnchorPane.setRightAnchor(specialDieIMG, 210.0);
         AnchorPane.setTopAnchor(specialDieIMG, 283.0);
-        AnchorPane.setTopAnchor(closeButton, 30.0);
-        AnchorPane.setLeftAnchor(closeButton, 35.0);
+        AnchorPane.setTopAnchor(closeButton, 40.0);
+        AnchorPane.setLeftAnchor(closeButton, 40.0);
         AnchorPane.setTopAnchor(ladderFieldIMG, 78.0);
         AnchorPane.setLeftAnchor(ladderFieldIMG, 183.0);
         AnchorPane.setTopAnchor(snakeFieldIMG, 145.0);
@@ -233,8 +234,6 @@ public class GameBoard {
         AnchorPane.setLeftAnchor(specialFieldIMG, 147.0);
         AnchorPane.setTopAnchor(playerArrowsIMG, 560.0);
         AnchorPane.setLeftAnchor(playerArrowsIMG, 350.0);
-
-        closeButton.setOnMouseReleased(event -> hideInstructions());
 
         return instructionsWindow;
     }
