@@ -202,25 +202,31 @@ public class GameBoard {
         specialFieldIMG.setFitWidth(35);
         specialFieldIMG.setPreserveRatio(true);
 
+        ImageView playerArrowsIMG = new ImageView("images/player_select_screen/Player_Arrows.PNG");
+        playerArrowsIMG.setFitWidth(135);
+        playerArrowsIMG.setPreserveRatio(true);
+
         HBox closeButton = OptionButtons.createCloseInstructionsButton();
 
-        AnchorPane instructionsWindow = new AnchorPane(instructionsBG, normalDieIMG, specialDieIMG, ladderFieldIMG, snakeFieldIMG, specialFieldIMG, instructionsText, closeButton);
+        AnchorPane instructionsWindow = new AnchorPane(instructionsBG, normalDieIMG, specialDieIMG, ladderFieldIMG, snakeFieldIMG, specialFieldIMG, playerArrowsIMG, instructionsText, closeButton);
         instructionsWindow.setTranslateX(700);
         instructionsWindow.setTranslateY(70);
         AnchorPane.setTopAnchor(instructionsText, 85.0);
-        AnchorPane.setLeftAnchor(instructionsText, 35.0);
-        AnchorPane.setRightAnchor(normalDieIMG, 45.0);
+        AnchorPane.setLeftAnchor(instructionsText, 40.0);
+        AnchorPane.setRightAnchor(normalDieIMG, 40.0);
         AnchorPane.setTopAnchor(normalDieIMG, 255.0);
-        AnchorPane.setRightAnchor(specialDieIMG, 215.0);
+        AnchorPane.setRightAnchor(specialDieIMG, 210.0);
         AnchorPane.setTopAnchor(specialDieIMG, 283.0);
         AnchorPane.setTopAnchor(closeButton, 30.0);
-        AnchorPane.setLeftAnchor(closeButton, 30.0);
+        AnchorPane.setLeftAnchor(closeButton, 35.0);
         AnchorPane.setTopAnchor(ladderFieldIMG, 78.0);
-        AnchorPane.setLeftAnchor(ladderFieldIMG, 178.0);
+        AnchorPane.setLeftAnchor(ladderFieldIMG, 183.0);
         AnchorPane.setTopAnchor(snakeFieldIMG, 145.0);
-        AnchorPane.setLeftAnchor(snakeFieldIMG, 178.0);
+        AnchorPane.setLeftAnchor(snakeFieldIMG, 183.0);
         AnchorPane.setTopAnchor(specialFieldIMG, 488.0);
-        AnchorPane.setLeftAnchor(specialFieldIMG, 142.0);
+        AnchorPane.setLeftAnchor(specialFieldIMG, 147.0);
+        AnchorPane.setTopAnchor(playerArrowsIMG, 560.0);
+        AnchorPane.setLeftAnchor(playerArrowsIMG, 350.0);
 
         closeButton.setOnMouseReleased(event -> hideInstructions());
 
