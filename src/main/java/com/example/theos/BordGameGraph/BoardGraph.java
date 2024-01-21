@@ -45,19 +45,19 @@ public class BoardGraph {
         backwardGraph.removeVertex(data);
     }
 
-    public <T> void addOneDirectionalEdge(T source, T target)
+    public <T> void addEdge(T source, T target)
     {
         forwardGraph.addOneDirectionalEdge(source, target);
         backwardGraph.addOneDirectionalEdge(target, source);
     }
 
-    public <T> void addOneDirectionalEdge(T source, T target, T weight)
+    public <T> void addEdge(T source, T target, Weight weight)
     {
         forwardGraph.addOneDirectionalEdge(source, target, weight);
         backwardGraph.addOneDirectionalEdge(target, source, weight);
     }
 
-    public <T> void addOneDirectionalEdge(T source, T target, T weight, edgeType type)
+    public <T> void addEdge(T source, T target, T weight, edgeType type)
     {
         forwardGraph.addOneDirectionalEdge(source, target, new Weight(weight, type));
         backwardGraph.addOneDirectionalEdge(target, source, new Weight(weight, type));
@@ -66,18 +66,31 @@ public class BoardGraph {
     public <T> void addOneDirectionalEdgeForward(T source, T target)
     {
         forwardGraph.addOneDirectionalEdge(source, target);
-        backwardGraph.addOneDirectionalEdge(target, source);
     }
 
-    public <T> void addOneDirectionalEdgeForward(T source, T target, T weight)
+    public <T> void addOneDirectionalEdgeForward(T source, T target, Weight weight)
     {
         forwardGraph.addOneDirectionalEdge(source, target, weight);
-        backwardGraph.addOneDirectionalEdge(target, source, weight);
     }
 
     public <T> void addOneDirectionalEdgeForward(T source, T target, T weight, edgeType type)
     {
         forwardGraph.addOneDirectionalEdge(source, target, new Weight(weight, type));
+    }
+
+    public <T> void addOneDirectionalEdgeBackward(T source, T target)
+    {
+        backwardGraph.addOneDirectionalEdge(target, source);
+    }
+
+    public <T> void addOneDirectionalEdgeBackward(T source, T target, Weight weight)
+    {
+        backwardGraph.addOneDirectionalEdge(source, target, weight);
+    }
+
+    public <T> void addOneDirectionalEdgeBackward(T source, T target, T weight, edgeType type)
+    {
+        backwardGraph.addOneDirectionalEdge(source, target, new Weight(weight, type));
     }
 
     /*
@@ -91,7 +104,7 @@ public class BoardGraph {
     }
 
     /*
-    Used to traverce the graph in both directions. Takes care of
+    Used to traverse the graph in both directions. Takes care of Lader Fields and Crossings
      */
     public Field hopCountTraversal(Field root, int hops)
     {
@@ -166,7 +179,7 @@ public class BoardGraph {
         }
     }
 
-    public SequentialTransition getAnimationPathFromGraph(Field root, int hops, int animationOffsetX, int animationOffsetY, Player player)
+    public SequentialTransition getAnimationPathFromGraph(Field root, int hops, int animationOffsetX, int animationOffsetY, Player currentPlayer)
     {
         SequentialTransition seqtrans = new SequentialTransition();
 
@@ -197,12 +210,7 @@ public class BoardGraph {
                         // TODO: Implementing the Crossing selection
                         System.out.println("Crosing selection is not implemented jet!");
                     } else {
-                        if (vertexData.getType() == Field.fieldType.LadderField)
-                            System.out.println("!! This should not Happen !!");
-
-                        // TODO Choose a Normal Field at random if several Normal Fields are connectet to this field
-
-
+                        // The user can stand at this point on a lande because he went backwards. When walking backwards Laders do not trigger.
                         for (var item : forwardGraph.getAdjacenctVertexEdges(vertexData)) {
                             tmpWeigth = (Weight) item.getWeight();
                             if (tmpWeigth.getType() == edgeType.NormalEdge) {
@@ -221,7 +229,7 @@ public class BoardGraph {
                                 tmpWeigth = (Weight) item.getWeight();
                                 if (tmpWeigth.getType() == edgeType.LadderEdge) {
                                     if (vertexData.getId() == 71 || vertexData.getId() == 72)
-                                        player.playFallWaterfall(); // Special Fall on the Waterfall
+                                        currentPlayer.playFallWaterfall(); // Special Fall on the Watterfall
                                     ladderPath.getElements().add(new MoveTo(vertexData.getX() - animationOffsetX, vertexData.getY() - animationOffsetY));
                                     var nextVertexData = (item.getSource() == vertexData) ? (Field) item.getTarget() : (Field) item.getSource();
                                     ladderPath.getElements().add(new LineTo(nextVertexData.getX() - animationOffsetX, nextVertexData.getY() - animationOffsetY));
@@ -270,34 +278,41 @@ public class BoardGraph {
                 vertexListSize = backwardGraph.getAdjacenctVertex(vertexData).size();
                 if (vertexListSize > 0) {
                     if (vertexListSize > 1) {
-                        vertexData = backwardGraph.getAdjacenctVertex(vertexData).get(rnd.nextInt(vertexListSize)); // More than one way back
-                    } else {
+                        var nextVertexData = backwardGraph.getAdjacenctVertex(vertexData).get(rnd.nextInt(vertexListSize)); // More than one way back
+                        tmpWeigth = (Weight) backwardGraph.getAdjacenctVertexEdges(vertexData).get(0).getWeight(); // Initialesierung weil es sein könnte das nichts zurück kommt.
 
-                        vertexData = backwardGraph.getAdjacenctVertex(vertexData).get(0);   // One way back
+                        for (var item : backwardGraph.getAdjacenctVertexEdges(vertexData)) {
+                            if (item.getSource() == nextVertexData || item.getTarget() == nextVertexData) {
+                                tmpWeigth = (Weight) item.getWeight();
+                                break;
+                            }
+                        }
+                        standartPath.getElements().add(new LineTo(nextVertexData.getX() - animationOffsetX, nextVertexData.getY() - animationOffsetY));
+                        standartDurration = standartDurration + (Integer) tmpWeigth.getData();
+                        vertexData = nextVertexData;
+                    } else {
+                        var nextVertexData = backwardGraph.getAdjacenctVertex(vertexData).get(rnd.nextInt(vertexListSize)); // More than one way back
+                        tmpWeigth = (Weight) backwardGraph.getAdjacenctVertexEdges(vertexData).get(0).getWeight(); // Initialesierung weil es sein könnte das nichts zurück kommt.
+                        standartPath.getElements().add(new LineTo(nextVertexData.getX() - animationOffsetX, nextVertexData.getY() - animationOffsetY));
+                        standartDurration = standartDurration + (Integer) tmpWeigth.getData();
+                        vertexData = nextVertexData;
                     }
 
 
-                    // TODO: Adding backwards animation
-                    /*
-                    ladderPath.getElements().add(new MoveTo(vertexData.getX() - animationOffsetX, vertexData.getY() - animationOffsetY));
-                    var nextVertexData = (item.getSource() == vertexData) ? (Field) item.getTarget() : (Field) item.getSource();
-                    ladderPath.getElements().add(new LineTo(nextVertexData.getX()-animationOffsetX,nextVertexData.getY()-animationOffsetY));
-                    ladderDurration = ladderDurration + (Integer) tmpWeigth.getData();
-                    vertexData = nextVertexData;
-
-                     */
-
+                } else {
                     PathTransition standartPathTransition = new PathTransition();
                     standartPathTransition.setPath(standartPath);
                     standartPathTransition.setDuration(Duration.millis(standartDurration));
                     seqtrans.getChildren().add(standartPathTransition);
 
-                } else {
-
                     return seqtrans;  // End of Graph
                 }
             }
 
+            PathTransition standartPathTransition = new PathTransition();
+            standartPathTransition.setPath(standartPath);
+            standartPathTransition.setDuration(Duration.millis(standartDurration));
+            seqtrans.getChildren().add(standartPathTransition);
             return seqtrans;
         }
     }
