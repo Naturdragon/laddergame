@@ -131,13 +131,16 @@ public class GameBoard {
         HBox closeAppButton = OptionButtons.createCloseAppButton();
         HBox mainMenuButton = OptionButtons.createReturnToMainMenuButton();
         HBox instructionsButton = OptionButtons.createInstructionsButton(this);
+        HBox musicButton = OptionButtons.createMusicButton();
         closeAppButton.setTranslateX(20);
         closeAppButton.setTranslateY(19);
         mainMenuButton.setTranslateX(79);
         mainMenuButton.setTranslateY(-31);
         instructionsButton.setTranslateX(1295);
         instructionsButton.setTranslateY(-85);
-        VBox buttonLayout = new VBox(closeAppButton, mainMenuButton, instructionsButton);
+        musicButton.setTranslateX(1352);
+        musicButton.setTranslateY(-134);
+        VBox buttonLayout = new VBox(closeAppButton, mainMenuButton, instructionsButton, musicButton);
         rootLayout.getChildren().add(buttonLayout);
 
         showInstructions(); // when the scene is created the instructionsWindow should be shown on screen for new players

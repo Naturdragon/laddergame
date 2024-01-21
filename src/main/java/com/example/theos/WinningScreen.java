@@ -99,6 +99,8 @@ public class WinningScreen {
 
         returnButton.setFont(Font.font(VARELA.getFamily(), 30));
         returnButton.setOpacity(0);
+        returnButton.setPrefWidth(360);
+        returnButton.setPrefHeight(100);
 
         // Create the return to main menu button using the winning screen scene
         HBox closeAppButton = OptionButtons.createCloseAppButton();
@@ -106,33 +108,43 @@ public class WinningScreen {
         // Adjust the position of closeAppButton
         closeAppButton.setAlignment(Pos.TOP_LEFT);
         closeAppButton.setPadding(new Insets(20, 0, 0, 20)); // Adjust the values accordingly
-        closeAppButton.setTranslateX(51);
-        closeAppButton.setTranslateY(-93);
+        closeAppButton.setTranslateX(50);
+        closeAppButton.setTranslateY(-9);
+
+        // Create the music button
+        HBox musicButton = OptionButtons.createMusicButton();
+
+        // Adjust the position of musicButton
+        musicButton.setAlignment(Pos.TOP_RIGHT);
+        musicButton.setPadding(new Insets(20, 0, 0, 20)); // Adjust the values accordingly
+        musicButton.setTranslateX(742);
+        musicButton.setTranslateY(-182);
 
         //Vbox (left side) with the added close button
-        VBox leftSide = new VBox(closeAppButton, winningCharacterImage, returnButton, returnToMenu, spaceText, menuButton);
+        VBox leftSide = new VBox(closeAppButton, musicButton, winningCharacterImage, returnButton, returnToMenu, spaceText, menuButton);
         leftSide.setAlignment(Pos.CENTER);
         leftSide.setSpacing(100);
 
+
         // Adjust the position of winningCharacterImage
         winningCharacterImage.setTranslateX(120); // Translate pixels to the right
-        winningCharacterImage.setTranslateY(-71); // Translate pixels down (for up use -)
+        winningCharacterImage.setTranslateY(-156); // Translate pixels down (for up use -)
 
         //Adjust the position of the Return to Main Menu Text
         returnToMenu.setTranslateX(122);
-        returnToMenu.setTranslateY(105);
+        returnToMenu.setTranslateY(20);
 
         // Adjust the position of returnButton
         returnButton.setTranslateX(118);
-        returnButton.setTranslateY(-123);
+        returnButton.setTranslateY(-213);
 
         //Adjust the position of the SPACE Text
         spaceText.setTranslateX(117);
-        spaceText.setTranslateY(26);
+        spaceText.setTranslateY(-60);
 
         //Adjust the position of the Button IMAGE
         menuButton.setTranslateX(120);
-        menuButton.setTranslateY(777);
+        menuButton.setTranslateY(860);
 
         spaceText.toFront(); // Bring spaceText to the front
         returnButton.toFront();
@@ -189,6 +201,8 @@ public class WinningScreen {
         HBox mainLayout = new HBox(leftSide, leaderboardGrid);
         mainLayout.setAlignment(Pos.CENTER);
         mainLayout.setSpacing(100);
+
+
 
         // Set background image for the whole scene using CSS
         String backgroundImage = "url('images/winning_screen/Winning_Screen.png')";

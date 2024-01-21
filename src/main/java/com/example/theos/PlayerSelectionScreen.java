@@ -64,13 +64,16 @@ public class PlayerSelectionScreen {
         // Create close and return-to-main-menu buttons
         HBox closeButton = OptionButtons.createCloseAppButton();
         HBox mainMenuButton = OptionButtons.createReturnToMainMenuButton();
+        HBox musicButton = OptionButtons.createMusicButton();
         closeButton.setTranslateX(-388);
-        closeButton.setTranslateY(-331);
+        closeButton.setTranslateY(-306);
         mainMenuButton.setTranslateX(-329);
-        mainMenuButton.setTranslateY(-381);
+        mainMenuButton.setTranslateY(-356);
+        musicButton.setTranslateX(943);
+        musicButton.setTranslateY(-408);
 
         // Add buttons to the layout
-        VBox buttonLayout = new VBox(closeButton, mainMenuButton);
+        VBox buttonLayout = new VBox(closeButton, mainMenuButton, musicButton);
         mainLayout.getChildren().add(buttonLayout);
         charactersGrid.toFront();
 
