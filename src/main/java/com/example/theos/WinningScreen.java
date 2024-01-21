@@ -202,8 +202,6 @@ public class WinningScreen {
         mainLayout.setAlignment(Pos.CENTER);
         mainLayout.setSpacing(100);
 
-
-
         // Set background image for the whole scene using CSS
         String backgroundImage = "url('images/winning_screen/Winning_Screen.png')";
         mainLayout.setStyle("-fx-background-image: " + backgroundImage + "; " +

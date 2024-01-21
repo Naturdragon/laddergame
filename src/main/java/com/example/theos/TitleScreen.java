@@ -131,6 +131,7 @@ public class TitleScreen {
         return frontPage;
     }
 
+
     public static void animateButtons(Node... buttons) {
         for (Node button : buttons) {
             TranslateTransition transition = new TranslateTransition(Duration.millis(500), button);

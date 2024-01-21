@@ -426,7 +426,6 @@ public class PlayerSelectionScreen {
         return selectedPlayers;
     }
 
-
     private static class Character {
         private String name;
 

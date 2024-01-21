@@ -831,6 +831,7 @@ public class GameBoard {
         });
     }
 
+
     public boolean addFinishedPlayer(Player player) {
         Field lastField = boardGraph.hopCountTraversal(player.getCurrentField(), Integer.MAX_VALUE);
 
