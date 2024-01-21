@@ -2,8 +2,11 @@ package com.example.theos;
 
 import Animation.SpriteAnimation;
 import javafx.animation.Animation;
+import javafx.animation.ParallelTransition;
+import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 import java.nio.file.Path;
 
@@ -144,16 +147,29 @@ public class Player {
         currentAnimation.play();
     }
 
-    public void playFallTransparent() {
+    public void playSpawnAnimation(Player player, int yCoordinate) {
         if (currentAnimation != null) {
             currentAnimation.stop();
         }
         currentAnimation = new SpriteAnimation(imageView, 6, 6, 0, 222, 74, 74);
         currentAnimation.setCycleCount(1);
-        currentAnimation.play();
+        player.getImageView().setY(yCoordinate - 150);
+
+        // Create animation for the movement
+        TranslateTransition transition = new TranslateTransition(Duration.millis(300), player.getImageView());
+        transition.setByY(107);
+        transition.setCycleCount(1);
+
+        // Execute animation (with playIdle following consecutively)
+        ParallelTransition parallelTransition = new ParallelTransition(currentAnimation, transition);
+        parallelTransition.setOnFinished(event -> {
+            currentAnimation = null;
+            player.playIdle();
+        });
+        parallelTransition.play();
     }
 
-    public void playFallOpaque() {
+    public void playFallWaterfall() {
         if (currentAnimation != null) {
             currentAnimation.stop();
         }

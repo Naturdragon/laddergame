@@ -18,7 +18,7 @@ public class SceneController {
         stage.show();
     }
 
-    public static void showPlayerSelectSceen() {
+    public static void showPlayerSelectScreen() {
         Scene scene = PlayerSelectionScreen.createPlayerSelectionScreen();
         scene.setCursor(new ImageCursor(TheOs.CURSOR_IMG));
         stage.setScene(scene);
@@ -29,7 +29,7 @@ public class SceneController {
     Shows the gameboard screen, also:
     the instance of the gameboard which holds all data of the game (number of players, finished players, etc) is created here
      */
-    public static void showGameBoardSceen(List<Player> playerList) {
+    public static void showGameBoardScreen(List<Player> playerList) {
         GameBoard gameBoard = new GameBoard();
         gameBoard.setPlayerList(playerList);
         gameBoard.fillGraphData();
@@ -51,8 +51,15 @@ public class SceneController {
                 if (event.getCode() == KeyCode.SPACE) {
                     TheOs.waitingForUserInput = false;
                     gameBoard.playerTurn(gameBoard.getPlayerList().get(0));
+                    gameBoard.hideInstructions();
                 }
             }
+            /* its possible to implement showing the instructions through a key press or option button in the future,
+            however, right now there is a visual bug with the close button similar to the one with the dice select arrow
+            if (event.getCode() == KeyCode.I) {
+                gameBoard.showInstructions();
+            }
+             */
 
             if (event.getCode() == KeyCode.ENTER) { // TODO: delete later, only there to quickly access the winning screen
                 showWinningScreen(gameBoard.getPlayerList());

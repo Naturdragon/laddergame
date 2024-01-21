@@ -1,6 +1,5 @@
 package com.example.theos;
 
-import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,7 +16,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -66,13 +64,16 @@ public class PlayerSelectionScreen {
         // Create close and return-to-main-menu buttons
         HBox closeButton = OptionButtons.createCloseAppButton();
         HBox mainMenuButton = OptionButtons.createReturnToMainMenuButton();
+        HBox musicButton = OptionButtons.createMusicButton();
         closeButton.setTranslateX(-388);
-        closeButton.setTranslateY(-331);
+        closeButton.setTranslateY(-306);
         mainMenuButton.setTranslateX(-329);
-        mainMenuButton.setTranslateY(-381);
+        mainMenuButton.setTranslateY(-356);
+        musicButton.setTranslateX(943);
+        musicButton.setTranslateY(-408);
 
         // Add buttons to the layout
-        VBox buttonLayout = new VBox(closeButton, mainMenuButton);
+        VBox buttonLayout = new VBox(closeButton, mainMenuButton, musicButton);
         mainLayout.getChildren().add(buttonLayout);
         charactersGrid.toFront();
 
@@ -143,7 +144,7 @@ public class PlayerSelectionScreen {
                 spaceButton.setTranslateY(975);
 
                 // The scene is switched to the GameBoard with the current list of selected characters if at least 2 characters are selected
-                if (allowPlayability()) SceneController.showGameBoardSceen(PlayerSelectionScreen.createPlayerList());
+                if (allowPlayability()) SceneController.showGameBoardScreen(PlayerSelectionScreen.createPlayerList());
             }
         });
 
@@ -388,7 +389,7 @@ public class PlayerSelectionScreen {
 
                 switch (i) {
                     case 0:
-                        player = new com.example.theos.Player("Diva O'Hara", new int[]{-3, -3, 6, 6, 6, 7}, Paths.get("images/player_icons/Icon_1.PNG"), Paths.get("images/winning_screen/Win_1.PNG"), Paths.get("images/gameboard_screen/Game_O_1.PNG"), Paths.get("images/sprites/Sprites_1.png"));
+                        player = new com.example.theos.Player("Diva O'Hara", new int[]{-3, -3, 5, 6, 6, 7}, Paths.get("images/player_icons/Icon_1.PNG"), Paths.get("images/winning_screen/Win_1.PNG"), Paths.get("images/gameboard_screen/Game_O_1.PNG"), Paths.get("images/sprites/Sprites_1.png"));
                         spawn = new Field(Field.fieldType.NormalField, 4.8, 60.1 - 1);
                         break;
                     case 1:
@@ -400,7 +401,7 @@ public class PlayerSelectionScreen {
                         spawn = new Field(Field.fieldType.NormalField, 11.6, 53.1 - 1);
                         break;
                     case 3:
-                        player = new com.example.theos.Player("Mint'O Lint", new int[]{1, 1, 2, 2, 2, 7}, Paths.get("images/player_icons/Icon_4.PNG"), Paths.get("images/winning_screen/Win_4.PNG"), Paths.get("images/gameboard_screen/Game_O_4.PNG"), Paths.get("images/sprites/Sprites_4.png"));
+                        player = new com.example.theos.Player("Mint'O Lint", new int[]{1, 1, 2, 2, 3, 7}, Paths.get("images/player_icons/Icon_4.PNG"), Paths.get("images/winning_screen/Win_4.PNG"), Paths.get("images/gameboard_screen/Game_O_4.PNG"), Paths.get("images/sprites/Sprites_4.png"));
                         spawn = new Field(Field.fieldType.NormalField, 8.3, 63.9 - 1);
                         break;
                     case 4:
@@ -424,7 +425,6 @@ public class PlayerSelectionScreen {
 
         return selectedPlayers;
     }
-
 
     private static class Character {
         private String name;

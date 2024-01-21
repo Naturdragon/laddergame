@@ -20,21 +20,16 @@ import java.util.Random;
 public class DiceUI extends AnchorPane {
 
     // accessing the custom font fix: https://stackoverflow.com/questions/30245085/javafx-embed-custom-font-not-working
-    static final Font CUSTOM_FONT_VARELA = Font.loadFont(TheOs.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), 22);
-    static final Font CUSTOM_FONT_CAVEAT = Font.loadFont(TheOs.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), 25);
-    static final ImageView BACKGROUND = new ImageView(new Image("images/gameboard_screen/Game_BG_Player.png"));
-    static final ImageView SELECTION_ARROW = new ImageView(new Image("images/gameboard_screen/Game_Die_Select.png"));
-    static final ImageView SPACE_BAR_BG = new ImageView(new Image("images/option_button_extras/Button_Space_Small.PNG"));
-    static final ImageView NORMAL_DIE_BG = new ImageView(new Image("images/gameboard_screen/Game_Die_0.png"));
-    static final Text NORMAL_DIE_USAGES = new Text("∞");
-    static final Text NORMAL_DIE_0 = new Text("1");
-    static final Text NORMAL_DIE_1 = new Text("2");
-    static final Text NORMAL_DIE_2 = new Text("3");
-    static final Text NORMAL_DIE_3 = new Text("4");
-    static final Text NORMAL_DIE_4 = new Text("5");
-    static final Text NORMAL_DIE_5 = new Text("6");
-    static final Text SPACE_BUTTON_LABEL = new Text("SPACE");
-    static final Text PRESS_TO_ROLL_TEXT = new Text("Press to Roll");
+    public static final Font CUSTOM_FONT_VARELA = Font.loadFont(TheOs.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), 22);
+    public static final Font CUSTOM_FONT_CAVEAT = Font.loadFont(TheOs.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), 25);
+    private final ImageView SELECTION_ARROW = new ImageView(new Image("images/gameboard_screen/Game_Die_Select.png")); // TODO origin of the selection arrow bug: all these variables/constants shouldnt be static
+    private final ImageView NORMAL_DIE_BG = new ImageView(new Image("images/gameboard_screen/Game_Die_0.png"));
+    private final Text NORMAL_DIE_0 = new Text("1");
+    private final Text NORMAL_DIE_1 = new Text("2");
+    private final Text NORMAL_DIE_2 = new Text("3");
+    private final Text NORMAL_DIE_3 = new Text("4");
+    private final Text NORMAL_DIE_4 = new Text("5");
+    private final Text NORMAL_DIE_5 = new Text("6");
 
     private List<ImageView> nextPlayerIconsList = new ArrayList<>();
     private ImageView specialDieBG;
@@ -51,12 +46,13 @@ public class DiceUI extends AnchorPane {
     private state uiState; // used to be able to indentify which die to use in playerTurn() method
 
     /*
-    Default constructor creates the interface and layouts it
-    the content is filled with Mint'O Lint as a character for demonstration purposes
+    Default constructor creates the content of the interface and layouts it
+    calls updateUI method to display the correct info
      */
     public DiceUI() {
-        BACKGROUND.setFitWidth(550);
-        BACKGROUND.setPreserveRatio(true);
+        ImageView background = new ImageView(new Image("images/gameboard_screen/Game_BG_Player.png"));
+        background.setFitWidth(550);
+        background.setPreserveRatio(true);
 
         SELECTION_ARROW.setFitWidth(30);
         SELECTION_ARROW.setPreserveRatio(true);
@@ -64,20 +60,24 @@ public class DiceUI extends AnchorPane {
         SELECTION_ARROW.setY(74);
         animateSelectionArrow();
 
-        SPACE_BAR_BG.setFitWidth(152);
-        SPACE_BAR_BG.setPreserveRatio(true);
+        ImageView spaceBarBG = new ImageView(new Image("images/option_button_extras/Button_Space_Small.PNG"));
+        spaceBarBG.setFitWidth(152);
+        spaceBarBG.setPreserveRatio(true);
 
-        SPACE_BUTTON_LABEL.setFont(CUSTOM_FONT_VARELA);
-        SPACE_BUTTON_LABEL.setFill(TheOs.BROWN);
+        Text spaceButtonLabel = new Text("SPACE");
+        spaceButtonLabel.setFont(CUSTOM_FONT_VARELA);
+        spaceButtonLabel.setFill(TheOs.BROWN);
 
-        PRESS_TO_ROLL_TEXT.setFont(CUSTOM_FONT_VARELA);
-        PRESS_TO_ROLL_TEXT.setFill(TheOs.BROWN);
+        Text pressToRollText = new Text("Press to Roll");
+        pressToRollText.setFont(CUSTOM_FONT_VARELA);
+        pressToRollText.setFill(TheOs.BROWN);
 
         NORMAL_DIE_BG.setFitWidth(224);
         NORMAL_DIE_BG.setPreserveRatio(true);
 
-        NORMAL_DIE_USAGES.setFont(CUSTOM_FONT_VARELA);
-        NORMAL_DIE_USAGES.setFill(TheOs.BROWN);
+        Text normalDieUsages = new Text("∞");
+        normalDieUsages.setFont(CUSTOM_FONT_VARELA);
+        normalDieUsages.setFill(TheOs.BROWN);
 
         NORMAL_DIE_0.setFont(CUSTOM_FONT_VARELA);
         NORMAL_DIE_0.setFill(TheOs.BROWN);
@@ -140,7 +140,7 @@ public class DiceUI extends AnchorPane {
         HBox nextPlayerIcons = new HBox(15);
         nextPlayerIcons.getChildren().addAll(nextPlayerIconsList.get(0), nextPlayerIconsList.get(1), nextPlayerIconsList.get(2), nextPlayerIconsList.get(3), nextPlayerIconsList.get(4));
 
-        HBox normalDieTexts = new HBox(23, NORMAL_DIE_USAGES, NORMAL_DIE_0, NORMAL_DIE_1, NORMAL_DIE_2,
+        HBox normalDieTexts = new HBox(23, normalDieUsages, NORMAL_DIE_0, NORMAL_DIE_1, NORMAL_DIE_2,
                 NORMAL_DIE_3, NORMAL_DIE_4, NORMAL_DIE_5);
         HBox.setMargin(NORMAL_DIE_0, new Insets(0, 0, 0, 6.5));
 
@@ -148,14 +148,14 @@ public class DiceUI extends AnchorPane {
                 specialDie3, specialDie4, specialDie5);
         HBox.setMargin(specialDieUsages, new Insets(0, 1.5, 0, 0));
 
-        StackPane spaceButton = new StackPane(SPACE_BAR_BG, SPACE_BUTTON_LABEL);
+        StackPane spaceButton = new StackPane(spaceBarBG, spaceButtonLabel);
 
         VBox rightSide = new VBox(5, nextPlayerIcons, normalDieTexts, specialDieTexts, spaceButton);
-        VBox.setMargin(normalDieTexts, new Insets(25, 0, 0, 3));
+        VBox.setMargin(normalDieTexts, new Insets(25, 0, 0.5, 3));
         VBox.setMargin(specialDieTexts, new Insets(15, 0, 10, 3));
         VBox.setMargin(spaceButton, new Insets(0, 0, 0, -130));
 
-        this.getChildren().addAll(BACKGROUND, NORMAL_DIE_BG, specialDieBG, leftSide, rightSide, SELECTION_ARROW, PRESS_TO_ROLL_TEXT);
+        this.getChildren().addAll(background, NORMAL_DIE_BG, specialDieBG, leftSide, rightSide, SELECTION_ARROW, pressToRollText);
         // set anchor for the right side of the layout
         AnchorPane.setTopAnchor(rightSide, 0.0);
         AnchorPane.setLeftAnchor(rightSide, 222.0);
@@ -163,8 +163,8 @@ public class DiceUI extends AnchorPane {
         AnchorPane.setTopAnchor(leftSide, 18.0);
         AnchorPane.setLeftAnchor(leftSide, 23.0);
         // set anchor for the text label "Press to roll"
-        AnchorPane.setRightAnchor(PRESS_TO_ROLL_TEXT, 43.0);
-        AnchorPane.setBottomAnchor(PRESS_TO_ROLL_TEXT, 17.0);
+        AnchorPane.setRightAnchor(pressToRollText, 43.0);
+        AnchorPane.setBottomAnchor(pressToRollText, 17.0);
         // set anchor for the background of the normaldie and specialdie images
         AnchorPane.setRightAnchor(NORMAL_DIE_BG, 63.0);
         AnchorPane.setBottomAnchor(NORMAL_DIE_BG, 104.0);
@@ -184,10 +184,10 @@ public class DiceUI extends AnchorPane {
     Updates the data shown by the UI with the new player currently playing
     Returns nothing
      */
-    public void updateUI(List<Player> playerList) {
+    public void updateNextPlayer(List<Player> playerList) {
         playerName.setText(playerList.get(0).getName());
 
-        specialDieUsages.setText(playerList.get(0).getSpecialDie().getCharge() + "×");
+        updateSpecialCharges(playerList.get(0));
 
         specialDie0.setText(String.valueOf(playerList.get(0).getSpecialDie().getDice()[0]));
         specialDie1.setText(String.valueOf(playerList.get(0).getSpecialDie().getDice()[1]));
@@ -217,7 +217,7 @@ public class DiceUI extends AnchorPane {
                 specialDie4.setFill(TheOs.DIVA_PINK);
                 specialDie5.setFill(TheOs.DIVA_PINK);
 
-                HBox.setMargin(specialDie0, new Insets(0, 0, 0, -3.5));
+                HBox.setMargin(specialDie0, new Insets(0, 0, 0, -5));
                 HBox.setMargin(specialDie1, new Insets(0, 0, 0, -9));
                 HBox.setMargin(specialDie2, new Insets(0, 0, 0, -4));
                 HBox.setMargin(specialDie3, new Insets(0, 0, 0, 0));
@@ -308,6 +308,14 @@ public class DiceUI extends AnchorPane {
         }
     }
 
+    /* Special charges are updated seperately than the rest of the diceUI,
+    so the effect can immediately be seen if a player lands on a special field or uses the die
+    Returns nothing
+     */
+    public void updateSpecialCharges(Player currentPlayer) {
+        specialDieUsages.setText(currentPlayer.getSpecialDie().getCharge() + "×");
+    }
+
     /*
     Animates the DiceUI moving down and back up and updates all the data shown using updateUI()
     !! THIS METHOD ALSO CHECKS IF THE GAME IS OVER (ALL PLAYERS REACHED THE LAST FIELD) !!
@@ -320,7 +328,7 @@ public class DiceUI extends AnchorPane {
         TranslateTransition translateUp = new TranslateTransition(Duration.millis(550), this);
         translateUp.setByY(-this.getHeight());
 
-        if (gameBoard.getPlayerList().size() > 1) {
+        if (gameBoard.getPlayerList().size() > 1) { // if stops the animation from happening if only one player is left
             translateDown.play();
             translateDown.setOnFinished(event -> {
 
@@ -330,20 +338,18 @@ public class DiceUI extends AnchorPane {
                     gameBoard.getPlayerList().remove(gameBoard.getPlayerList().size() - 1);
                 }
 
-                // if gameboards playerList is empty then all players are finished => winning screen is started
-                if (gameBoard.getPlayerList().isEmpty()) {
-                    SceneController.showWinningScreen(gameBoard.getFinishedPlayers());
-                    return;
-                }
-
                 System.out.println(gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1).getName()); // TODO only for debugging
 
-                updateUI(gameBoard.getPlayerList());
+                updateNextPlayer(gameBoard.getPlayerList());
                 selectNormalDie();
                 translateUp.play();
                 translateUp.setOnFinished(event1 -> TheOs.waitingForUserInput = true);
             });
         } else {
+            /* if only one player is left the diceUI is updated without the animation
+            The game only ends if all players reached a winning field, so this is where the game is ended, if the last player finishes
+             */
+
             // check if the current player reached the final field
             if (gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1).getCurrentField() == gameBoard.getWinningFields().get(0)) {
                 gameBoard.addFinishedPlayer(gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1));
@@ -353,10 +359,11 @@ public class DiceUI extends AnchorPane {
             // if gameboards playerList is empty then all players are finished => winning screen is started
             if (gameBoard.getPlayerList().isEmpty()) {
                 SceneController.showWinningScreen(gameBoard.getFinishedPlayers());
+                TheOs.waitingForUserInput = true;
                 return;
             }
 
-            updateUI(gameBoard.getPlayerList());
+            updateNextPlayer(gameBoard.getPlayerList());
             selectNormalDie();
             System.out.println(gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1).getName());
             TheOs.waitingForUserInput = true;
@@ -431,7 +438,11 @@ public class DiceUI extends AnchorPane {
             }
         }
 
-        // this part feels needlessly long but it works:
+        /* if the special die is rolled it cant directly be figured out which "side" of the die it was,
+        because only the value of the rolled side is visible from the outside
+        –> if a character has multiple sides with the same value a random one is selected,
+        so it doesnt seem as its always the same (which backend-wise it isnt anyway)
+         */
         if (uiState == state.SpecialDieSelected) {
             int[] dieUsed = player.getSpecialDie().getDice();
 
@@ -480,7 +491,7 @@ public class DiceUI extends AnchorPane {
 
         parallel.play();
         parallel.setOnFinished(event -> {
-            // again, this could probably be a lot more compact, but it works
+            // this could probably be a lot more compact, but it works
             NORMAL_DIE_0.setOpacity(1);
             NORMAL_DIE_0.setScaleY(1);
             NORMAL_DIE_0.setScaleX(1);

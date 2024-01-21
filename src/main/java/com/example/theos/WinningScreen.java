@@ -1,6 +1,7 @@
 package com.example.theos;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -8,6 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -56,36 +59,48 @@ public class WinningScreen {
         menuButton.setPreserveRatio(true);
         menuButton.setFitWidth(348);
 
-        //Button to return to MAIN MENU (not finished)
+        // Button to return to MAIN MENU (not finished)
         Button returnButton = new Button("Return to Main Menu");
 
-        // Event handler for pressing SPACE key
+        // Event handler for pressing SPACE key or pressing the mouse
+        EventHandler<MouseEvent> pressHandler = event -> {
+            // Toggle opacity for spaceText and menuButton
+            double currentOpacity = spaceText.getOpacity();
+            double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.5, but not below 0.5
+            spaceText.setOpacity(newOpacity);
+            menuButton.setOpacity(newOpacity);
+        };
+
+        // Event handler for releasing SPACE key or releasing the mouse
+        EventHandler<MouseEvent> releaseHandler = event -> {
+            // Reset opacity to normal
+            spaceText.setOpacity(1.0);
+            menuButton.setOpacity(1.0);
+
+            SceneController.showTitleScreen();
+        };
+
+        // Set event handlers for both SPACE key and mouse
         returnButton.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.SPACE) {
-                System.out.println("Return to Menu");
-                // Implement logic to return to the main menu
-
-                // Toggle opacity for spaceText and menuButton
-                double currentOpacity = spaceText.getOpacity();
-                double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.2, but not below 0.2
-                spaceText.setOpacity(newOpacity);
-                menuButton.setOpacity(newOpacity);
+                pressHandler.handle(null); // Call the press handler
             }
         });
 
-        // Event handler for releasing SPACE key
         returnButton.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.SPACE) {
-                // Reset opacity to normal when the button is released
-                spaceText.setOpacity(1.0);
-                menuButton.setOpacity(1.0);
-
-                SceneController.showTitleScreen();
+                releaseHandler.handle(null); // Call the release handler
             }
         });
+
+        returnButton.setOnMousePressed(pressHandler); // Call the press handler when the mouse is pressed
+        returnButton.setOnMouseReleased(releaseHandler); // Call the release handler when the mouse is released
+
 
         returnButton.setFont(Font.font(VARELA.getFamily(), 30));
         returnButton.setOpacity(0);
+        returnButton.setPrefWidth(360);
+        returnButton.setPrefHeight(100);
 
         // Create the return to main menu button using the winning screen scene
         HBox closeAppButton = OptionButtons.createCloseAppButton();
@@ -93,38 +108,49 @@ public class WinningScreen {
         // Adjust the position of closeAppButton
         closeAppButton.setAlignment(Pos.TOP_LEFT);
         closeAppButton.setPadding(new Insets(20, 0, 0, 20)); // Adjust the values accordingly
-        closeAppButton.setTranslateX(51);
-        closeAppButton.setTranslateY(-93);
+        closeAppButton.setTranslateX(50);
+        closeAppButton.setTranslateY(-9);
+
+        // Create the music button
+        HBox musicButton = OptionButtons.createMusicButton();
+
+        // Adjust the position of musicButton
+        musicButton.setAlignment(Pos.TOP_RIGHT);
+        musicButton.setPadding(new Insets(20, 0, 0, 20)); // Adjust the values accordingly
+        musicButton.setTranslateX(742);
+        musicButton.setTranslateY(-182);
 
         //Vbox (left side) with the added close button
-        VBox leftSide = new VBox(closeAppButton, winningCharacterImage, returnButton, returnToMenu, spaceText, menuButton);
+        VBox leftSide = new VBox(closeAppButton, musicButton, winningCharacterImage, returnButton, returnToMenu, spaceText, menuButton);
         leftSide.setAlignment(Pos.CENTER);
         leftSide.setSpacing(100);
 
+
         // Adjust the position of winningCharacterImage
         winningCharacterImage.setTranslateX(120); // Translate pixels to the right
-        winningCharacterImage.setTranslateY(-71); // Translate pixels down (for up use -)
+        winningCharacterImage.setTranslateY(-156); // Translate pixels down (for up use -)
 
         //Adjust the position of the Return to Main Menu Text
         returnToMenu.setTranslateX(122);
-        returnToMenu.setTranslateY(-55);
+        returnToMenu.setTranslateY(20);
 
         // Adjust the position of returnButton
-        returnButton.setTranslateX(0);
-        returnButton.setTranslateY(0);
+        returnButton.setTranslateX(118);
+        returnButton.setTranslateY(-213);
 
         //Adjust the position of the SPACE Text
         spaceText.setTranslateX(117);
-        spaceText.setTranslateY(-135);
+        spaceText.setTranslateY(-60);
 
         //Adjust the position of the Button IMAGE
         menuButton.setTranslateX(120);
-        menuButton.setTranslateY(777);
+        menuButton.setTranslateY(860);
 
         spaceText.toFront(); // Bring spaceText to the front
+        returnButton.toFront();
         menuButton.toBack(); // Send menuButton to the back
 
-        animateButtons(returnToMenu, spaceText, menuButton);
+        animateButtons(returnButton, returnToMenu, spaceText, menuButton);
 
         // Creating the right side with the leaderboard
         GridPane leaderboardGrid = new GridPane();

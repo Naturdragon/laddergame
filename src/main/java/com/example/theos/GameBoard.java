@@ -1,10 +1,14 @@
 package com.example.theos;
 
 import com.example.theos.BordGameGraph.BoardGraph;
-import javafx.animation.SequentialTransition;
+import javafx.animation.*;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +23,11 @@ public class GameBoard {
     private List<Player> finishedPlayers;
 
     private List<Field> winningFields;
-
+    private Pane rootLayout;
+    private final AnchorPane INSTRUCTIONS_WINDOW = createInstructionsWindow();
     private boolean gameDone = false;
+    private Field waterfallField1;
+    private Field waterfallField2;
 
     public GameBoard() {
 
@@ -47,6 +54,8 @@ public class GameBoard {
         winningFields = new ArrayList<>();
 
         finishedPlayers = new ArrayList<>();
+
+        rootLayout = new Pane();
     }
 
     public GameBoard(BoardGraph boardGraph, List<Player> playerList, Background background) {
@@ -96,41 +105,188 @@ public class GameBoard {
         Returns a scene object, which can be used for the stage object in TheOs start() method
          */
     public Scene createGameBoardScreen() {
-        Pane root = new Pane();
-
-        root.setBackground(background);
+        rootLayout.setBackground(background);
 
         // Placing the diceUI on the sceen
-        diceUI.updateUI(playerList);
+        diceUI.updateNextPlayer(playerList);
         diceUI.setTranslateX(40);
         diceUI.setTranslateY(800 - 215);
-        root.getChildren().add(diceUI);
+        rootLayout.getChildren().add(diceUI);
 
         // the ImageViews of all players in playerList are placed on screen at the coordinates of their spawnfield
         for (Player player : playerList) {
-            root.getChildren().add(player.getImageView());
+            rootLayout.getChildren().add(player.getImageView());
             player.getImageView().setX(player.getCurrentField().getX() - 27);
             player.getImageView().setY(player.getCurrentField().getY() - 27 - 15);
-            player.playIdle();
+            player.playSpawnAnimation(player, player.getCurrentField().getY());
         }
 
         // Placing the top background (water fall section)
         Region backgroundTopRegion = new Region();
         backgroundTopRegion.setBackground(backgroundTop);
         backgroundTopRegion.setPrefSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
-        root.getChildren().add(backgroundTopRegion);
+        rootLayout.getChildren().add(backgroundTopRegion);
 
         // Create option buttons
         HBox closeAppButton = OptionButtons.createCloseAppButton();
         HBox mainMenuButton = OptionButtons.createReturnToMainMenuButton();
+        HBox instructionsButton = OptionButtons.createInstructionsButton(this);
+        HBox musicButton = OptionButtons.createMusicButton();
         closeAppButton.setTranslateX(20);
         closeAppButton.setTranslateY(19);
         mainMenuButton.setTranslateX(79);
         mainMenuButton.setTranslateY(-31);
-        VBox buttonLayout = new VBox(closeAppButton, mainMenuButton);
-        root.getChildren().add(buttonLayout);
+        instructionsButton.setTranslateX(1295);
+        instructionsButton.setTranslateY(-85);
+        musicButton.setTranslateX(1352);
+        musicButton.setTranslateY(-134);
+        VBox buttonLayout = new VBox(closeAppButton, mainMenuButton, instructionsButton, musicButton);
+        rootLayout.getChildren().add(buttonLayout);
 
-        return new Scene(root, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
+        showInstructions(); // when the scene is created the instructionsWindow should be shown on screen for new players
+
+        //showPathSelectionArrows(2);
+
+        return new Scene(rootLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
+    }
+
+    /*
+    Creates the layout of the InstructionsWindow
+    This method is used to fill the instructionsWindow variable of the GameBoard
+    The window can in later use be added to the screen or hidden from the screen
+    Returns an AnchorPane
+     */
+    AnchorPane createInstructionsWindow() {
+        VBox instructionsText = new VBox();
+
+        Text text1 = new Text("Landing on a        - Field makes your Character" + System.lineSeparator() + "take a shortcut");
+        text1.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text1.setFill(TheOs.BROWN);
+        Text text2 = new Text("Landing on a        - Field makes your Character " + System.lineSeparator() + "be set backwards, try to avoid them!");
+        text2.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text2.setFill(TheOs.BROWN);
+        Text text3 = new Text("Every Character has a Normal Die" + System.lineSeparator() + "and a Special Die");
+        text3.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text3.setFill(TheOs.BROWN);
+        Text text4 = new Text("The Numbers on the Special Die are different" + System.lineSeparator() + "for each Character, choose carefully!");
+        text4.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text4.setFill(TheOs.BROWN);
+        Text text5 = new Text("You can use your Special Die only 3 Times at" + System.lineSeparator() + "the Start");
+        text5.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text5.setFill(TheOs.BROWN);
+        Text text6 = new Text("Passing a        - Field increases your Charges");
+        text6.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text6.setFill(TheOs.BROWN);
+        Text text7 = new Text("Select which Die to use with");
+        text7.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text7.setFill(TheOs.BROWN);
+
+        instructionsText.getChildren().addAll(text1, text2, text3, text4, text5, text6, text7);
+        instructionsText.setSpacing(50);
+        VBox.setMargin(text2, new Insets(-35, 0, 0, 0));
+        VBox.setMargin(text4, new Insets(-35, 0, 0, 0));
+        VBox.setMargin(text6, new Insets(-35, 0, 0, 0));
+
+        ImageView instructionsBG = new ImageView("images/gameboard_screen/Instructions_BG.png");
+        instructionsBG.setOpacity(0.85);
+
+        ImageView normalDieIMG = new ImageView("images/gameboard_screen/Game_Die_0.PNG");
+        normalDieIMG.setFitWidth(140);
+        normalDieIMG.setPreserveRatio(true);
+
+        ImageView specialDieIMG = new ImageView("images/gameboard_screen/Game_Die_All.png");
+        specialDieIMG.setFitWidth(140);
+        specialDieIMG.setPreserveRatio(true);
+
+        ImageView ladderFieldIMG = new ImageView("images/gameboard_screen/Tutorial_Up.PNG");
+        ladderFieldIMG.setFitWidth(35);
+        ladderFieldIMG.setPreserveRatio(true);
+        ImageView snakeFieldIMG = new ImageView("images/gameboard_screen/Tutorial_Down.PNG");
+        snakeFieldIMG.setFitWidth(35);
+        snakeFieldIMG.setPreserveRatio(true);
+        ImageView specialFieldIMG = new ImageView("images/gameboard_screen/Tutorial_Special.PNG");
+        specialFieldIMG.setFitWidth(35);
+        specialFieldIMG.setPreserveRatio(true);
+
+        ImageView playerArrowsIMG = new ImageView("images/player_select_screen/Player_Arrows.PNG");
+        playerArrowsIMG.setFitWidth(135);
+        playerArrowsIMG.setPreserveRatio(true);
+
+        OptionButtons optionButtons = new OptionButtons(this);
+        HBox closeButton = optionButtons.createCloseInstructionsButton();
+
+        AnchorPane instructionsWindow = new AnchorPane(instructionsBG, normalDieIMG, specialDieIMG, ladderFieldIMG, snakeFieldIMG, specialFieldIMG, playerArrowsIMG, instructionsText, closeButton);
+        instructionsWindow.setTranslateX(700);
+        instructionsWindow.setTranslateY(70);
+        AnchorPane.setTopAnchor(instructionsText, 85.0);
+        AnchorPane.setLeftAnchor(instructionsText, 40.0);
+        AnchorPane.setRightAnchor(normalDieIMG, 40.0);
+        AnchorPane.setTopAnchor(normalDieIMG, 255.0);
+        AnchorPane.setRightAnchor(specialDieIMG, 210.0);
+        AnchorPane.setTopAnchor(specialDieIMG, 283.0);
+        AnchorPane.setTopAnchor(closeButton, 40.0);
+        AnchorPane.setLeftAnchor(closeButton, 40.0);
+        AnchorPane.setTopAnchor(ladderFieldIMG, 78.0);
+        AnchorPane.setLeftAnchor(ladderFieldIMG, 183.0);
+        AnchorPane.setTopAnchor(snakeFieldIMG, 145.0);
+        AnchorPane.setLeftAnchor(snakeFieldIMG, 183.0);
+        AnchorPane.setTopAnchor(specialFieldIMG, 488.0);
+        AnchorPane.setLeftAnchor(specialFieldIMG, 147.0);
+        AnchorPane.setTopAnchor(playerArrowsIMG, 560.0);
+        AnchorPane.setLeftAnchor(playerArrowsIMG, 350.0);
+
+        return instructionsWindow;
+    }
+
+    /*
+    Adds the instructions window to the rootLayout
+    Plays an animation of the instructions popping up
+    Returns nothing
+     */
+    public void showInstructions() {
+        if (!rootLayout.getChildren().contains(INSTRUCTIONS_WINDOW)) {
+            rootLayout.getChildren().add(INSTRUCTIONS_WINDOW);
+
+            ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(350), INSTRUCTIONS_WINDOW);
+            scaleTransition.setFromX(0);
+            scaleTransition.setFromY(0);
+            scaleTransition.setToX(1);
+            scaleTransition.setToY(1);
+
+            FadeTransition fadeTransition = new FadeTransition(Duration.millis(350), INSTRUCTIONS_WINDOW);
+            fadeTransition.setFromValue(0.0);
+            fadeTransition.setToValue(1);
+
+            ParallelTransition loadAnimation = new ParallelTransition(scaleTransition, fadeTransition);
+            loadAnimation.play();
+
+            /* the idleAnimation was a bit distracting so its commented out
+            TranslateTransition idleAnimation = new TranslateTransition(Duration.millis(500), INSTRUCTIONS_WINDOW);
+            idleAnimation.setByY(-2);
+            idleAnimation.setCycleCount(Animation.INDEFINITE);
+            idleAnimation.setAutoReverse(true);
+
+            loadAnimation.setOnFinished(actionEvent -> idleAnimation.play());
+             */
+        }
+    }
+
+    /*
+    Removes the instructinosWindow from the rootLayout
+    Plays an animation of the window closing
+    Returns nothing
+     */
+    public void hideInstructions() {
+        ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(350), INSTRUCTIONS_WINDOW);
+        scaleTransition.setToX(0.0);
+        scaleTransition.setToY(0.0);
+
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(350), INSTRUCTIONS_WINDOW);
+        fadeTransition.setToValue(0.0);
+
+        ParallelTransition closeAnimation = new ParallelTransition(scaleTransition, fadeTransition);
+        closeAnimation.play();
+        closeAnimation.setOnFinished(actionEvent -> rootLayout.getChildren().remove(INSTRUCTIONS_WINDOW));
     }
 
     public void fillGraphData() {
@@ -212,9 +368,9 @@ public class GameBoard {
         Field field167 = new Field(Field.fieldType.NormalField, 46.6, 12.8);
         Field field168 = new Field(Field.fieldType.NormalField, 48.5, 14.8);
         Field field169 = new Field(Field.fieldType.NormalField, 50.3, 16.6);
-        Field field170 = new Field(Field.fieldType.LadderField, 52.1, 18.3);
+        Field field170 = new Field(Field.fieldType.LadderField, 52.1, 18.3); // Waterfall
 
-        Field field171 = new Field(Field.fieldType.LadderField, 53.8, 20);
+        Field field171 = new Field(Field.fieldType.LadderField, 53.8, 20); // Waterfall
         Field field172 = new Field(Field.fieldType.NormalField, 55.5, 21.9);
         Field field173 = new Field(Field.fieldType.NormalField, 57.1, 23.6);
         Field field174 = new Field(Field.fieldType.NormalField, 59.2, 21.6);
@@ -241,6 +397,9 @@ public class GameBoard {
         Field field193 = new Field(Field.fieldType.NormalField, 77.3, 46.4);
         Field field194 = new Field(Field.fieldType.LadderField, 79.5, 44.7);
         Field field195 = new Field(Field.fieldType.NormalField, 81.1, 42.3);
+
+        waterfallField1 = field170;
+        waterfallField2 = field171;
 
         fieldListUpperPath.add(field101);
         fieldListUpperPath.add(field102);
@@ -551,6 +710,15 @@ public class GameBoard {
         for (Player player : playerList) {
             boardGraph.addVertex(player.getCurrentField());
             boardGraph.addOneDirectionalEdgeForward(player.getCurrentField(), field101, 500, BoardGraph.edgeType.NormalEdge);
+            switch (player.getName()) {
+                case "Diva O'Hara" -> boardGraph.addOneDirectionalEdgeForward(player.getCurrentField(), field101, 2100, BoardGraph.edgeType.NormalEdge);
+                case "Y'Olanda" -> boardGraph.addOneDirectionalEdgeForward(player.getCurrentField(), field101, 1500, BoardGraph.edgeType.NormalEdge);
+                case "Kidd'O" -> boardGraph.addOneDirectionalEdgeForward(player.getCurrentField(), field101, 1000, BoardGraph.edgeType.NormalEdge);
+                case "Mint'O Lint" -> boardGraph.addOneDirectionalEdgeForward(player.getCurrentField(), field101, 2000, BoardGraph.edgeType.NormalEdge);
+                case "Brooke O'Let" -> boardGraph.addOneDirectionalEdgeForward(player.getCurrentField(), field101, 1400, BoardGraph.edgeType.NormalEdge);
+                case "O'Fitz" -> boardGraph.addOneDirectionalEdgeForward(player.getCurrentField(), field101, 700, BoardGraph.edgeType.NormalEdge);
+                default -> boardGraph.addOneDirectionalEdgeForward(player.getCurrentField(), field101, 500, BoardGraph.edgeType.NormalEdge);
+            }
         }
 
         // Add ladder edges between the necessary fields (going from the main path)
@@ -612,6 +780,7 @@ public class GameBoard {
     /*
     Rolls the appropriate die of the player depending on which one is selected at the diceUI
     Calls animateRolledNumber method of diceUI and the movePlayer method
+    Updates the special die charges, so it can be seen when the player used the special die
     Returns nothing
      */
     public void playerTurn(Player player) {
@@ -625,6 +794,7 @@ public class GameBoard {
             rolled = player.rollDie(Dice.dieType.SpecialDie);
         }
 
+        diceUI.updateSpecialCharges(player);
         diceUI.animateRolledNumber(player, rolled);
 
         movePlayer(player, rolled);
@@ -651,11 +821,17 @@ public class GameBoard {
         player.setCurrentField(boardGraph.hopCountTraversal(player.getCurrentField(), fieldsToMove));
 
         sequentialTransition.setOnFinished(event -> {
+            // Check if the new field of the player is a specialChargeField
+            if (player.getCurrentField().getType() == Field.fieldType.SpecialChargeField) {
+                player.getSpecialDie().addCharge();
+                diceUI.updateSpecialCharges(player);
+            }
             player.increaseTurns();
             diceUI.switchPlayerTurn(this);
             player.playIdle();
         });
     }
+
 
     public boolean addFinishedPlayer(Player player) {
         Field lastField = boardGraph.hopCountTraversal(player.getCurrentField(), Integer.MAX_VALUE);
@@ -668,25 +844,5 @@ public class GameBoard {
             }
         }
         return false;
-    }
-
-    public boolean checkWinningCondition() {
-        boolean allPlayersFinished = true;
-
-        for (Player player : playerList) {
-            Field lastField = boardGraph.hopCountTraversal(player.getCurrentField(), Integer.MAX_VALUE);
-
-            if (lastField != null && lastField.getType() != Field.fieldType.LadderField) {
-                // Check if the player has reached or passed the last field
-                if (boardGraph.hopCountTraversal(player.getCurrentField(), Integer.MAX_VALUE) != null) {
-                    player.increaseTurns(); // Increase turns for players who have reached or passed the last field
-                } else {
-                    allPlayersFinished = false; // At least one player hasn't reached the last field
-                }
-            } else {
-                allPlayersFinished = false; // One of the players is on a ladder, not finished
-            }
-        }
-        return allPlayersFinished;
     }
 }
