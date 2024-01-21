@@ -22,6 +22,7 @@ import java.util.Objects;
 
 import static com.example.theos.TheOs.BROWN;
 
+// Der folgende Code wurde teilweise angepasst von [ChatGPT]
 public class PlayerSelectionScreen {
     private static final double SCREEN_WIDTH = 1422;
     private static final double SCREEN_HEIGHT = 800;
@@ -43,7 +44,8 @@ public class PlayerSelectionScreen {
     static final Font CAVEAT = Font.loadFont(PlayerSelectionScreen.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), -1);
     static final Font VARELA = Font.loadFont(PlayerSelectionScreen.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), -1);
 
-
+    /*creates and returnes PlayerSelectinScreen including
+    character selection grid, instructions and buttons */
     public static Scene createPlayerSelectionScreen() {
         playerCounter = 1;
 
@@ -76,8 +78,7 @@ public class PlayerSelectionScreen {
 
         return new Scene(mainLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
     }
-
-
+    //creates VBox and includes instruction text and images for controls
     private static VBox createInstructionsBox() {
 
         Text controls = new Text("CONTROLS");
@@ -167,7 +168,7 @@ public class PlayerSelectionScreen {
         row2.setTranslateX(-6);
         row2.setTranslateY(150);
 
-        row3.setTranslateX(-18);
+        row3.setTranslateX(-11);
         row3.setTranslateY(33);
 
         row4.setTranslateX(87);
@@ -191,6 +192,8 @@ public class PlayerSelectionScreen {
         return leftSide;
     }
 
+    /*Gridpane containes character images, names and deselect buttons,
+    allowing select or deselct characters*/
     private static GridPane createCharactersGrid() {
         charactersGrid = new GridPane();
         charactersGrid.setPadding(new Insets(PADDING_VALUE));
@@ -262,7 +265,8 @@ public class PlayerSelectionScreen {
         return charactersGrid;
     }
 
-
+    /*Creates an ImageView for a given character image path and index,
+     setting up event handling to toggle player selection when clicked*/
     private static ImageView createCharacterImageView(String imagePath, int playerIndex) {
         Image image = new Image(imagePath);
         ImageView imageView = new ImageView(image);
@@ -275,6 +279,7 @@ public class PlayerSelectionScreen {
 
         return imageView;
     }
+
 
     private static ImageView createDeselectButton(int playerIndex, ImageView characterImage) {
         Image deselectImage = new Image("images/player_select_screen/Player_Deselect.PNG", 35, 35, true, true);
@@ -290,7 +295,7 @@ public class PlayerSelectionScreen {
 
         return deselectImageView;
     }
-
+    //toggles player selection status for a given player index
     private static void togglePlayerSelection(int playerIndex, ImageView characterImage) {
         Player currentPlayer = players[playerIndex];
         if (currentPlayer.getPlayerNumber() == 0) {
@@ -299,7 +304,8 @@ public class PlayerSelectionScreen {
             deselectPlayer(playerIndex, characterImage);
         }
     }
-
+    /*selects a player by assignung a player number
+    and adjusts the character image`s position and opacity*/
     private static void selectPlayer(int playerIndex, ImageView characterImage) {
         Player currentPlayer = players[playerIndex];
         currentPlayer.setPlayerNumber(playerCounter++);
@@ -312,6 +318,7 @@ public class PlayerSelectionScreen {
         printAllPlayers();
     }
 
+    //deselects a player by resetting the player number
     private static void deselectPlayer(int playerIndex, ImageView characterImage) {
         Player currentPlayer = players[playerIndex];
         int deselectedPlayerNumber = currentPlayer.getPlayerNumber();
@@ -326,7 +333,8 @@ public class PlayerSelectionScreen {
         System.out.println(allowPlayability());
         printAllPlayers();
     }
-
+    /*adjusts the player numbers of all players with numbers greater than
+     the deselctes player´s number */
     private static void adjustPlayerNumbers(int deselectedPlayerNumber) {
         for (int i = 0; i < players.length; i++) {
             Player player = players[i];
@@ -335,7 +343,8 @@ public class PlayerSelectionScreen {
             }
         }
     }
-
+    /*checks if the current selections allows to start the game
+    by ensuringthe minimum numbers of players is selected*/
     private static boolean allowPlayability() {
         boolean allowPlayability = false;
         if (countSelectedPlayers() >= MIN_PLAYERS) {
@@ -344,6 +353,7 @@ public class PlayerSelectionScreen {
         return allowPlayability;
     }
 
+    //counts and returns the number of currently selected players
     private static int countSelectedPlayers() {
         int count = 0;
         for (Player player : players) {
@@ -354,6 +364,7 @@ public class PlayerSelectionScreen {
         return count;
     }
 
+    //prints information about players like their names and player numbers
     private static void printAllPlayers() {
         for (Player player : players) {
             System.out.println(player);
@@ -436,6 +447,8 @@ public class PlayerSelectionScreen {
         private final SimpleBooleanProperty selectedProperty = new SimpleBooleanProperty(false);
         private final StringProperty playerInfoProperty = new SimpleStringProperty();
 
+        /*to create a player with a selected character
+        and an optional player number*/
         public Player(Character selectedCharacter, Integer playerNumber) {
             this.selectedCharacter = selectedCharacter;
             this.playerNumber = (playerNumber != null) ? playerNumber : 0;
