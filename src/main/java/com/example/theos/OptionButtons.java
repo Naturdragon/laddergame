@@ -175,12 +175,14 @@ public class OptionButtons {
                 musicButtonPane.setOpacity(newOpacity);
                 musicButtonPane.setTranslateY(newOpacity > 0.5 ? musicButtonPane.getTranslateY() - 5 : musicButtonPane.getTranslateY() + 5);
                 musicOn = false;
+                SoundGame.setVolume(0);
             }
             else {
                 double newOpacity = 1.0;
                 musicButtonPane.setOpacity(newOpacity);
                 musicButtonPane.setTranslateY(0);
                 musicOn = true;
+                SoundGame.setVolume(0.1);
                 }
         });
 

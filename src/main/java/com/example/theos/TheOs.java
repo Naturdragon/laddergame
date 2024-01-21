@@ -34,6 +34,7 @@ public class TheOs extends javafx.application.Application {
         SceneController.showTitleScreen();
 
         SoundGame soundGame = new SoundGame("/sound/sound.wav"); // plays music
+        SoundGame.setVolume(0.1);
         stage.setOnCloseRequest(event -> soundGame.stop()); // stops music in case of closed application
 
         // Set application icon
