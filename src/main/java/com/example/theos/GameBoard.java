@@ -130,11 +130,14 @@ public class GameBoard {
         // Create option buttons
         HBox closeAppButton = OptionButtons.createCloseAppButton();
         HBox mainMenuButton = OptionButtons.createReturnToMainMenuButton();
+        HBox instructionsButton = OptionButtons.createInstructionsButton(this);
         closeAppButton.setTranslateX(20);
         closeAppButton.setTranslateY(19);
         mainMenuButton.setTranslateX(79);
         mainMenuButton.setTranslateY(-31);
-        VBox buttonLayout = new VBox(closeAppButton, mainMenuButton);
+        instructionsButton.setTranslateX(1295);
+        instructionsButton.setTranslateY(-85);
+        VBox buttonLayout = new VBox(closeAppButton, mainMenuButton, instructionsButton);
         rootLayout.getChildren().add(buttonLayout);
 
         showInstructions(); // when the scene is created the instructionsWindow should be shown on screen for new players
@@ -150,7 +153,7 @@ public class GameBoard {
     The window can in later use be added to the screen or hidden from the screen
     Returns an AnchorPane
      */
-    private AnchorPane createInstructionsWindow() {
+    AnchorPane createInstructionsWindow() {
         VBox instructionsText = new VBox();
 
         Text text1 = new Text("Landing on a        - Field makes your Character" + System.lineSeparator() + "take a shortcut");
