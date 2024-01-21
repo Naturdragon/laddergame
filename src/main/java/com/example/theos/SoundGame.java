@@ -10,12 +10,11 @@ class SoundGame {
 
     public SoundGame(String filePath) {
         try {
-            // Verwende den ClassLoader, um die Sounddatei als Ressource zu laden
+            // Classloader to load the sound file as a resource
             InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filePath);
             if (inputStream != null) {
                 AudioInputStream audioStream = AudioSystem.getAudioInputStream(new BufferedInputStream(inputStream));
 
-                // Erstelle eine Clip-Instanz und öffne den Audio-Stream
                 clip = AudioSystem.getClip();
                 clip.open(audioStream);
             } else {
@@ -26,16 +25,16 @@ class SoundGame {
         }
     }
 
+    //plays the sound in a loop
     public void playLoop() {
         if (clip != null) {
-            // Starte das Audio im Loop
             clip.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }
 
+    //stop the playback of a sound
     public void stop() {
         if (clip != null) {
-            // Stoppe das Audio
             clip.stop();
         }
     }
