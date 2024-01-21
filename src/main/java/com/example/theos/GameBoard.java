@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -100,9 +102,9 @@ public class GameBoard {
     }
 
     /*
-        Creates the scene/screen view of the gameboard
-        Returns a scene object, which can be used for the stage object in TheOs start() method
-         */
+    Creates the scene/screen view of the gameboard
+    Returns a scene object, which can be used for the stage object in TheOs start() method
+     */
     public Scene createGameBoardScreen() {
         rootLayout.setBackground(background);
 
@@ -271,7 +273,7 @@ public class GameBoard {
     }
 
     /*
-    Removes the instructinosWindow from the rootLayout
+    Removes the instructionsWindow from the rootLayout
     Plays an animation of the window closing
     Returns nothing
      */
@@ -824,6 +826,7 @@ public class GameBoard {
             if (player.getCurrentField().getType() == Field.fieldType.SpecialChargeField) {
                 player.getSpecialDie().addCharge();
                 diceUI.updateSpecialCharges(player);
+                this.playChargeAddedAnimation();
             }
             player.increaseTurns();
             diceUI.switchPlayerTurn(this);
@@ -831,6 +834,37 @@ public class GameBoard {
         });
     }
 
+    /*
+    Meant to play when someone lands on a special field
+    Shows "Special Die Charges +1" animated on the screen
+    Returns nothing
+     */
+    public void playChargeAddedAnimation() {
+        Text text = new Text("Special Die Charges +1");
+        text.setFill(TheOs.BROWN);
+        text.setFont(Font.font(DiceUI.CUSTOM_FONT_VARELA.getFamily(), 65));
+
+        text.setX(370);
+        text.setY(350);
+        rootLayout.getChildren().add(text);
+
+        TranslateTransition translate = new TranslateTransition(Duration.millis(500), text);
+        translate.setByY(-60);
+
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), text);
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(1);
+
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(200), text);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0.2);
+
+        SequentialTransition fadeInAndOut = new SequentialTransition(fadeIn, fadeOut);
+
+        ParallelTransition parallelTransition = new ParallelTransition(translate, fadeInAndOut);
+        parallelTransition.play();
+        parallelTransition.setOnFinished(actionEvent -> rootLayout.getChildren().remove(text));
+    }
 
     public boolean addFinishedPlayer(Player player) {
         Field lastField = boardGraph.hopCountTraversal(player.getCurrentField(), Integer.MAX_VALUE);
