@@ -12,8 +12,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -36,7 +34,6 @@ public class PlayerSelectionScreen {
     private static final double DESELECT_BUTTON_OFFSET_X = 50; // Adjust this value
     private static final double DESELECT_BUTTON_OFFSET_Y = 50;  // Adjust this value
 
-    static private String[] selectedCharacters; // this doesnt really serve any purpose in the current state of the code
     private static GridPane charactersGrid;
     static private BooleanProperty[] playerSelectedProperties;
     private static Character[] characters;
@@ -80,6 +77,7 @@ public class PlayerSelectionScreen {
         return new Scene(mainLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
     }
 
+
     private static VBox createInstructionsBox() {
 
         Text controls = new Text("CONTROLS");
@@ -97,23 +95,28 @@ public class PlayerSelectionScreen {
         row2.setFont(Font.font(VARELA.getFamily(), 28));
         row2.setFill(BROWN);
 
-        Text row3 = new Text("Dice" + System.lineSeparator() +
-                "Select");
-        row3.setFont(Font.font(VARELA.getFamily(), 30));
+        Text row3 = new Text("You must select" + System.lineSeparator() +
+                "at least two Characters!" + System.lineSeparator());
+        row3.setFont(Font.font(VARELA.getFamily(), 28));
         row3.setFill(BROWN);
 
-        Text row4 = new Text("Player Select" + System.lineSeparator() +
-                "Option Select");
+        Text row4 = new Text("Dice" + System.lineSeparator() +
+                "Select");
         row4.setFont(Font.font(VARELA.getFamily(), 30));
         row4.setFill(BROWN);
 
-        Text row5 = new Text("Start");
+        Text row5 = new Text("Player Select" + System.lineSeparator() +
+                "Option Select");
         row5.setFont(Font.font(VARELA.getFamily(), 30));
         row5.setFill(BROWN);
 
-        Text row6 = new Text("SPACE");
-        row6.setFont(Font.font(VARELA.getFamily(), 28));
+        Text row6 = new Text("Start");
+        row6.setFont(Font.font(VARELA.getFamily(), 30));
         row6.setFill(BROWN);
+
+        Text row7 = new Text("SPACE");
+        row7.setFont(Font.font(VARELA.getFamily(), 28));
+        row7.setFill(BROWN);
 
         ImageView spaceButton = new ImageView(new Image("images/option_button_extras/Button_Space_Small.PNG"));
         spaceButton.setPreserveRatio(true);
@@ -129,8 +132,8 @@ public class PlayerSelectionScreen {
                 double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.2, but not below 0.2
                 row6.setOpacity(newOpacity);
                 spaceButton.setOpacity(newOpacity);
-                row6.setTranslateY(-376);
-                spaceButton.setTranslateY(978);
+                row6.setTranslateY(-480);
+                spaceButton.setTranslateY(1075);
             }
         });
 
@@ -140,8 +143,8 @@ public class PlayerSelectionScreen {
                 // Reset opacity to normal when the button is released
                 row6.setOpacity(1.0);
                 spaceButton.setOpacity(1.0);
-                row6.setTranslateY(-379);
-                spaceButton.setTranslateY(975);
+                row6.setTranslateY(-480);
+                spaceButton.setTranslateY(1075);
 
                 // The scene is switched to the GameBoard with the current list of selected characters if at least 2 characters are selected
                 if (allowPlayability()) SceneController.showGameBoardScreen(PlayerSelectionScreen.createPlayerList());
@@ -151,33 +154,36 @@ public class PlayerSelectionScreen {
         startButton.setOpacity(0);
 
         //Vbox (left side)
-        VBox leftSide = new VBox(controls, row1, row2, row3, row4, row6, spaceButton, row5, startButton);
+        VBox leftSide = new VBox(controls, row1, row2, row3, row4, row6,row7, spaceButton, row5, startButton);
         leftSide.setAlignment(Pos.CENTER);
         leftSide.setSpacing(100);
 
         controls.setTranslateX(-8);
-        controls.setTranslateY(254);
+        controls.setTranslateY(355);
 
-        row1.setTranslateX(-13);
-        row1.setTranslateY(190);
+        row1.setTranslateX(-16);
+        row1.setTranslateY(268);
 
         row2.setTranslateX(-6);
-        row2.setTranslateY(100);
+        row2.setTranslateY(150);
 
-        row3.setTranslateX(90);
-        row3.setTranslateY(3);
+        row3.setTranslateX(-18);
+        row3.setTranslateY(33);
 
-        row4.setTranslateX(-65);
-        row4.setTranslateY(-65);
+        row4.setTranslateX(87);
+        row4.setTranslateY(-75);
 
-        row5.setTranslateX(95);
-        row5.setTranslateY(-118);
+        row5.setTranslateX(-65);
+        row5.setTranslateY(-283);
 
-        row6.setTranslateX(-77);
-        row6.setTranslateY(-379);
+        row6.setTranslateX(93);
+        row6.setTranslateY(-480);
 
-        spaceButton.setTranslateX(-77);
-        spaceButton.setTranslateY(975);
+        row7.setTranslateX(-77);
+        row7.setTranslateY(-45);
+
+        spaceButton.setTranslateX(-79);
+        spaceButton.setTranslateY(1075);
 
         spaceButton.toBack();
         row6.toFront();
@@ -212,7 +218,6 @@ public class PlayerSelectionScreen {
                 "O'Fitz"
         };
 
-        selectedCharacters = new String[characterImagePaths.length];
         playerSelectedProperties = new BooleanProperty[characterImagePaths.length];
 
         int columnIndex = 0;
@@ -224,7 +229,6 @@ public class PlayerSelectionScreen {
             }
 
             ImageView characterImage = createCharacterImageView(characterImagePaths[i], i);
-            Circle characterButton = createCharacterButton(i, characterImage);
             ImageView deselectButton = createDeselectButton(i, characterImage);
 
             characters[i] = new Character(characterNames[i]);
@@ -243,7 +247,7 @@ public class PlayerSelectionScreen {
             playerInfoBox.setAlignment(Pos.CENTER);
 
             StackPane characterPane = new StackPane();
-            characterPane.getChildren().addAll(playerInfoBox, characterButton, deselectButton);
+            characterPane.getChildren().addAll(playerInfoBox, deselectButton);
             StackPane.setAlignment(deselectButton, Pos.TOP_RIGHT);
             StackPane.setMargin(deselectButton, new Insets(DESELECT_BUTTON_OFFSET_Y, DESELECT_BUTTON_OFFSET_X, 0, 0));
             charactersGrid.add(characterPane, columnIndex, rowIndex);
@@ -258,19 +262,6 @@ public class PlayerSelectionScreen {
         return charactersGrid;
     }
 
-    private static Circle createCharacterButton(int playerIndex, ImageView characterImage) {
-        Circle button = new Circle(CHARACTER_IMAGE_SIZE / 2);
-        button.setFill(Color.TRANSPARENT);
-        button.setStroke(Color.TRANSPARENT);
-
-        button.setOnMousePressed(event -> {
-            if (playerIndex < selectedCharacters.length) {
-                togglePlayerSelection(playerIndex, characterImage);
-            }
-        });
-
-        return button;
-    }
 
     private static ImageView createCharacterImageView(String imagePath, int playerIndex) {
         Image image = new Image(imagePath);

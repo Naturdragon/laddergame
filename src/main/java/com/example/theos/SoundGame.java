@@ -1,6 +1,5 @@
 package com.example.theos;
 
-
 import javax.sound.sampled.*;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -41,4 +40,3 @@ class SoundGame {
         }
     }
 }
-
