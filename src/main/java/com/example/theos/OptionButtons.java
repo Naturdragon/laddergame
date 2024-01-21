@@ -8,7 +8,13 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+
 public class OptionButtons {
+
+    private GameBoard gameBoard;  // Add a reference to GameBoard for createCloseInstructionsButton()
+    public OptionButtons(GameBoard gameBoard) {
+        this.gameBoard = gameBoard;
+    }
 
     public static HBox createCloseAppButton() {
         ImageView closeImage = new ImageView(new Image("images/option_button_extras/Button_Exit.PNG"));
@@ -45,7 +51,7 @@ public class OptionButtons {
         return closeButtonBox;
     }
 
-    public static HBox createCloseInstructionsButton() {
+    public HBox createCloseInstructionsButton() {
         ImageView closeImage = new ImageView(new Image("images/option_button_extras/Button_Exit.PNG"));
         closeImage.setFitWidth(35);
         closeImage.setFitHeight(35);
@@ -62,13 +68,19 @@ public class OptionButtons {
         closeButtonBox.setOnMouseEntered(event -> closeButtonBox.getStyleClass().add("hovered"));
         closeButtonBox.setOnMouseExited(event -> closeButtonBox.getStyleClass().remove("hovered"));
 
-        // Set action on mouse press for both the image and the hitbox
+        // Opacity and translation effect on press
         closeButtonBox.setOnMousePressed(event -> {
-            // Opacity and translation effect on press
             double currentOpacity = closeButtonPane.getOpacity();
             double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.5, but not below 0.5
             closeButtonPane.setOpacity(newOpacity);
             closeButtonPane.setTranslateY(newOpacity > 0.5 ? closeButtonPane.getTranslateY() - 5 : closeButtonPane.getTranslateY() + 5);
+        });
+
+        // Reset opacity and y-coordinate & close instructions window
+        closeButtonBox.setOnMouseReleased(event -> {
+            closeButtonPane.setOpacity(1.0);
+            closeButtonPane.setTranslateY(closeButtonPane.getTranslateY() - 5);
+            gameBoard.hideInstructions();
         });
 
         return closeButtonBox;
@@ -105,5 +117,81 @@ public class OptionButtons {
         });
 
         return returnButtonBox;
+    }
+    public static HBox createInstructionsButton(GameBoard gameBoard) {
+        ImageView instructionsImage = new ImageView(new Image("images/option_button_extras/Button_Instructions.PNG"));
+        instructionsImage.setFitHeight(50);
+        instructionsImage.setPreserveRatio(true);
+
+        // Create an invisible hitbox (rectangle)
+        Rectangle hitbox = new Rectangle(50, 50);
+        hitbox.setFill(Color.TRANSPARENT);
+
+        instructionsImage.setOnMouseReleased(event -> gameBoard.showInstructions());
+        hitbox.setOnMouseReleased(event -> gameBoard.showInstructions());
+
+        // Use a StackPane to overlay the image and hitbox
+        StackPane instructionsButtonPane = new StackPane(instructionsImage, hitbox);
+
+        HBox instructionsButtonBox = new HBox(instructionsButtonPane);
+        instructionsButtonBox.setOnMouseEntered(event -> instructionsButtonBox.getStyleClass().add("hovered"));
+        instructionsButtonBox.setOnMouseExited(event -> instructionsButtonBox.getStyleClass().remove("hovered"));
+
+        // Set action on mouse press for both the image and the hitbox
+        instructionsButtonBox.setOnMousePressed(event -> {
+            // Opacity and translation effect on press
+            double newOpacity = 0.5;
+            instructionsButtonPane.setOpacity(newOpacity);
+            instructionsButtonPane.setTranslateY(newOpacity > 0.5 ? -5 : 5);
+        });
+
+        instructionsButtonBox.setOnMouseReleased(event -> {
+            // Opacity and translation effect on release
+            instructionsButtonPane.setOpacity(1.0);
+            instructionsButtonPane.setTranslateY(0);
+        });
+
+        return instructionsButtonBox;
+    }
+
+    public static HBox createMusicButton() {
+        System.out.println("Creating music button");  // Debugging output
+
+        ImageView musicImage = new ImageView(new Image("images/option_button_extras/Button_Sound.PNG"));
+        musicImage.setFitWidth(50);
+        musicImage.setFitHeight(50);
+
+        // Create an invisible hitbox (rectangle)
+        Rectangle hitbox = new Rectangle(50, 50);
+        hitbox.setFill(Color.TRANSPARENT);
+
+        // Use a StackPane to overlay the image and hitbox
+        StackPane musicButtonPane = new StackPane(musicImage, hitbox);
+
+        HBox musicButtonBox = new HBox(musicButtonPane);
+        musicButtonBox.getStyleClass().add("app-button");
+        musicButtonBox.setOnMouseEntered(event -> musicButtonBox.getStyleClass().add("hovered"));
+        musicButtonBox.setOnMouseExited(event -> musicButtonBox.getStyleClass().remove("hovered"));
+
+        // Set action on mouse press for both the image and the hitbox
+        musicButtonBox.setOnMousePressed(event -> {
+            System.out.println("Music button pressed");
+            // Opacity and translation effect on press
+            double currentOpacity = musicButtonPane.getOpacity();
+            double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.5, but not below 0.5
+            musicButtonPane.setOpacity(newOpacity);
+            musicButtonPane.setTranslateY(newOpacity > 0.5 ? musicButtonPane.getTranslateY() - 5 : musicButtonPane.getTranslateY() + 5);
+        });
+
+        musicButtonBox.setOnMouseReleased(event -> {
+            System.out.println("Music button released");
+            // Opacity and translation effect on release
+            double newOpacity = 1.0;
+            musicButtonPane.setOpacity(newOpacity);
+            musicButtonPane.setTranslateY(0);
+        });
+
+
+        return musicButtonBox;
     }
 }

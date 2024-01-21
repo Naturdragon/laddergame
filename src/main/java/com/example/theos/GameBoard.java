@@ -26,6 +26,8 @@ public class GameBoard {
     private Pane rootLayout;
     private final AnchorPane INSTRUCTIONS_WINDOW = createInstructionsWindow();
     private boolean gameDone = false;
+    private Field waterfallField1;
+    private Field waterfallField2;
 
     public GameBoard() {
 
@@ -128,11 +130,17 @@ public class GameBoard {
         // Create option buttons
         HBox closeAppButton = OptionButtons.createCloseAppButton();
         HBox mainMenuButton = OptionButtons.createReturnToMainMenuButton();
+        HBox instructionsButton = OptionButtons.createInstructionsButton(this);
+        HBox musicButton = OptionButtons.createMusicButton();
         closeAppButton.setTranslateX(20);
         closeAppButton.setTranslateY(19);
         mainMenuButton.setTranslateX(79);
         mainMenuButton.setTranslateY(-31);
-        VBox buttonLayout = new VBox(closeAppButton, mainMenuButton);
+        instructionsButton.setTranslateX(1295);
+        instructionsButton.setTranslateY(-85);
+        musicButton.setTranslateX(1352);
+        musicButton.setTranslateY(-134);
+        VBox buttonLayout = new VBox(closeAppButton, mainMenuButton, instructionsButton, musicButton);
         rootLayout.getChildren().add(buttonLayout);
 
         showInstructions(); // when the scene is created the instructionsWindow should be shown on screen for new players
@@ -148,7 +156,7 @@ public class GameBoard {
     The window can in later use be added to the screen or hidden from the screen
     Returns an AnchorPane
      */
-    private AnchorPane createInstructionsWindow() {
+    AnchorPane createInstructionsWindow() {
         VBox instructionsText = new VBox();
 
         Text text1 = new Text("Landing on a        - Field makes your Character" + System.lineSeparator() + "take a shortcut");
@@ -200,27 +208,32 @@ public class GameBoard {
         specialFieldIMG.setFitWidth(35);
         specialFieldIMG.setPreserveRatio(true);
 
-        HBox closeButton = OptionButtons.createCloseInstructionsButton();
+        ImageView playerArrowsIMG = new ImageView("images/player_select_screen/Player_Arrows.PNG");
+        playerArrowsIMG.setFitWidth(135);
+        playerArrowsIMG.setPreserveRatio(true);
 
-        AnchorPane instructionsWindow = new AnchorPane(instructionsBG, normalDieIMG, specialDieIMG, ladderFieldIMG, snakeFieldIMG, specialFieldIMG, instructionsText, closeButton);
+        OptionButtons optionButtons = new OptionButtons(this);
+        HBox closeButton = optionButtons.createCloseInstructionsButton();
+
+        AnchorPane instructionsWindow = new AnchorPane(instructionsBG, normalDieIMG, specialDieIMG, ladderFieldIMG, snakeFieldIMG, specialFieldIMG, playerArrowsIMG, instructionsText, closeButton);
         instructionsWindow.setTranslateX(700);
         instructionsWindow.setTranslateY(70);
         AnchorPane.setTopAnchor(instructionsText, 85.0);
-        AnchorPane.setLeftAnchor(instructionsText, 35.0);
-        AnchorPane.setRightAnchor(normalDieIMG, 45.0);
+        AnchorPane.setLeftAnchor(instructionsText, 40.0);
+        AnchorPane.setRightAnchor(normalDieIMG, 40.0);
         AnchorPane.setTopAnchor(normalDieIMG, 255.0);
-        AnchorPane.setRightAnchor(specialDieIMG, 215.0);
+        AnchorPane.setRightAnchor(specialDieIMG, 210.0);
         AnchorPane.setTopAnchor(specialDieIMG, 283.0);
-        AnchorPane.setTopAnchor(closeButton, 30.0);
-        AnchorPane.setLeftAnchor(closeButton, 30.0);
+        AnchorPane.setTopAnchor(closeButton, 40.0);
+        AnchorPane.setLeftAnchor(closeButton, 40.0);
         AnchorPane.setTopAnchor(ladderFieldIMG, 78.0);
-        AnchorPane.setLeftAnchor(ladderFieldIMG, 178.0);
+        AnchorPane.setLeftAnchor(ladderFieldIMG, 183.0);
         AnchorPane.setTopAnchor(snakeFieldIMG, 145.0);
-        AnchorPane.setLeftAnchor(snakeFieldIMG, 178.0);
+        AnchorPane.setLeftAnchor(snakeFieldIMG, 183.0);
         AnchorPane.setTopAnchor(specialFieldIMG, 488.0);
-        AnchorPane.setLeftAnchor(specialFieldIMG, 142.0);
-
-        closeButton.setOnMouseReleased(event -> hideInstructions());
+        AnchorPane.setLeftAnchor(specialFieldIMG, 147.0);
+        AnchorPane.setTopAnchor(playerArrowsIMG, 560.0);
+        AnchorPane.setLeftAnchor(playerArrowsIMG, 350.0);
 
         return instructionsWindow;
     }
@@ -355,9 +368,9 @@ public class GameBoard {
         Field field167 = new Field(Field.fieldType.NormalField, 46.6, 12.8);
         Field field168 = new Field(Field.fieldType.NormalField, 48.5, 14.8);
         Field field169 = new Field(Field.fieldType.NormalField, 50.3, 16.6);
-        Field field170 = new Field(Field.fieldType.LadderField, 52.1, 18.3);
+        Field field170 = new Field(Field.fieldType.LadderField, 52.1, 18.3); // Waterfall
 
-        Field field171 = new Field(Field.fieldType.LadderField, 53.8, 20);
+        Field field171 = new Field(Field.fieldType.LadderField, 53.8, 20); // Waterfall
         Field field172 = new Field(Field.fieldType.NormalField, 55.5, 21.9);
         Field field173 = new Field(Field.fieldType.NormalField, 57.1, 23.6);
         Field field174 = new Field(Field.fieldType.NormalField, 59.2, 21.6);
@@ -384,6 +397,9 @@ public class GameBoard {
         Field field193 = new Field(Field.fieldType.NormalField, 77.3, 46.4);
         Field field194 = new Field(Field.fieldType.LadderField, 79.5, 44.7);
         Field field195 = new Field(Field.fieldType.NormalField, 81.1, 42.3);
+
+        waterfallField1 = field170;
+        waterfallField2 = field171;
 
         fieldListUpperPath.add(field101);
         fieldListUpperPath.add(field102);
@@ -711,8 +727,8 @@ public class GameBoard {
         getBoardGraph().addOneDirectionalEdge(field127, field135, 2300, BoardGraph.edgeType.LadderEdge);
         getBoardGraph().addOneDirectionalEdge(field143, field124, 1250, BoardGraph.edgeType.LadderEdge);
         getBoardGraph().addOneDirectionalEdge(field154, field165, 2150, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field170, field202, 2250, BoardGraph.edgeType.LadderEdge);    // water fall
-        getBoardGraph().addOneDirectionalEdge(field171, field203, 2400, BoardGraph.edgeType.LadderEdge);    // water fall
+        getBoardGraph().addOneDirectionalEdge(field170, field202, 600, BoardGraph.edgeType.LadderEdge); // Waterfall
+        getBoardGraph().addOneDirectionalEdge(field171, field203, 600, BoardGraph.edgeType.LadderEdge); // Waterfall
         getBoardGraph().addOneDirectionalEdge(field177, field182, 1800, BoardGraph.edgeType.LadderEdge);
         getBoardGraph().addOneDirectionalEdge(field184, field174, 2500, BoardGraph.edgeType.LadderEdge);
         getBoardGraph().addOneDirectionalEdge(field194, field322, 1500, BoardGraph.edgeType.LadderEdge);
@@ -814,6 +830,7 @@ public class GameBoard {
             player.playIdle();
         });
     }
+
 
     public boolean addFinishedPlayer(Player player) {
         Field lastField = boardGraph.hopCountTraversal(player.getCurrentField(), Integer.MAX_VALUE);

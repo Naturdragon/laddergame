@@ -39,11 +39,16 @@ public class TitleScreen {
 
         // Create the return to main menu button using the main menu scene
         HBox closeAppButton = OptionButtons.createCloseAppButton();
-        closeAppButton.setTranslateX(-840);
-        closeAppButton.setTranslateY(-356);
+        closeAppButton.setTranslateX(-815);
+        closeAppButton.setTranslateY(-358);
+
+        HBox musicButton = OptionButtons.createMusicButton();
+        musicButton.setTranslateX(465);
+        musicButton.setTranslateY(-360);
 
         // Add the button to the main layout
         mainLayout.getChildren().add(closeAppButton);
+        mainLayout.getChildren().add(musicButton);
         return new Scene(mainLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
     }
 
@@ -125,6 +130,7 @@ public class TitleScreen {
 
         return frontPage;
     }
+
 
     public static void animateButtons(Node... buttons) {
         for (Node button : buttons) {

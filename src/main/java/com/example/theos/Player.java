@@ -3,7 +3,6 @@ package com.example.theos;
 import Animation.SpriteAnimation;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
-import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -170,7 +169,7 @@ public class Player {
         parallelTransition.play();
     }
 
-    public void playFallOpaque() {
+    public void playFallWaterfall() {
         if (currentAnimation != null) {
             currentAnimation.stop();
         }
