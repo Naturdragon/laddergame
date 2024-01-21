@@ -9,30 +9,25 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static com.example.theos.OptionButtons.createCloseAppButton;
 import static com.example.theos.TitleScreen.animateButtons;
-import static javafx.application.Application.launch;
 
+/*
+The WinningScreen class displays the winning screen with the leaderboard and options to return to the main menu.
+ */
 public class WinningScreen {
 
     static final Font VARELA = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), -1);
 
-    /* Displays the winning screen with the leaderboard and options to return to the main menu.
-     * primaryStage    The primary stage of the JavaFX application.
-     * finishedPlayers List of players who have completed the game.
-     */
     public static Scene createWinningScreen(List<Player> finishedPlayers) {
         // Extract the winner
         Player winner = finishedPlayers.get(0);
@@ -46,20 +41,22 @@ public class WinningScreen {
         winningCharacterImage.setFitWidth(262);
         winningCharacterImage.setFitHeight(185);
 
-        //Text shown on Screen above the SPACE Button
+        // Text shown on Screen above the SPACE Button
         Text returnToMenu = new Text("Return to Main Menu");
         returnToMenu.setFont(Font.font(VARELA.getFamily(), 30));
         returnToMenu.setFill(TheOs.BROWN);
 
+        // SPACE Text on the actual Return Button
         Text spaceText = new Text("SPACE");
         spaceText.setFont(Font.font(VARELA.getFamily(), 32));
         spaceText.setFill(TheOs.BROWN);
 
+        // The Picture of the Button
         ImageView menuButton = new ImageView(new Image("images/option_button_extras/Button_Space_Big.PNG"));
         menuButton.setPreserveRatio(true);
         menuButton.setFitWidth(348);
 
-        // Button to return to MAIN MENU (not finished)
+        // Button to return to MAIN MENU
         Button returnButton = new Button("Return to Main Menu");
 
         // Event handler for pressing SPACE key or pressing the mouse
@@ -77,16 +74,18 @@ public class WinningScreen {
             spaceText.setOpacity(1.0);
             menuButton.setOpacity(1.0);
 
+            // Return to Title Screen
             SceneController.showTitleScreen();
         };
 
-        // Set event handlers for both SPACE key and mouse
+        // Set event handlers for pressing either SPACE key or mouse
         returnButton.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.SPACE) {
                 pressHandler.handle(null); // Call the press handler
             }
         });
 
+        // Set event handlers for releasing either SPACE key or mouse
         returnButton.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.SPACE) {
                 releaseHandler.handle(null); // Call the release handler
@@ -96,13 +95,15 @@ public class WinningScreen {
         returnButton.setOnMousePressed(pressHandler); // Call the press handler when the mouse is pressed
         returnButton.setOnMouseReleased(releaseHandler); // Call the release handler when the mouse is released
 
-
+        // Formatting and adjusting the size of the return Button
         returnButton.setFont(Font.font(VARELA.getFamily(), 30));
         returnButton.setOpacity(0);
         returnButton.setPrefWidth(360);
-        returnButton.setPrefHeight(100);
+        returnButton.setPrefHeight(130);
+        returnButton.setTranslateX(118);
+        returnButton.setTranslateY(-218);
 
-        // Create the return to main menu button using the winning screen scene
+        // Creating the closeApp Button
         HBox closeAppButton = OptionButtons.createCloseAppButton();
 
         // Adjust the position of closeAppButton
@@ -111,7 +112,7 @@ public class WinningScreen {
         closeAppButton.setTranslateX(50);
         closeAppButton.setTranslateY(-9);
 
-        // Create the music button
+        // Creates the music button
         HBox musicButton = OptionButtons.createMusicButton();
 
         // Adjust the position of musicButton
@@ -120,36 +121,32 @@ public class WinningScreen {
         musicButton.setTranslateX(742);
         musicButton.setTranslateY(-182);
 
-        //Vbox (left side) with the added close button
+        // Vbox (left side) with the added buttons
         VBox leftSide = new VBox(closeAppButton, musicButton, winningCharacterImage, returnButton, returnToMenu, spaceText, menuButton);
         leftSide.setAlignment(Pos.CENTER);
         leftSide.setSpacing(100);
 
-
         // Adjust the position of winningCharacterImage
         winningCharacterImage.setTranslateX(120); // Translate pixels to the right
-        winningCharacterImage.setTranslateY(-156); // Translate pixels down (for up use -)
+        winningCharacterImage.setTranslateY(-159); // Translate pixels down (for up use -)
 
-        //Adjust the position of the Return to Main Menu Text
+        // Adjust the position of the Return to Main Menu Text
         returnToMenu.setTranslateX(122);
-        returnToMenu.setTranslateY(20);
+        returnToMenu.setTranslateY(15);
 
-        // Adjust the position of returnButton
-        returnButton.setTranslateX(118);
-        returnButton.setTranslateY(-213);
-
-        //Adjust the position of the SPACE Text
+        // Adjust the position of the SPACE Text
         spaceText.setTranslateX(117);
-        spaceText.setTranslateY(-60);
+        spaceText.setTranslateY(-65);
 
-        //Adjust the position of the Button IMAGE
+        // Adjust the position of the Button IMAGE
         menuButton.setTranslateX(120);
         menuButton.setTranslateY(860);
 
         spaceText.toFront(); // Bring spaceText to the front
-        returnButton.toFront();
+        returnButton.toFront(); // Bring the returnButton to the Front
         menuButton.toBack(); // Send menuButton to the back
 
+        // Button Animation
         animateButtons(returnButton, returnToMenu, spaceText, menuButton);
 
         // Creating the right side with the leaderboard
@@ -202,7 +199,7 @@ public class WinningScreen {
         mainLayout.setAlignment(Pos.CENTER);
         mainLayout.setSpacing(100);
 
-        // Set background image for the whole scene using CSS
+        // Set background image
         String backgroundImage = "url('images/winning_screen/Winning_Screen.png')";
         mainLayout.setStyle("-fx-background-image: " + backgroundImage + "; " +
                 "-fx-background-size: cover;");

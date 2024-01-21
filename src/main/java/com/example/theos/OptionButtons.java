@@ -9,170 +9,150 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class OptionButtons {
-
     private GameBoard gameBoard;  // Add a reference to GameBoard for createCloseInstructionsButton()
     public OptionButtons(GameBoard gameBoard) {
         this.gameBoard = gameBoard;
     }
-    private static boolean musicOn = true;
+    static boolean instructionsOn = true;
+    static boolean musicOn = true;
 
     public static HBox createCloseAppButton() {
-        ImageView closeImage = new ImageView(new Image("images/option_button_extras/Button_Exit.PNG"));
-        closeImage.setFitWidth(50);
-        closeImage.setFitHeight(50);
+        ImageView closeAppIMG = new ImageView(new Image("images/option_button_extras/Button_Exit.PNG"));
+        closeAppIMG.setFitWidth(50);
+        closeAppIMG.setPreserveRatio(true);
 
         // Create an invisible hitbox (rectangle)
         Rectangle hitbox = new Rectangle(50, 50);
         hitbox.setFill(Color.TRANSPARENT);
 
-        // Use a StackPane to overlay the image and hitbox
-        StackPane closeButtonPane = new StackPane(closeImage, hitbox);
+        // StackPane overlays image / hitbox & creates HBox
+        StackPane closeAppButtonPane = new StackPane(closeAppIMG, hitbox);
+        HBox closeAppButtonBox = new HBox(closeAppButtonPane);
 
-        HBox closeButtonBox = new HBox(closeButtonPane);
-        closeButtonBox.getStyleClass().add("app-button");
-        closeButtonBox.setOnMouseEntered(event -> closeButtonBox.getStyleClass().add("hovered"));
-        closeButtonBox.setOnMouseExited(event -> closeButtonBox.getStyleClass().remove("hovered"));
-
-        // Set action on mouse press for both the image and the hitbox
-        closeButtonBox.setOnMousePressed(event -> {
-            // Opacity and translation effect on press
-            double currentOpacity = closeButtonPane.getOpacity();
+        // Opacity & translation effects
+        closeAppButtonBox.setOnMousePressed(event -> {
+            double currentOpacity = closeAppButtonPane.getOpacity();
             double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.5, but not below 0.5
-            closeButtonPane.setOpacity(newOpacity);
-            closeButtonPane.setTranslateY(newOpacity > 0.5 ? closeButtonPane.getTranslateY() - 5 : closeButtonPane.getTranslateY() + 5);
+            closeAppButtonPane.setOpacity(newOpacity);
+            closeAppButtonPane.setTranslateY(newOpacity > 0.5 ? closeAppButtonPane.getTranslateY() - 5 : closeAppButtonPane.getTranslateY() + 5);
         });
 
-        // Set action on mouse release for both the image and the hitbox
-        closeButtonBox.setOnMouseReleased(event -> {
-            // Perform exit action
-            Platform.exit();
-        });
+        // Close application
+        closeAppButtonBox.setOnMouseReleased(event -> Platform.exit());
 
-        return closeButtonBox;
+        return closeAppButtonBox;
     }
 
     public HBox createCloseInstructionsButton() {
-        ImageView closeImage = new ImageView(new Image("images/option_button_extras/Button_Exit.PNG"));
-        closeImage.setFitWidth(35);
-        closeImage.setFitHeight(35);
+        ImageView closeInstructionsIMG = new ImageView(new Image("images/option_button_extras/Button_Exit.PNG"));
+        closeInstructionsIMG.setFitWidth(35);
+        closeInstructionsIMG.setPreserveRatio(true);
 
         // Create an invisible hitbox (rectangle)
         Rectangle hitbox = new Rectangle(35, 35);
         hitbox.setFill(Color.TRANSPARENT);
 
-        // Use a StackPane to overlay the image and hitbox
-        StackPane closeButtonPane = new StackPane(closeImage, hitbox);
+        // StackPane overlays image / hitbox & creates HBox
+        StackPane closeInstructionsButtonPane = new StackPane(closeInstructionsIMG, hitbox);
+        HBox closeInstructionsButtonBox = new HBox(closeInstructionsButtonPane);
 
-        HBox closeButtonBox = new HBox(closeButtonPane);
-        closeButtonBox.getStyleClass().add("app-button");
-        closeButtonBox.setOnMouseEntered(event -> closeButtonBox.getStyleClass().add("hovered"));
-        closeButtonBox.setOnMouseExited(event -> closeButtonBox.getStyleClass().remove("hovered"));
-
-        // Opacity and translation effect on press
-        closeButtonBox.setOnMousePressed(event -> {
-            double currentOpacity = closeButtonPane.getOpacity();
+        // Opacity & translation effects
+        closeInstructionsButtonBox.setOnMousePressed(event -> {
+            double currentOpacity = closeInstructionsButtonPane.getOpacity();
             double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.5, but not below 0.5
-            closeButtonPane.setOpacity(newOpacity);
-            closeButtonPane.setTranslateY(newOpacity > 0.5 ? closeButtonPane.getTranslateY() - 5 : closeButtonPane.getTranslateY() + 5);
+            closeInstructionsButtonPane.setOpacity(newOpacity);
+            closeInstructionsButtonPane.setTranslateY(newOpacity > 0.5 ? closeInstructionsButtonPane.getTranslateY() - 5 : closeInstructionsButtonPane.getTranslateY() + 5);
         });
 
-        // Reset opacity and y-coordinate & close instructions window
-        closeButtonBox.setOnMouseReleased(event -> {
-            closeButtonPane.setOpacity(1.0);
-            closeButtonPane.setTranslateY(closeButtonPane.getTranslateY() - 5);
+        // Reset opacity & translation + close instructions window
+        closeInstructionsButtonBox.setOnMouseReleased(event -> {
+            closeInstructionsButtonPane.setOpacity(1.0);
+            closeInstructionsButtonPane.setTranslateY(closeInstructionsButtonPane.getTranslateY() - 5);
             gameBoard.hideInstructions();
+            instructionsOn = false;
         });
 
-        return closeButtonBox;
+        return closeInstructionsButtonBox;
     }
 
     public static HBox createReturnToMainMenuButton() {
-        ImageView returnImage = new ImageView(new Image("images/option_button_extras/Button_Main.PNG"));
-        returnImage.setFitWidth(50);
-        returnImage.setFitHeight(50);
+        ImageView returnIMG = new ImageView(new Image("images/option_button_extras/Button_Main.PNG"));
+        returnIMG.setFitWidth(50);
+        returnIMG.setPreserveRatio(true);
 
         // Create an invisible hitbox (rectangle)
         Rectangle hitbox = new Rectangle(50, 50);
         hitbox.setFill(Color.TRANSPARENT);
 
-        // Set action on click for both the image and the hitbox
-        returnImage.setOnMouseReleased(event -> SceneController.showTitleScreen());
-        hitbox.setOnMouseReleased(event -> SceneController.showTitleScreen());
-
-        // Use a StackPane to overlay the image and hitbox
-        StackPane returnButtonPane = new StackPane(returnImage, hitbox);
-
+        // StackPane overlays image / hitbox & creates HBox
+        StackPane returnButtonPane = new StackPane(returnIMG, hitbox);
         HBox returnButtonBox = new HBox(returnButtonPane);
-        returnButtonBox.getStyleClass().add("app-button");
-        returnButtonBox.setOnMouseEntered(event -> returnButtonBox.getStyleClass().add("hovered"));
-        returnButtonBox.setOnMouseExited(event -> returnButtonBox.getStyleClass().remove("hovered"));
 
-        // Set action on mouse press for both the image and the hitbox
+        // Opacity & translation effects
         returnButtonBox.setOnMousePressed(event -> {
-            // Opacity and translation effect on press
             double currentOpacity = returnButtonPane.getOpacity();
             double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.5, but not below 0.5
             returnButtonPane.setOpacity(newOpacity);
             returnButtonPane.setTranslateY(newOpacity > 0.5 ? returnButtonPane.getTranslateY() - 5 : returnButtonPane.getTranslateY() + 5);
+            instructionsOn = true;
         });
+
+        // Return to title screen
+        returnButtonBox.setOnMouseReleased(event -> SceneController.showTitleScreen());
 
         return returnButtonBox;
     }
 
     public static HBox createInstructionsButton(GameBoard gameBoard) {
-        ImageView instructionsImage = new ImageView(new Image("images/option_button_extras/Button_Instructions.PNG"));
-        instructionsImage.setFitHeight(50);
-        instructionsImage.setPreserveRatio(true);
+        ImageView instructionsIMG = new ImageView(new Image("images/option_button_extras/Button_Instructions.PNG"));
+        instructionsIMG.setFitHeight(50);
+        instructionsIMG.setPreserveRatio(true);
 
         // Create an invisible hitbox (rectangle)
         Rectangle hitbox = new Rectangle(50, 50);
         hitbox.setFill(Color.TRANSPARENT);
 
-        instructionsImage.setOnMouseReleased(event -> gameBoard.showInstructions());
-        hitbox.setOnMouseReleased(event -> gameBoard.showInstructions());
-
-        // Use a StackPane to overlay the image and hitbox
-        StackPane instructionsButtonPane = new StackPane(instructionsImage, hitbox);
-
+        // StackPane overlays image / hitbox & creates HBox
+        StackPane instructionsButtonPane = new StackPane(instructionsIMG, hitbox);
         HBox instructionsButtonBox = new HBox(instructionsButtonPane);
-        instructionsButtonBox.setOnMouseEntered(event -> instructionsButtonBox.getStyleClass().add("hovered"));
-        instructionsButtonBox.setOnMouseExited(event -> instructionsButtonBox.getStyleClass().remove("hovered"));
 
-        // Set action on mouse press for both the image and the hitbox
+        // Opacity & translation effects
         instructionsButtonBox.setOnMousePressed(event -> {
-            // Opacity and translation effect on press
             double newOpacity = 0.5;
             instructionsButtonPane.setOpacity(newOpacity);
             instructionsButtonPane.setTranslateY(newOpacity > 0.5 ? -5 : 5);
         });
 
         instructionsButtonBox.setOnMouseReleased(event -> {
-            // Opacity and translation effect on release
+            // Opacity & translation effects
             instructionsButtonPane.setOpacity(1.0);
             instructionsButtonPane.setTranslateY(0);
+
+            // Show / hide instructions window
+            if (instructionsOn) {
+                gameBoard.hideInstructions();
+                instructionsOn = false;
+            } else {
+                gameBoard.showInstructions();
+                instructionsOn = true;
+            }
         });
 
         return instructionsButtonBox;
     }
 
     public static HBox createMusicButton() {
-        System.out.println("Creating music button");  // Debugging output
-
-        ImageView musicImage = new ImageView(new Image("images/option_button_extras/Button_Sound.PNG"));
-        musicImage.setFitWidth(50);
-        musicImage.setFitHeight(50);
+        ImageView musicIMG = new ImageView(new Image("images/option_button_extras/Button_Sound.PNG"));
+        musicIMG.setFitWidth(50);
+        musicIMG.setPreserveRatio(true);
 
         // Create an invisible hitbox (rectangle)
         Rectangle hitbox = new Rectangle(50, 50);
         hitbox.setFill(Color.TRANSPARENT);
 
-        // Use a StackPane to overlay the image and hitbox
-        StackPane musicButtonPane = new StackPane(musicImage, hitbox);
-
+        // StackPane overlays image / hitbox & creates HBox
+        StackPane musicButtonPane = new StackPane(musicIMG, hitbox);
         HBox musicButtonBox = new HBox(musicButtonPane);
-        musicButtonBox.getStyleClass().add("app-button");
-        musicButtonBox.setOnMouseEntered(event -> musicButtonBox.getStyleClass().add("hovered"));
-        musicButtonBox.setOnMouseExited(event -> musicButtonBox.getStyleClass().remove("hovered"));
 
         // Make sure right state is being displayed when loaded in (music on/off)
         if (musicOn) {
