@@ -8,13 +8,13 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-
 public class OptionButtons {
 
     private GameBoard gameBoard;  // Add a reference to GameBoard for createCloseInstructionsButton()
     public OptionButtons(GameBoard gameBoard) {
         this.gameBoard = gameBoard;
     }
+    private static boolean musicOn = true;
 
     public static HBox createCloseAppButton() {
         ImageView closeImage = new ImageView(new Image("images/option_button_extras/Button_Exit.PNG"));
@@ -118,6 +118,7 @@ public class OptionButtons {
 
         return returnButtonBox;
     }
+
     public static HBox createInstructionsButton(GameBoard gameBoard) {
         ImageView instructionsImage = new ImageView(new Image("images/option_button_extras/Button_Instructions.PNG"));
         instructionsImage.setFitHeight(50);
@@ -173,24 +174,35 @@ public class OptionButtons {
         musicButtonBox.setOnMouseEntered(event -> musicButtonBox.getStyleClass().add("hovered"));
         musicButtonBox.setOnMouseExited(event -> musicButtonBox.getStyleClass().remove("hovered"));
 
-        // Set action on mouse press for both the image and the hitbox
-        musicButtonBox.setOnMousePressed(event -> {
-            System.out.println("Music button pressed");
-            // Opacity and translation effect on press
+        // Make sure right state is being displayed when loaded in (music on/off)
+        if (musicOn) {
+            double newOpacity = 1.0;
+            musicButtonPane.setOpacity(newOpacity);
+            musicButtonPane.setTranslateY(0);
+        }
+        else {
             double currentOpacity = musicButtonPane.getOpacity();
             double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.5, but not below 0.5
             musicButtonPane.setOpacity(newOpacity);
             musicButtonPane.setTranslateY(newOpacity > 0.5 ? musicButtonPane.getTranslateY() - 5 : musicButtonPane.getTranslateY() + 5);
-        });
+        }
 
-        musicButtonBox.setOnMouseReleased(event -> {
-            System.out.println("Music button released");
-            // Opacity and translation effect on release
-            double newOpacity = 1.0;
-            musicButtonPane.setOpacity(newOpacity);
-            musicButtonPane.setTranslateY(0);
+        // Change state once clicked
+        musicButtonBox.setOnMouseClicked(event -> {
+            if (musicOn) {
+                double currentOpacity = musicButtonPane.getOpacity();
+                double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.5, but not below 0.5
+                musicButtonPane.setOpacity(newOpacity);
+                musicButtonPane.setTranslateY(newOpacity > 0.5 ? musicButtonPane.getTranslateY() - 5 : musicButtonPane.getTranslateY() + 5);
+                musicOn = false;
+            }
+            else {
+                double newOpacity = 1.0;
+                musicButtonPane.setOpacity(newOpacity);
+                musicButtonPane.setTranslateY(0);
+                musicOn = true;
+                }
         });
-
 
         return musicButtonBox;
     }
