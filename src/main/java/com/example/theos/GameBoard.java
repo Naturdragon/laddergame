@@ -735,10 +735,10 @@ public class GameBoard {
         getBoardGraph().addOneDirectionalEdgeForward(field184, field174, 2500, BoardGraph.edgeType.LadderEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field194, field322, 1500, BoardGraph.edgeType.LadderEdge);
         // Add ladder edges between the necessary fields (going from the shortest path)
-        getBoardGraph().addOneDirectionalEdgeForward(field210, field203, 1000, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdgeForward(field212, field204, 1000, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdgeForward(field213, field204, 1000, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdgeForward(field215, field206, 1000, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field210, field203, 700, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field212, field204, 700, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field213, field204, 700, BoardGraph.edgeType.LadderEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field215, field206, 700, BoardGraph.edgeType.LadderEdge);
         // Add ladder edges between the necessary fields (going from the longest path)
         getBoardGraph().addOneDirectionalEdgeForward(field312, field304, 3100, BoardGraph.edgeType.LadderEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field314, field330, 2900, BoardGraph.edgeType.LadderEdge);
