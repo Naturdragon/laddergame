@@ -3,24 +3,18 @@ package com.example.theos;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
-import java.util.Objects;
-
 public class SoundGame {
-    private static MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer;
 
-    public static void playBackgroundMusic() {
-        String musicFile = "/sound/sound.mp3";
-        Media media = new Media(Objects.requireNonNull(SoundGame.class.getResource(musicFile).toExternalForm())); // Create Media object from the music file
-        mediaPlayer = new MediaPlayer(media); // Create MediaPlayer using the Media object
-
-        mediaPlayer.setVolume(0.5);
+    public SoundGame(String filePath) { // plays  music
+        Media media = new Media(getClass().getResource(filePath).toExternalForm());
+        mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.setVolume(0.1);
         mediaPlayer.play();
     }
 
-    public static void stopBackgroundMusic() {
-        if (mediaPlayer != null) {
-            mediaPlayer.stop(); // Stop the music
-        }
+    public void stop() { // stops music
+        mediaPlayer.stop();
     }
 }

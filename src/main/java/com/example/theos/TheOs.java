@@ -33,8 +33,8 @@ public class TheOs extends javafx.application.Application {
         stage.setResizable(false); // daweil mal ohne resizable
         SceneController.showTitleScreen();
 
-        // Plays music
-        SoundGame.playBackgroundMusic();
+        SoundGame soundGame = new SoundGame("/sound/sound.wav"); // plays music
+        stage.setOnCloseRequest(event -> soundGame.stop()); // stops music in case of closed application
 
         // Set application icon
         Image icon = new Image("/images/application_icon/Application_Icon.PNG");
