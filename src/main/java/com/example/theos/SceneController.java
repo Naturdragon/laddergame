@@ -63,6 +63,7 @@ public class SceneController {
 
             if (event.getCode() == KeyCode.ENTER) { // TODO: delete later, only there to quickly access the winning screen
                 showWinningScreen(gameBoard.getPlayerList());
+                OptionButtons.instructionsOn = true;
             }
         });
     }
@@ -72,5 +73,6 @@ public class SceneController {
         scene.setCursor(new ImageCursor(TheOs.CURSOR_IMG));
         stage.setScene(scene);
         stage.show();
+        OptionButtons.instructionsOn = true;
     }
 }

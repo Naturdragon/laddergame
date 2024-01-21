@@ -14,8 +14,8 @@ public class OptionButtons {
     public OptionButtons(GameBoard gameBoard) {
         this.gameBoard = gameBoard;
     }
-    private static boolean instructionsOn = true;
-    private static boolean musicOn = true;
+    static boolean instructionsOn = true;
+    static boolean musicOn = true;
 
     public static HBox createCloseAppButton() {
         ImageView closeAppIMG = new ImageView(new Image("images/option_button_extras/Button_Exit.PNG"));
