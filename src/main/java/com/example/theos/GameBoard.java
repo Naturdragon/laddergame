@@ -102,6 +102,28 @@ public class GameBoard {
     }
 
     /*
+    Playes the animation (as a ParallelTransition) of all characters spawning in
+    Unlocks the user to be able to input something (roll or select die)
+    Returns nothing
+     */
+    public void playGameStartAnimation() {
+        ParallelTransition transition = new ParallelTransition();
+        transition.setCycleCount(1);
+
+        for (Player player : playerList) {
+            transition.getChildren().add(player.playSpawnAnimation());
+        }
+
+        transition.play();
+        transition.setOnFinished(event -> {
+            for (Player player : playerList) {
+                player.playIdle();
+            }
+            TheOs.waitingForUserInput = true;
+        });
+    }
+
+    /*
     Creates the scene/screen view of the gameboard
     Returns a scene object, which can be used for the stage object in TheOs start() method
      */
@@ -119,8 +141,9 @@ public class GameBoard {
             rootLayout.getChildren().add(player.getImageView());
             player.getImageView().setX(player.getCurrentField().getX() - 27);
             player.getImageView().setY(player.getCurrentField().getY() - 27 - 15);
-            player.playSpawnAnimation(player, player.getCurrentField().getY());
         }
+
+        playGameStartAnimation(); // plays the spawn in animation of the characters (so that only afterwards the users can input something)
 
         // Placing the top background (water fall section)
         Region backgroundTopRegion = new Region();
@@ -843,23 +866,34 @@ public class GameBoard {
         Text text = new Text("Special Die Charges +1");
         text.setFill(TheOs.BROWN);
         text.setFont(Font.font(DiceUI.CUSTOM_FONT_VARELA.getFamily(), 65));
+        /* Adding a white stroke to the text makes it look better and more legible,
+        but the animation becomes really laggy for some reason (maybe only on my pc):
+
+        text.setStroke(Color.WHITE);
+        text.setStrokeWidth(5);
+        text.setStrokeType(StrokeType.OUTSIDE);
+         */
 
         text.setX(370);
         text.setY(350);
         rootLayout.getChildren().add(text);
 
-        TranslateTransition translate = new TranslateTransition(Duration.millis(500), text);
+        TranslateTransition translate = new TranslateTransition(Duration.millis(1000), text);
         translate.setByY(-60);
 
         FadeTransition fadeIn = new FadeTransition(Duration.millis(300), text);
         fadeIn.setFromValue(0.0);
         fadeIn.setToValue(1);
 
-        FadeTransition fadeOut = new FadeTransition(Duration.millis(200), text);
-        fadeOut.setFromValue(1);
-        fadeOut.setToValue(0.2);
+        FadeTransition fadeMiddle = new FadeTransition(Duration.millis(500), text);
+        fadeMiddle.setFromValue(1);
+        fadeMiddle.setToValue(1);
 
-        SequentialTransition fadeInAndOut = new SequentialTransition(fadeIn, fadeOut);
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), text);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0.0);
+
+        SequentialTransition fadeInAndOut = new SequentialTransition(fadeIn, fadeMiddle, fadeOut);
 
         ParallelTransition parallelTransition = new ParallelTransition(translate, fadeInAndOut);
         parallelTransition.play();

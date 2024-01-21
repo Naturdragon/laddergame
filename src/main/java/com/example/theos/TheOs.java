@@ -24,7 +24,7 @@ public class TheOs extends javafx.application.Application {
     static final Color MINT_GREEN = Color.rgb(63, 139, 88);
     static final Color BROOKE_BLUE = Color.rgb(106, 162, 194);
     static final Color FITZ_PURPLE = Color.rgb(58, 75, 156);
-    static boolean waitingForUserInput = true;
+    static boolean waitingForUserInput;
 
     @Override
     public void start(Stage stage){

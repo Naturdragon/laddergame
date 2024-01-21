@@ -3,6 +3,7 @@ package com.example.theos;
 import Animation.SpriteAnimation;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
+import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,7 +22,7 @@ public class Player {
     private Path nextPlayerImagePath;
     private Path spriteImagePath;
     private Field currentField; // Current Field where the player is
-    private SpriteAnimation currentAnimation;
+    private Transition currentAnimation;
     private ImageView imageView; //used to represent the character of the player on screen
     private int turnCount;
 
@@ -116,30 +117,28 @@ public class Player {
     }
 
     /*
-    The following methods create the respective animations based on the sprite sheet and
-    load it into the currentAnimation variable of character. Any previous animation is stopped to prevent animation-bugs.
-    Return nothing
+    Creates the SpawnAnimation of a character. Its a ParallelTransition consisting of a Translate and a Sprite Animation
+    Unlike other character animations this is not loaded into the currentAnimation variable, reason being:
+    the spawn animation of all characters are later played together in another ParallelTransition, this helps for input handling
+    Returns a Transition (ParallelTransition)
      */
-    public void playSpawnAnimation(Player player, int yCoordinate) {
+    public Transition playSpawnAnimation() {
         if (currentAnimation != null) {
             currentAnimation.stop();
         }
-        currentAnimation = new SpriteAnimation(imageView, 6, 6, 0, 222, 74, 74);
-        currentAnimation.setCycleCount(1);
-        player.getImageView().setY(yCoordinate - 150);
+        // Create SpriteAnimation based on the spritesheet
+        SpriteAnimation spriteAnimation = new SpriteAnimation(imageView, 6, 6, 0, 222, 74, 74);
+        imageView.setY(currentField.getY() - 150);
 
         // Create animation for movement
-        TranslateTransition transition = new TranslateTransition(Duration.millis(300), player.getImageView());
+        TranslateTransition transition = new TranslateTransition(Duration.millis(300), imageView);
         transition.setByY(107);
-        transition.setCycleCount(1);
 
-        // Execute animation (with playIdle following consecutively)
-        ParallelTransition parallelTransition = new ParallelTransition(currentAnimation, transition);
-        parallelTransition.setOnFinished(event -> {
-            currentAnimation = null;
-            player.playIdle();
-        });
-        parallelTransition.play();
+        // Combine the two animations
+        ParallelTransition currentAnimation = new ParallelTransition(spriteAnimation, transition);
+        currentAnimation.setCycleCount(1);
+
+        return currentAnimation;
     }
 
     public void playIdle() {

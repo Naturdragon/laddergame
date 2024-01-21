@@ -29,6 +29,7 @@ public class SceneController {
     the instance of the gameboard which holds all data of the game (number of players, finished players, etc) is created here
      */
     public static void showGameBoardScreen(List<Player> playerList) {
+        TheOs.waitingForUserInput = false; // the user input is unlocked after the spawn in animation is played (line 37)
         GameBoard gameBoard = new GameBoard();
         gameBoard.setPlayerList(playerList);
         gameBoard.fillGraphData();
