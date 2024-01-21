@@ -34,7 +34,7 @@ public class TheOs extends javafx.application.Application {
         stage.setResizable(false); // daweil mal ohne resizable
         SceneController.showTitleScreen();
 
-        SoundGame soundGame = new SoundGame("/Users/alis/IdeaProjects/laddergame/src/main/resources/sound/sound.wav");
+        SoundGame soundGame = new SoundGame("sound/sound.mp3");
         //Playing the audio in loop
         soundGame.playLoop();
 

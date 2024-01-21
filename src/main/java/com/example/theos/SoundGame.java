@@ -1,20 +1,27 @@
 package com.example.theos;
+
+
 import javax.sound.sampled.*;
-import java.io.File;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 class SoundGame {
     private Clip clip;
 
     public SoundGame(String filePath) {
         try {
-            // Create an AudioInputStream from the provided audio file path
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File(filePath));
+            // Verwende den ClassLoader, um die Sounddatei als Ressource zu laden
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filePath);
+            if (inputStream != null) {
+                AudioInputStream audioStream = AudioSystem.getAudioInputStream(new BufferedInputStream(inputStream));
 
-            // Get a Clip instance and open the audio stream
-            clip = AudioSystem.getClip();
-            clip.open(audioStream);
-
+                // Erstelle eine Clip-Instanz und öffne den Audio-Stream
+                clip = AudioSystem.getClip();
+                clip.open(audioStream);
+            } else {
+                System.out.println("Datei nicht gefunden: " + filePath);
+            }
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
@@ -22,18 +29,16 @@ class SoundGame {
 
     public void playLoop() {
         if (clip != null) {
-            // Start playing the audio in a loop
+            // Starte das Audio im Loop
             clip.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }
 
     public void stop() {
         if (clip != null) {
-            // Stop the audio
+            // Stoppe das Audio
             clip.stop();
         }
     }
 }
-
-
 
