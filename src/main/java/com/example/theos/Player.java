@@ -116,10 +116,32 @@ public class Player {
     }
 
     /*
-    The following three methods create the respective animations based on the sprite sheet and
+    The following methods create the respective animations based on the sprite sheet and
     load it into the currentAnimation variable of character. Any previous animation is stopped to prevent animation-bugs.
     Return nothing
      */
+    public void playSpawnAnimation(Player player, int yCoordinate) {
+        if (currentAnimation != null) {
+            currentAnimation.stop();
+        }
+        currentAnimation = new SpriteAnimation(imageView, 6, 6, 0, 222, 74, 74);
+        currentAnimation.setCycleCount(1);
+        player.getImageView().setY(yCoordinate - 150);
+
+        // Create animation for movement
+        TranslateTransition transition = new TranslateTransition(Duration.millis(300), player.getImageView());
+        transition.setByY(107);
+        transition.setCycleCount(1);
+
+        // Execute animation (with playIdle following consecutively)
+        ParallelTransition parallelTransition = new ParallelTransition(currentAnimation, transition);
+        parallelTransition.setOnFinished(event -> {
+            currentAnimation = null;
+            player.playIdle();
+        });
+        parallelTransition.play();
+    }
+
     public void playIdle() {
         if (currentAnimation != null) {
             currentAnimation.stop();
@@ -138,42 +160,20 @@ public class Player {
         currentAnimation.play();
     }
 
-    public void playSwim() {
-        if (currentAnimation != null) {
-            currentAnimation.stop();
-        }
-        currentAnimation = new SpriteAnimation(imageView, 20, 20, 0, 148, 74, 74);
-        currentAnimation.setCycleCount(Animation.INDEFINITE);
-        currentAnimation.play();
-    }
-
-    public void playSpawnAnimation(Player player, int yCoordinate) {
-        if (currentAnimation != null) {
-            currentAnimation.stop();
-        }
-        currentAnimation = new SpriteAnimation(imageView, 6, 6, 0, 222, 74, 74);
-        currentAnimation.setCycleCount(1);
-        player.getImageView().setY(yCoordinate - 150);
-
-        // Create animation for the movement
-        TranslateTransition transition = new TranslateTransition(Duration.millis(300), player.getImageView());
-        transition.setByY(107);
-        transition.setCycleCount(1);
-
-        // Execute animation (with playIdle following consecutively)
-        ParallelTransition parallelTransition = new ParallelTransition(currentAnimation, transition);
-        parallelTransition.setOnFinished(event -> {
-            currentAnimation = null;
-            player.playIdle();
-        });
-        parallelTransition.play();
-    }
-
     public void playFallWaterfall() {
         if (currentAnimation != null) {
             currentAnimation.stop();
         }
         currentAnimation = new SpriteAnimation(imageView, 6, 6, 0, 296, 74, 74);
+        currentAnimation.setCycleCount(1);
+        currentAnimation.play();
+    }
+
+    public void playJump() {
+        if (currentAnimation != null) {
+            currentAnimation.stop();
+        }
+        currentAnimation = new SpriteAnimation(imageView, 6, 6, 740, 296, 74, 74);
         currentAnimation.setCycleCount(1);
         currentAnimation.play();
     }
@@ -187,12 +187,12 @@ public class Player {
         currentAnimation.play();
     }
 
-    public void playJump() {
+    public void playSwim() {
         if (currentAnimation != null) {
             currentAnimation.stop();
         }
-        currentAnimation = new SpriteAnimation(imageView, 6, 6, 740, 296, 74, 74);
-        currentAnimation.setCycleCount(1);
+        currentAnimation = new SpriteAnimation(imageView, 20, 20, 0, 148, 74, 74);
+        currentAnimation.setCycleCount(Animation.INDEFINITE);
         currentAnimation.play();
     }
 

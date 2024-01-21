@@ -8,7 +8,6 @@ import javafx.stage.Stage;
 import java.util.List;
 
 public class SceneController {
-
     static Stage stage;
 
     public static void showTitleScreen() {

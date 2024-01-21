@@ -9,7 +9,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class OptionButtons {
-
     private GameBoard gameBoard;  // Add a reference to GameBoard for createCloseInstructionsButton()
     public OptionButtons(GameBoard gameBoard) {
         this.gameBoard = gameBoard;

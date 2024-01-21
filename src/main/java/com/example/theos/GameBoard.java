@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameBoard {
-
     private BoardGraph boardGraph;
     private List<Player> playerList;
     private Background background;
