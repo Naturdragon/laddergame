@@ -164,7 +164,7 @@ public class Player {
         if (currentAnimation != null) {
             currentAnimation.stop();
         }
-        currentAnimation = new SpriteAnimation(imageView, 6, 6, 0, 296, 74, 74);
+        currentAnimation = new SpriteAnimation(imageView, 10, 10, 0, 296, 74, 74);
         currentAnimation.setCycleCount(1);
         currentAnimation.play();
     }
