@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.application.Application;
 import javafx.stage.Stage;
-
+import javafx.scene.image.Image;
 
 public class TheOs extends javafx.application.Application {
 
@@ -34,16 +34,24 @@ public class TheOs extends javafx.application.Application {
         stage.setResizable(false); // daweil mal ohne resizable
         SceneController.showTitleScreen();
 
-
-        // Create an instance of the SoundGame class
         SoundGame soundGame = new SoundGame("/Users/alis/IdeaProjects/laddergame/src/main/resources/sound/sound.wav");
-
-        // Start playing the audio in a loop
+        //Playing the audio in loop
         soundGame.playLoop();
 
 
 
-    }
+
+        // Setzen Sie das Application Icon
+        Image icon = new Image("/images/application_icon/example.PNG");
+        stage.getIcons().add(icon);
+
+
+        }
+
+
+
+
+
 
     public static void main(String[] args) {
         launch();
