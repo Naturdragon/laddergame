@@ -30,6 +30,9 @@ public class GameBoard {
     private Field waterfallField1;
     private Field waterfallField2;
 
+    private Field crossoverField1;
+    private Field crossoverField2;
+
     public GameBoard() {
 
         boardGraph = new BoardGraph();
@@ -169,7 +172,7 @@ public class GameBoard {
 
         showInstructions(); // when the scene is created the instructionsWindow should be shown on screen for new players
 
-        //showPathSelectionArrows(2);
+        //selectPathEvent(crossoverField2, 0); // TODO delete later, only for simulating a crossover
 
         return new Scene(rootLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
     }
@@ -370,6 +373,7 @@ public class GameBoard {
         Field field147 = new Field(Field.fieldType.NormalField, 40.8, 36.9);
         Field field148 = new Field(Field.fieldType.NormalField, 43.6, 36.4);
         Field field149 = new Field(Field.fieldType.NormalField, 45.9, 34.5); // TODO Chanche to Crossing Field
+        crossoverField1 = field149;
         Field field150 = new Field(Field.fieldType.NormalField, 43.8, 32.7);
 
         Field field151 = new Field(Field.fieldType.NormalField, 42, 30.7);
@@ -542,6 +546,7 @@ public class GameBoard {
         Field field207 = new Field(Field.fieldType.NormalField, 50.3, 57.5);
         Field field208 = new Field(Field.fieldType.NormalField, 51.8, 60.7);
         Field field209 = new Field(Field.fieldType.NormalField, 53.8, 62.5); // TODO for the beta test field type was changed to NormalField, later change it back to CrossingField
+        crossoverField2 = field209;
         Field field210 = new Field(Field.fieldType.LadderField, 55.9, 63.1);
 
         Field field211 = new Field(Field.fieldType.SpecialChargeField, 58.4, 62.2);
@@ -797,6 +802,89 @@ public class GameBoard {
         getBoardGraph().addOneDirectionalEdgeForward(field347, win5, 500, BoardGraph.edgeType.NormalEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field195, win6, 500, BoardGraph.edgeType.NormalEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field347, win6, 500, BoardGraph.edgeType.NormalEdge);
+
+        /*
+        for (Player player : playerList) {
+            player.setCurrentField(field165);
+        }
+
+         */
+
+    }
+
+    /*
+    This method is meant to be called when a player lands at a crossover
+    The arrows to select the paths are placed on the screen (and animated)
+    The player can click on an arrow to select this path to move forward
+     */
+    public void selectPathEvent(Field field, int hopsLeft) {
+        ImageView pathOneArrow = new ImageView("images/gameboard_screen/Game_Crossover_Arrow.PNG");
+        pathOneArrow.setFitWidth(55);
+        pathOneArrow.setPreserveRatio(true);
+        pathOneArrow.setOpacity(0.85);
+
+        ImageView pathTwoArrow = new ImageView("images/gameboard_screen/Game_Crossover_Arrow.PNG");
+        pathTwoArrow.setFitWidth(55);
+        pathTwoArrow.setPreserveRatio(true);
+        pathTwoArrow.setOpacity(0.85);
+
+        if (field == crossoverField1) { // position the arrows at the first crossover
+            // first path option: left
+            pathOneArrow.setRotate(-55);
+            pathOneArrow.setTranslateX(562);
+            pathOneArrow.setTranslateY(187);
+
+            // second path option: right
+            pathTwoArrow.setRotate(123);
+            pathTwoArrow.setTranslateX(695);
+            pathTwoArrow.setTranslateY(265);
+        } else if (field == crossoverField2) { // position the arrows at the second crossover
+            // first path option: down
+            pathOneArrow.setRotate(195);
+            pathOneArrow.setTranslateX(705);
+            pathOneArrow.setTranslateY(530);
+
+            // second path option: right
+            pathTwoArrow.setRotate(70);
+            pathTwoArrow.setTranslateX(815);
+            pathTwoArrow.setTranslateY(445);
+        }
+
+        TranslateTransition idleArrowOne = new TranslateTransition(Duration.millis(600), pathOneArrow);
+        idleArrowOne.setByY(-5);
+        idleArrowOne.setCycleCount(Animation.INDEFINITE);
+        idleArrowOne.setAutoReverse(true);
+        idleArrowOne.play();
+
+        TranslateTransition idleArrowTwo = new TranslateTransition(Duration.millis(600), pathTwoArrow);
+        idleArrowTwo.setByY(-5);
+        idleArrowTwo.setCycleCount(Animation.INDEFINITE);
+        idleArrowTwo.setAutoReverse(true);
+        idleArrowTwo.play();
+
+        rootLayout.getChildren().addAll(pathOneArrow, pathTwoArrow);
+
+        pathOneArrow.setOnMousePressed(event -> {
+            pathOneArrow.setOpacity(1);
+            pathOneArrow.setScaleX(1.4);
+            pathOneArrow.setScaleY(1.4);
+        });
+        pathOneArrow.setOnMouseReleased(event -> {
+            boardGraph.hopCountTraversal(field, hopsLeft);
+            rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow);
+            TheOs.waitingForUserInput = true;
+        });
+
+        pathTwoArrow.setOnMousePressed(event -> {
+            pathTwoArrow.setOpacity(1);
+            pathTwoArrow.setScaleX(1.4);
+            pathTwoArrow.setScaleY(1.4);
+        });
+        pathTwoArrow.setOnMouseReleased(event -> {
+            boardGraph.hopCountTraversal(field, hopsLeft);
+            rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow);
+            TheOs.waitingForUserInput = true;
+        });
     }
 
     /*

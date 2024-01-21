@@ -340,6 +340,8 @@ public class BoardGraph {
 
     public enum edgeType {
         NormalEdge,
-        LadderEdge
+        LadderEdge,
+        CrossoverPathOne,
+        CrossoverPathTwo
     }
 }
