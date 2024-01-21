@@ -1,35 +1,26 @@
 package com.example.theos;
 
-import javafx.application.Application;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.stage.Stage;
 
-import java.nio.file.Paths;
+import java.util.Objects;
 
 public class SoundGame {
+    private static MediaPlayer mediaPlayer;
 
-    @Override
-    public void start(Stage stage) {
-        String musicPath = "music.mp3";
-        double initialVolume = 0.5;
+    public static void playBackgroundMusic() {
+        String musicFile = "/sound/sound.mp3";
+        Media media = new Media(Objects.requireNonNull(SoundGame.class.getResource(musicFile).toExternalForm())); // Create Media object from the music file
+        mediaPlayer = new MediaPlayer(media); // Create MediaPlayer using the Media object
 
-        MediaPlayer mediaPlayer = createMediaPlayer(musicPath, initialVolume);
-        mediaPlayer.play();
-
-        stage.setTitle("Background Music Example");
-        stage.show();
-    }
-
-    private MediaPlayer createMediaPlayer(String musicPath, double initialVolume) {
-        Media media = new Media(Paths.get(musicPath).toUri().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-
-        mediaPlayer.setVolume(initialVolume);
+        mediaPlayer.setVolume(0.5);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-
-        return mediaPlayer;
+        mediaPlayer.play();
     }
 
+    public static void stopBackgroundMusic() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop(); // Stop the music
+        }
+    }
 }
-

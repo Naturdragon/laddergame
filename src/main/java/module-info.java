@@ -7,6 +7,5 @@ module com.example.theos {
     requires org.kordamp.bootstrapfx.core;
 
     opens com.example.theos to javafx.fxml;
-    exports com.example.theos;
     requires java.desktop;
 }
