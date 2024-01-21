@@ -26,6 +26,8 @@ public class GameBoard {
     private Pane rootLayout;
     private final AnchorPane INSTRUCTIONS_WINDOW = createInstructionsWindow();
     private boolean gameDone = false;
+    private Field waterfallField1;
+    private Field waterfallField2;
 
     public GameBoard() {
 
@@ -355,9 +357,9 @@ public class GameBoard {
         Field field167 = new Field(Field.fieldType.NormalField, 46.6, 12.8);
         Field field168 = new Field(Field.fieldType.NormalField, 48.5, 14.8);
         Field field169 = new Field(Field.fieldType.NormalField, 50.3, 16.6);
-        Field field170 = new Field(Field.fieldType.LadderField, 52.1, 18.3);
+        Field field170 = new Field(Field.fieldType.LadderField, 52.1, 18.3); // Waterfall
 
-        Field field171 = new Field(Field.fieldType.LadderField, 53.8, 20);
+        Field field171 = new Field(Field.fieldType.LadderField, 53.8, 20); // Waterfall
         Field field172 = new Field(Field.fieldType.NormalField, 55.5, 21.9);
         Field field173 = new Field(Field.fieldType.NormalField, 57.1, 23.6);
         Field field174 = new Field(Field.fieldType.NormalField, 59.2, 21.6);
@@ -384,6 +386,9 @@ public class GameBoard {
         Field field193 = new Field(Field.fieldType.NormalField, 77.3, 46.4);
         Field field194 = new Field(Field.fieldType.LadderField, 79.5, 44.7);
         Field field195 = new Field(Field.fieldType.NormalField, 81.1, 42.3);
+
+        waterfallField1 = field170;
+        waterfallField2 = field171;
 
         fieldListUpperPath.add(field101);
         fieldListUpperPath.add(field102);
@@ -711,8 +716,8 @@ public class GameBoard {
         getBoardGraph().addOneDirectionalEdge(field127, field135, 2300, BoardGraph.edgeType.LadderEdge);
         getBoardGraph().addOneDirectionalEdge(field143, field124, 1250, BoardGraph.edgeType.LadderEdge);
         getBoardGraph().addOneDirectionalEdge(field154, field165, 2150, BoardGraph.edgeType.LadderEdge);
-        getBoardGraph().addOneDirectionalEdge(field170, field202, 2250, BoardGraph.edgeType.LadderEdge);    // water fall
-        getBoardGraph().addOneDirectionalEdge(field171, field203, 2400, BoardGraph.edgeType.LadderEdge);    // water fall
+        getBoardGraph().addOneDirectionalEdge(field170, field202, 600, BoardGraph.edgeType.LadderEdge); // Waterfall
+        getBoardGraph().addOneDirectionalEdge(field171, field203, 600, BoardGraph.edgeType.LadderEdge); // Waterfall
         getBoardGraph().addOneDirectionalEdge(field177, field182, 1800, BoardGraph.edgeType.LadderEdge);
         getBoardGraph().addOneDirectionalEdge(field184, field174, 2500, BoardGraph.edgeType.LadderEdge);
         getBoardGraph().addOneDirectionalEdge(field194, field322, 1500, BoardGraph.edgeType.LadderEdge);

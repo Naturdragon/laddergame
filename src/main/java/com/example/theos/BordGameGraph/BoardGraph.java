@@ -221,7 +221,7 @@ public class BoardGraph {
                                 tmpWeigth = (Weight) item.getWeight();
                                 if (tmpWeigth.getType() == edgeType.LadderEdge) {
                                     if (vertexData.getId() == 71 || vertexData.getId() == 72)
-                                        player.playFallOpaque(); // Special Fall on the Watter fall
+                                        player.playFallWaterfall(); // Special Fall on the Waterfall
                                     ladderPath.getElements().add(new MoveTo(vertexData.getX() - animationOffsetX, vertexData.getY() - animationOffsetY));
                                     var nextVertexData = (item.getSource() == vertexData) ? (Field) item.getTarget() : (Field) item.getSource();
                                     ladderPath.getElements().add(new LineTo(nextVertexData.getX() - animationOffsetX, nextVertexData.getY() - animationOffsetY));
