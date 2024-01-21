@@ -456,9 +456,6 @@ public class PlayerSelectionScreen {
             updatePlayerInfo();
         }
 
-        public Character getSelectedCharacter() {
-            return selectedCharacter;
-        }
 
         public int getPlayerNumber() {
             return playerNumber;
@@ -472,10 +469,6 @@ public class PlayerSelectionScreen {
             selectedProperty.set(playerNumber != 0);
         }
 
-        public SimpleBooleanProperty selectedProperty() {
-            return selectedProperty;
-        }
-
         public StringProperty playerInfoProperty() {
             return playerInfoProperty;
         }
@@ -486,10 +479,6 @@ public class PlayerSelectionScreen {
             } else {
                 playerInfoProperty.set("");
             }
-        }
-
-        public static List<Integer> getPlayerNumbers() {
-            return playerNumbers;
         }
 
         @Override
