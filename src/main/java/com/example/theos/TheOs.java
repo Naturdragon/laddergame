@@ -5,7 +5,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.application.Application;
-import javafx.stage.Stage;
 import javafx.scene.image.Image;
 
 public class TheOs extends javafx.application.Application {
@@ -35,8 +34,7 @@ public class TheOs extends javafx.application.Application {
         SceneController.showTitleScreen();
 
         // Plays music in a loop
-        SoundGame soundGame = new SoundGame("sound/sound.mp3");
-        soundGame.playLoop();
+
 
         // Set application icon
         Image icon = new Image("/images/application_icon/Application_Icon.PNG");

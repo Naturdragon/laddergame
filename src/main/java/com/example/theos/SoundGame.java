@@ -1,41 +1,35 @@
 package com.example.theos;
 
-import javax.sound.sampled.*;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javafx.application.Application;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.stage.Stage;
 
-class SoundGame {
-    private Clip clip;
+import java.nio.file.Paths;
 
-    public SoundGame(String filePath) {
-        try {
-            // Classloader to load the sound file as a resource
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filePath);
-            if (inputStream != null) {
-                AudioInputStream audioStream = AudioSystem.getAudioInputStream(new BufferedInputStream(inputStream));
+public class SoundGame {
 
-                clip = AudioSystem.getClip();
-                clip.open(audioStream);
-            } else {
-                System.out.println("Datei nicht gefunden: " + filePath);
-            }
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void start(Stage stage) {
+        String musicPath = "music.mp3";
+        double initialVolume = 0.5;
+
+        MediaPlayer mediaPlayer = createMediaPlayer(musicPath, initialVolume);
+        mediaPlayer.play();
+
+        stage.setTitle("Background Music Example");
+        stage.show();
     }
 
-    //plays the sound in a loop
-    public void playLoop() {
-        if (clip != null) {
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-        }
+    private MediaPlayer createMediaPlayer(String musicPath, double initialVolume) {
+        Media media = new Media(Paths.get(musicPath).toUri().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+
+        mediaPlayer.setVolume(initialVolume);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+
+        return mediaPlayer;
     }
 
-    //stop the playback of a sound
-    public void stop() {
-        if (clip != null) {
-            clip.stop();
-        }
-    }
 }
+
