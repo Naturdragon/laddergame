@@ -25,7 +25,6 @@ public class GameBoard {
     private List<Field> winningFields;
     private Pane rootLayout;
     private final AnchorPane INSTRUCTIONS_WINDOW = createInstructionsWindow();
-    private boolean gameDone = false;
     private Field waterfallField1;
     private Field waterfallField2;
 
