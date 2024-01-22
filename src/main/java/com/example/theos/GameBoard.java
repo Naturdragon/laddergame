@@ -838,8 +838,10 @@ public class GameBoard {
     Normal user input (UP / DOWN / SPACE) is locked during this event
     After an arrow was clicked with the mouse they dissapear, and the method to further move the player along the chosen path is called
      */
-    public void selectPathEvent(Field field, int hopsLeft, Player player, SequentialTransition sequentialTransition) {
+    public void selectPathEvent(int hopsLeft, Player player, SequentialTransition sequentialTransition) {
+
         TheOs.waitingForUserInput = false;
+
 
         // Plays the Sequential Transition given by the getAnimationPathMethode Methode
         sequentialTransition.setNode(player.getImageView());
@@ -855,13 +857,14 @@ public class GameBoard {
 
         pathOneArrow.setFitWidth(55);
         pathOneArrow.setPreserveRatio(true);
-        pathOneArrow.setOpacity(0.85);
+        pathOneArrow.setOpacity(0.85); //0.85
+        pathOneArrow.setY(300);
 
         pathTwoArrow.setFitWidth(55);
         pathTwoArrow.setPreserveRatio(true);
         pathTwoArrow.setOpacity(0.85);
 
-        if (field == crossoverField1) { // position the arrows at the first crossover
+        if (player.getCurrentField() == crossoverField1) { // position the arrows at the first crossover
             // first path option: left
             pathOneArrow.setRotate(-55);
             pathOneArrow.setTranslateX(562);
@@ -871,7 +874,7 @@ public class GameBoard {
             pathTwoArrow.setRotate(123);
             pathTwoArrow.setTranslateX(695);
             pathTwoArrow.setTranslateY(265);
-        } else if (field == crossoverField2) { // position the arrows at the second crossover
+        } else if (player.getCurrentField() == crossoverField2) { // position the arrows at the second crossover
             // first path option: down
             pathOneArrow.setRotate(195);
             pathOneArrow.setTranslateX(705);
@@ -904,7 +907,6 @@ public class GameBoard {
         });
         pathOneArrow.setOnMouseReleased(event -> {
             rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow);
-            TheOs.waitingForUserInput = true;
             crossingManager(hopsLeft,player,BoardGraph.edgeType.CrossoverPathOne);
         });
 
@@ -915,7 +917,6 @@ public class GameBoard {
         });
         pathTwoArrow.setOnMouseReleased(event -> {
             rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow);
-            TheOs.waitingForUserInput = true;
             crossingManager(hopsLeft,player,BoardGraph.edgeType.CrossoverPathTwo);
         });
     }

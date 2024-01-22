@@ -236,7 +236,7 @@ public class BoardGraph {
                         standartPathTransition.setPath(standartPath);
                         standartPathTransition.setDuration(Duration.millis(standartDurration));
                         seqtrans.getChildren().add(standartPathTransition);
-                        gameBord.selectPathEvent(vertexData,i-1,currentPlayer,seqtrans);     // Crossing
+                        gameBord.selectPathEvent(i-1,currentPlayer,seqtrans);     // Crossing
                     } else {
                         // The user can stand at this point on a lande because he went backwards. When walking backwards Laders do not trigger.
                         for (var item : forwardGraph.getAdjacenctVertexEdges(vertexData)) {
