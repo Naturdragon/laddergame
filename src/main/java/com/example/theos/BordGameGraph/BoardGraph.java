@@ -2,6 +2,7 @@ package com.example.theos.BordGameGraph;
 
 import Graph.*;
 import com.example.theos.Field;
+import com.example.theos.GameBoard;
 import com.example.theos.Player;
 import javafx.animation.PathTransition;
 import javafx.animation.SequentialTransition;
@@ -21,13 +22,16 @@ public class BoardGraph {
 
     public BoardGraph()
     {
+        /*
+        Initialises two Graphs. One for forwards movememnt and one for backwards movement. We decided to use two graphs because a graph does not have a direction, our game does.
+         */
         forwardGraph = new Graph();
         backwardGraph = new Graph();
     }
 
     /*
-    Adds a Vertex to the Graph
-    Gets generic Data
+    Adds a Vertex to both Graphs
+    Takes generic Data
     */
     public <T> void addVertex(T data)
     {
@@ -36,7 +40,7 @@ public class BoardGraph {
     }
 
     /*
-    Removes a Vertex
+    Removes a Vertex from both graphs
     The data to be Removed from the Hashmap
      */
     public <T> void removeVertex(T data)
@@ -45,6 +49,10 @@ public class BoardGraph {
         backwardGraph.removeVertex(data);
     }
 
+    /*
+    Adds an edge which goes in both directions
+
+     */
     public <T> void addEdge(T source, T target)
     {
         forwardGraph.addOneDirectionalEdge(source, target);
@@ -128,8 +136,7 @@ public class BoardGraph {
                 vertexListSize = forwardGraph.getAdjacenctVertex(vertexData).size();
                 if (vertexListSize > 0) {
                     if (vertexData.getType() == Field.fieldType.CrossoverField) {
-                        // TODO: Implementing the Crossing selection
-                        System.out.println("Crosing selection is not implemented jet!");
+                        return vertexData;  // Crossing
                     } else {
                         if (vertexData.getType() == Field.fieldType.LadderField)
                             System.out.println("!! This should not Happen !!");
@@ -179,7 +186,13 @@ public class BoardGraph {
         }
     }
 
-    public SequentialTransition getAnimationPathFromGraph(Field root, int hops, int animationOffsetX, int animationOffsetY, Player currentPlayer)
+
+    /*
+
+
+    Primar Methode: This methode is to be called before the hopCountTraversal. I also handels the Crossings, which hopCountTraversal does not.
+     */
+    public SequentialTransition getAnimationPathFromGraph(Field root, int hops, int animationOffsetX, int animationOffsetY, Player currentPlayer, GameBoard gameBord)
     {
         SequentialTransition seqtrans = new SequentialTransition();
 
@@ -204,11 +217,26 @@ public class BoardGraph {
         Weight tmpWeigth;
         if (hops > 0) { // Checks which graph should be used
             for (int i = 0; i < hops; i++) {
+                /*
+                // Does not work Properly
+                if(backwardGraph.getAdjacenctVertex(vertexData).size() == 1 && backwardGraph.getAdjacenctVertex(vertexData).get(0).getType() == Field.fieldType.CrossoverField ){ // Checks if the Last field was a crossing Field
+                    standartPath.getElements().clear(); // clear the default point
+                    Field fieldcrossing = backwardGraph.getAdjacenctVertex(vertexData).get(0);
+                    standartPath.getElements().add(new LineTo(fieldcrossing.getX() - animationOffsetX, fieldcrossing.getY() - animationOffsetY));
+                    standartPath.getElements().add(new LineTo(vertexData.getX() - animationOffsetX, vertexData.getY() - animationOffsetY));
+                    Weight tempCrossingWeight = (Weight) backwardGraph.getAdjacenctVertexEdges(vertexData).get(0).getWeight();
+                    standartDurration = standartDurration + (Integer) tempCrossingWeight.getData();
+                }
+
+                 */
                 vertexListSize = forwardGraph.getAdjacenctVertex(vertexData).size();
                 if (vertexListSize > 0) {
                     if (vertexData.getType() == Field.fieldType.CrossoverField) {
-                        // TODO: Implementing the Crossing selection
-                        System.out.println("Crosing selection is not implemented jet!");
+                        PathTransition standartPathTransition = new PathTransition();
+                        standartPathTransition.setPath(standartPath);
+                        standartPathTransition.setDuration(Duration.millis(standartDurration));
+                        seqtrans.getChildren().add(standartPathTransition);
+                        gameBord.selectPathEvent(vertexData,i-1,currentPlayer,seqtrans);     // Crossing
                     } else {
                         // The user can stand at this point on a lande because he went backwards. When walking backwards Laders do not trigger.
                         for (var item : forwardGraph.getAdjacenctVertexEdges(vertexData)) {
@@ -315,6 +343,18 @@ public class BoardGraph {
             seqtrans.getChildren().add(standartPathTransition);
             return seqtrans;
         }
+    }
+
+    public Field crossingMove(Field root, edgeType edgetype){
+        if(root.getType() != Field.fieldType.CrossoverField) return root;
+
+        for (Edge edge: forwardGraph.getAdjacenctVertexEdges(root)) {
+            Weight tempWeight = (Weight)edge.getWeight();
+            if(tempWeight.getType() == edgetype){
+                return (edge.getSource() == root)? (Field)edge.getTarget():(Field)edge.getSource();
+            }
+        }
+        return root; // An error is accured. No Crossing should have no two crossing Edges. Returning Root for damage minomizaton.
     }
 
     public void checkGraph()

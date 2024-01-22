@@ -3,8 +3,7 @@ package com.example.theos;
 import java.util.Random;
 
 public class Dice {
-    // Random numbers use static to use the same random object continuously
-    static Random rnd = new Random();
+    static Random rnd = new Random();   // Random numbers use static to use the same random object continuously for better randomnes
     private int charge;
     private int[] dice;
     private dieType type;
@@ -56,7 +55,11 @@ public class Dice {
 
     }
 
-    // Types of die
+    /*
+    Types of Dice
+    NormalDie -> Standart six sieded die
+    SpecialDie -> six sieded die with special numbers
+     */
     public enum dieType {
         NormalDie,
         SpecialDie

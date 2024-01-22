@@ -31,7 +31,11 @@ public class GameBoard {
     private Field crossoverField1;
     private Field crossoverField2;
 
+    private int animationOffsetX = 0;
+    private int animationOffsetY = 15;
+
     // Default constructor: just initializes the most important variables with their default constructor
+
     public GameBoard() {
 
         boardGraph = new BoardGraph();
@@ -377,7 +381,7 @@ public class GameBoard {
         Field field146 = new Field(Field.fieldType.NormalField, 38.2, 36.6);
         Field field147 = new Field(Field.fieldType.NormalField, 40.8, 36.9);
         Field field148 = new Field(Field.fieldType.NormalField, 43.6, 36.4);
-        Field field149 = new Field(Field.fieldType.NormalField, 45.9, 34.5); // TODO Change to Crossing Field
+        Field field149 = new Field(Field.fieldType.CrossoverField, 45.9, 34.5);
         crossoverField1 = field149;
         Field field150 = new Field(Field.fieldType.NormalField, 43.8, 32.7);
 
@@ -550,7 +554,7 @@ public class GameBoard {
         Field field206 = new Field(Field.fieldType.NormalField, 49.5, 53.3);
         Field field207 = new Field(Field.fieldType.NormalField, 50.3, 57.5);
         Field field208 = new Field(Field.fieldType.NormalField, 51.8, 60.7);
-        Field field209 = new Field(Field.fieldType.NormalField, 53.8, 62.5); // TODO for the beta test field type was changed to NormalField, later change it back to CrossingField
+        Field field209 = new Field(Field.fieldType.CrossoverField, 53.8, 62.5);
         crossoverField2 = field209;
         Field field210 = new Field(Field.fieldType.LadderField, 55.9, 63.1);
 
@@ -716,6 +720,10 @@ public class GameBoard {
         }
 
         for (int i = 0; i < fieldListUpperPath.size() - 1; i++) {
+            if(field149 == fieldListUpperPath.get(i)){
+                getBoardGraph().addEdge(fieldListUpperPath.get(i), fieldListUpperPath.get(i + 1), 500, BoardGraph.edgeType.CrossoverPathOne);
+                continue;
+            }
             getBoardGraph().addEdge(fieldListUpperPath.get(i), fieldListUpperPath.get(i + 1), 500, BoardGraph.edgeType.NormalEdge);
         }
 
@@ -724,6 +732,10 @@ public class GameBoard {
         }
 
         for (int i = 0; i < fieldListMiddlePath.size() - 1; i++) {
+            if(field209 == fieldListUpperPath.get(i)){
+                getBoardGraph().addEdge(fieldListUpperPath.get(i), fieldListUpperPath.get(i + 1), 500, BoardGraph.edgeType.CrossoverPathOne);
+                continue;
+            }
             getBoardGraph().addEdge(fieldListMiddlePath.get(i), fieldListMiddlePath.get(i + 1), 500, BoardGraph.edgeType.NormalEdge);
         }
 
@@ -736,9 +748,15 @@ public class GameBoard {
         }
 
         // Add edges between three main paths
-        boardGraph.addEdge(field149, field201, 500, BoardGraph.edgeType.NormalEdge);
-        boardGraph.addEdge(field209, field301, 500, BoardGraph.edgeType.NormalEdge);
+
+        boardGraph.addOneDirectionalEdgeForward(field149, field201, 500, BoardGraph.edgeType.CrossoverPathTwo);
+        boardGraph.addOneDirectionalEdgeBackward(field149, field201, 500, BoardGraph.edgeType.NormalEdge);
+
+        boardGraph.addOneDirectionalEdgeForward(field209, field301, 500, BoardGraph.edgeType.CrossoverPathTwo);
+        boardGraph.addOneDirectionalEdgeBackward(field209, field301, 500, BoardGraph.edgeType.NormalEdge);
+
         boardGraph.addEdge(field222, field187, 500, BoardGraph.edgeType.NormalEdge);
+
 
         // Add normal edges from spawn area to first field
         for (Player player : playerList) {
@@ -808,13 +826,10 @@ public class GameBoard {
         getBoardGraph().addOneDirectionalEdgeForward(field195, win6, 500, BoardGraph.edgeType.NormalEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field347, win6, 500, BoardGraph.edgeType.NormalEdge);
 
-        /*
+
         for (Player player : playerList) {
-            player.setCurrentField(field165);
+            player.setCurrentField(field146);
         }
-
-         */
-
     }
 
     /*
@@ -823,8 +838,17 @@ public class GameBoard {
     Normal user input (UP / DOWN / SPACE) is locked during this event
     After an arrow was clicked with the mouse they dissapear, and the method to further move the player along the chosen path is called
      */
-    public void selectPathEvent(Field field, int hopsLeft) {
+    public void selectPathEvent(Field field, int hopsLeft, Player player, SequentialTransition sequentialTransition) {
         TheOs.waitingForUserInput = false;
+
+        // Plays the Sequential Transition given by the getAnimationPathMethode Methode
+        sequentialTransition.setNode(player.getImageView());
+        sequentialTransition.play();
+        player.setCurrentField(boardGraph.hopCountTraversal(player.getCurrentField(), hopsLeft)); // Sets the currentField of the Player to teh Crossing Field
+
+        sequentialTransition.setOnFinished(event -> {
+            player.playIdle();
+        });
 
         ImageView pathOneArrow = new ImageView("images/gameboard_screen/Game_Crossover_Arrow.PNG");
         ImageView pathTwoArrow = new ImageView("images/gameboard_screen/Game_Crossover_Arrow.PNG");
@@ -879,9 +903,9 @@ public class GameBoard {
             pathOneArrow.setScaleY(1.4);
         });
         pathOneArrow.setOnMouseReleased(event -> {
-            boardGraph.hopCountTraversal(field, hopsLeft);
             rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow);
             TheOs.waitingForUserInput = true;
+            crossingManager(hopsLeft,player,BoardGraph.edgeType.CrossoverPathOne);
         });
 
         pathTwoArrow.setOnMousePressed(event -> {
@@ -890,9 +914,9 @@ public class GameBoard {
             pathTwoArrow.setScaleY(1.4);
         });
         pathTwoArrow.setOnMouseReleased(event -> {
-            boardGraph.hopCountTraversal(field, hopsLeft);
             rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow);
             TheOs.waitingForUserInput = true;
+            crossingManager(hopsLeft,player,BoardGraph.edgeType.CrossoverPathTwo);
         });
     }
 
@@ -929,14 +953,21 @@ public class GameBoard {
     Returns nothing
     */
     public void movePlayer(Player player, int fieldsToMove) {
-        int animationOffsetX = 0;
-        int animationOffsetY = 15;
+        // Does not fix the zero bug when the end of Graph has been reached
+        if(fieldsToMove == 0) {
+            player.increaseTurns();
+            diceUI.switchPlayerTurn(this);
+            return;
+        }
 
-        player.playWalk();
+        player.playWalk();  // Begins Player Animation
 
-        SequentialTransition sequentialTransition = boardGraph.getAnimationPathFromGraph(player.getCurrentField(), fieldsToMove, animationOffsetX, animationOffsetY, player);
+        // Gets SequentialPath from teh Graph and plays it
+        SequentialTransition sequentialTransition = boardGraph.getAnimationPathFromGraph(player.getCurrentField(), fieldsToMove, animationOffsetX, animationOffsetY, player, this);
         sequentialTransition.setNode(player.getImageView());
         sequentialTransition.play();
+
+        // Chaches the current field of the Player to the new field
         player.setCurrentField(boardGraph.hopCountTraversal(player.getCurrentField(), fieldsToMove));
 
         sequentialTransition.setOnFinished(event -> {
@@ -1006,5 +1037,31 @@ public class GameBoard {
             }
         }
         return false;
+    }
+
+    /*
+    Special Methode that gets called by the Cklick on the Arrows at a crossing.
+     */
+    public void crossingManager(int fieldsToMove, Player player, BoardGraph.edgeType edgeType){
+        player.setCurrentField(boardGraph.crossingMove(player.getCurrentField(),edgeType)); // Moves once
+
+        player.playWalk();
+        SequentialTransition sequentialTransition = boardGraph.getAnimationPathFromGraph(player.getCurrentField(),fieldsToMove-1,animationOffsetX,animationOffsetY,player,this);  // Animation for Walking after the crossing
+        sequentialTransition.setNode(player.getImageView());
+        sequentialTransition.play();
+        player.setCurrentField(boardGraph.hopCountTraversal(player.getCurrentField(), fieldsToMove-1)); // Already moved once
+
+        sequentialTransition.setOnFinished(event -> {
+            // Check if the new field of the player is a specialChargeField
+            if (player.getCurrentField().getType() == Field.fieldType.SpecialChargeField) {
+                player.getSpecialDie().addCharge();
+                diceUI.updateSpecialCharges(player);
+                this.playChargeAddedAnimation();
+            }
+            player.increaseTurns();
+            diceUI.switchPlayerTurn(this);
+            player.playIdle();
+        });
+
     }
 }

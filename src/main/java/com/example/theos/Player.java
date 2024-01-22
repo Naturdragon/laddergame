@@ -22,7 +22,7 @@ public class Player {
     private Path nextPlayerImagePath;
     private Path spriteImagePath;
     private Field currentField; // Current Field where the player is
-    private Transition currentAnimation;
+    private Transition currentAnimation;    // The current animation of the Player. aka. Walking, standing, etc.
     private ImageView imageView; //used to represent the character of the player on screen
     private int turnCount;
 
@@ -32,11 +32,13 @@ public class Player {
         specialDie = new Dice(specialDiceArray);
         imagePath = path;
 
+        // Increase the ID by one
         iD = nextID;
         nextID++;
         turnCount = 0;
     }
 
+    // Methode to create a character
     public Player(String characterName, int[] specialDiceArray, Path path, Path winningImagePath, Field currentCharacterField) {
         this(characterName, specialDiceArray, path);
         this.winningImagePath = winningImagePath;
@@ -199,18 +201,11 @@ public class Player {
         Rolls the dice which are saved in the Player class
         Used to choose the die to roll
         returns the die result
-        !! DIE SPECIAL DIE CHARGES DO NOT GET CHECKED HERE. THIS NEEDS TO BE DONE IN THE APPLICATION CLASS !!
+        !! DIE SPECIAL DIE CHARGES DO NOT GET CHECKED HERE. THIS NEEDS TO BE DONE IN THE SceneController CLASS !!
         */
     public int rollDie(Dice.dieType dieType) {
 
         switch (dieType) {
-            /*
-            // Is it needed? The IDE complains that this statement and the default statement are the same. Should we ignore it or should we remove the statement?
-            case NormalDie -> {
-                return basicDie.rollDie();
-            }
-            break;
-             */
             case SpecialDie -> {
                 return specialDie.rollDie();
             }
