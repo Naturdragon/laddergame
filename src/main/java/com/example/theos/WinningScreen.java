@@ -21,6 +21,8 @@ import java.util.List;
 
 import static com.example.theos.TitleScreen.animateButtons;
 
+// Der folgende Code wurde teilweise angepasst von [ChatGPT]
+
 /*
 The WinningScreen class displays the winning screen with the leaderboard and options to return to the main menu.
  */

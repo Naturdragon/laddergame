@@ -18,6 +18,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+// Der folgende Code wurde teilweise angepasst von [ChatGPT]
+
 /*
 The TitleScreen class displays the TitleScreen.
  */
