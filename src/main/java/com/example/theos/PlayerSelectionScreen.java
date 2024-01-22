@@ -25,7 +25,6 @@ import static com.example.theos.TheOs.BROWN;
 // Der folgende Code wurde teilweise angepasst von [ChatGPT]
 public class PlayerSelectionScreen {
     private static final double SCREEN_WIDTH = 1422;
-    private static final double SCREEN_HEIGHT = 800;
     private static final int NUM_COLUMNS = 3;
     private static final double CHARACTER_IMAGE_SIZE = SCREEN_WIDTH / (NUM_COLUMNS + 2);
     private static final int PADDING_VALUE = 20;
@@ -44,7 +43,7 @@ public class PlayerSelectionScreen {
     static final Font CAVEAT = Font.loadFont(PlayerSelectionScreen.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), -1);
     static final Font VARELA = Font.loadFont(PlayerSelectionScreen.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), -1);
 
-    /*creates and returnes PlayerSelectinScreen including
+    /*creates and returns PlayerSelectionScreen including
     character selection grid, instructions and buttons */
     public static Scene createPlayerSelectionScreen() {
         playerCounter = 1;
@@ -192,8 +191,8 @@ public class PlayerSelectionScreen {
         return leftSide;
     }
 
-    /*Gridpane containes character images, names and deselect buttons,
-    allowing select or deselct characters*/
+    /*Gridpane contains character images, names and deselect buttons,
+    allowing select or deselect characters*/
     private static GridPane createCharactersGrid() {
         charactersGrid = new GridPane();
         charactersGrid.setPadding(new Insets(PADDING_VALUE));
@@ -286,7 +285,7 @@ public class PlayerSelectionScreen {
             deselectPlayer(playerIndex, characterImage);
         }
     }
-    /*selects a player by assignung a player number
+    /*selects a player by assigning a player number
     and adjusts the character image`s position and opacity*/
     private static void selectPlayer(int playerIndex, ImageView characterImage) {
         Player currentPlayer = players[playerIndex];
@@ -316,7 +315,7 @@ public class PlayerSelectionScreen {
         printAllPlayers();
     }
     /*adjusts the player numbers of all players with numbers greater than
-     the deselctes player´s number */
+     the deselects player´s number */
     private static void adjustPlayerNumbers(int deselectedPlayerNumber) {
         for (int i = 0; i < players.length; i++) {
             Player player = players[i];
@@ -326,7 +325,7 @@ public class PlayerSelectionScreen {
         }
     }
     /*checks if the current selections allows to start the game
-    by ensuringthe minimum numbers of players is selected*/
+    by ensuring the minimum numbers of players is selected*/
     private static boolean allowPlayability() {
         boolean allowPlayability = false;
         if (countSelectedPlayers() >= MIN_PLAYERS) {

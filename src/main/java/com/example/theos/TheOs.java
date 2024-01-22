@@ -27,7 +27,7 @@ public class TheOs extends javafx.application.Application {
     public void start(Stage stage){
         SceneController.stage = stage;
         stage.setTitle("The O’s");
-        stage.setResizable(false); // daweil mal ohne resizable
+        stage.setResizable(false); // for now not resizable
         SceneController.showTitleScreen();
 
         SoundGame soundGame = new SoundGame("/sound/sound.wav"); // plays music

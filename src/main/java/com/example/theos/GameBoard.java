@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -89,7 +88,7 @@ public class GameBoard {
     }
 
     /*
-    Playes the animation (as a ParallelTransition) of all characters spawning in
+    Plays the animation (as a ParallelTransition) of all characters spawning in
     Unlocks the user to be able to input something (roll or select die)
     Returns nothing
      */
@@ -135,7 +134,7 @@ public class GameBoard {
 
         rootLayout.setBackground(background);
 
-        // Placing the diceUI on the sceen
+        // Placing the diceUI on the screen
         diceUI.updateNextPlayer(playerList);
         diceUI.setTranslateX(40);
         diceUI.setTranslateY(800 - 215);
@@ -379,7 +378,7 @@ public class GameBoard {
         Field field146 = new Field(Field.fieldType.NormalField, 38.2, 36.6);
         Field field147 = new Field(Field.fieldType.NormalField, 40.8, 36.9);
         Field field148 = new Field(Field.fieldType.NormalField, 43.6, 36.4);
-        Field field149 = new Field(Field.fieldType.NormalField, 45.9, 34.5); // TODO Chanche to Crossing Field
+        Field field149 = new Field(Field.fieldType.NormalField, 45.9, 34.5); // TODO Change to Crossing Field
         crossoverField1 = field149;
         Field field150 = new Field(Field.fieldType.NormalField, 43.8, 32.7);
 

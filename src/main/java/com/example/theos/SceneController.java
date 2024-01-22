@@ -22,8 +22,8 @@ public class SceneController {
     }
 
     /*
-    Shows the gameboard screen, also:
-    the instance of the gameboard which holds all data of the game (number of players, finished players, etc) is created here
+    Shows the Gameboard screen, also:
+    the instance of the Gameboard which holds all data of the game (number of players, finished players, etc.) is created here
      */
     public static void showGameBoardScreen(List<Player> playerList) {
         TheOs.waitingForUserInput = false; // the user input is unlocked after the spawn in animation is played (happens inside createGameBoardScreen, line 32)
@@ -48,7 +48,7 @@ public class SceneController {
                     gameBoard.hideInstructions();
                 }
             }
-            /* its possible to implement showing the instructions through a key press or option button in the future,
+            /* it's possible to implement showing the instructions through a key press or option button in the future,
             however, right now there is a visual bug with the close button similar to the one with the dice select arrow
             if (event.getCode() == KeyCode.I) {
                 gameBoard.showInstructions();

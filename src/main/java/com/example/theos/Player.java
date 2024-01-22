@@ -117,7 +117,7 @@ public class Player {
     }
 
     /*
-    Creates the SpawnAnimation of a character. Its a ParallelTransition consisting of a Translate and a Sprite Animation
+    Creates the SpawnAnimation of a character. It's a ParallelTransition consisting of a Translate and a Sprite Animation
     Unlike other character animations this is not loaded into the currentAnimation variable, reason being:
     the spawn animation of all characters are later played together in another ParallelTransition, this helps for input handling
     Returns a Transition (ParallelTransition)
@@ -205,7 +205,7 @@ public class Player {
 
         switch (dieType) {
             /*
-            // Is it needed? The IDE complains that this statement and the default statement are the same. Should we ignor it or should we remove the statement?
+            // Is it needed? The IDE complains that this statement and the default statement are the same. Should we ignore it or should we remove the statement?
             case NormalDie -> {
                 return basicDie.rollDie();
             }
