@@ -22,7 +22,7 @@ public class DiceUI extends AnchorPane {
     // accessing the custom font fix: https://stackoverflow.com/questions/30245085/javafx-embed-custom-font-not-working
     public static final Font CUSTOM_FONT_VARELA = Font.loadFont(TheOs.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), 22);
     public static final Font CUSTOM_FONT_CAVEAT = Font.loadFont(TheOs.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), 25);
-    private final ImageView SELECTION_ARROW = new ImageView(new Image("images/gameboard_screen/Game_Die_Select.png")); // TODO origin of the selection arrow bug: all these variables/constants shouldnt be static
+    private final ImageView SELECTION_ARROW = new ImageView(new Image("images/gameboard_screen/Game_Die_Select.png")); // TODO origin of the selection arrow bug: all these variables/constants shouldn't be static
     private final ImageView NORMAL_DIE_BG = new ImageView(new Image("images/gameboard_screen/Game_Die_0.png"));
     private final Text NORMAL_DIE_0 = new Text("1");
     private final Text NORMAL_DIE_1 = new Text("2");
@@ -43,7 +43,7 @@ public class DiceUI extends AnchorPane {
     private Text specialDie4;
     private Text specialDie5;
 
-    private state uiState; // used to be able to indentify which die to use in playerTurn() method
+    private state uiState; // used to be able to identify which die to use in playerTurn() method
 
     /*
     Default constructor creates the content of the interface and layouts it
@@ -132,7 +132,7 @@ public class DiceUI extends AnchorPane {
 
         // Creating the layout:
 
-        // Layout for the left side (charactericon and name)
+        // Layout for the left side (character-icon and name)
         VBox leftSide = new VBox(0, playerPortrait, playerName);
         leftSide.setAlignment(Pos.CENTER);
 
@@ -308,7 +308,7 @@ public class DiceUI extends AnchorPane {
         }
     }
 
-    /* Special charges are updated seperately than the rest of the diceUI,
+    /* Special charges are updated separately than the rest of the diceUI,
     so the effect can immediately be seen if a player lands on a special field or uses the die
     Returns nothing
      */
@@ -356,7 +356,7 @@ public class DiceUI extends AnchorPane {
                 gameBoard.getPlayerList().remove(gameBoard.getPlayerList().size() - 1);
             }
 
-            // if gameboards playerList is empty then all players are finished => winning screen is started
+            // if gameboard playerList is empty then all players are finished => winning screen is started
             if (gameBoard.getPlayerList().isEmpty()) {
                 SceneController.showWinningScreen(gameBoard.getFinishedPlayers());
                 TheOs.waitingForUserInput = true;
@@ -441,7 +441,7 @@ public class DiceUI extends AnchorPane {
         /* if the special die is rolled it cant directly be figured out which "side" of the die it was,
         because only the value of the rolled side is visible from the outside
         –> if a character has multiple sides with the same value a random one is selected,
-        so it doesnt seem as its always the same (which backend-wise it isnt anyway)
+        so it doesn't seem as it's always the same (which backend-wise it isn't anyway)
          */
         if (uiState == state.SpecialDieSelected) {
             int[] dieUsed = player.getSpecialDie().getDice();
