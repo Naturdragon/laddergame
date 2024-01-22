@@ -22,7 +22,7 @@ public class DiceUI extends AnchorPane {
     // accessing the custom font fix: https://stackoverflow.com/questions/30245085/javafx-embed-custom-font-not-working
     public static final Font CUSTOM_FONT_VARELA = Font.loadFont(TheOs.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), 22);
     public static final Font CUSTOM_FONT_CAVEAT = Font.loadFont(TheOs.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), 25);
-    private final ImageView SELECTION_ARROW = new ImageView(new Image("images/gameboard_screen/Game_Die_Select.png")); // TODO origin of the selection arrow bug: all these variables/constants shouldnt be static
+    private final ImageView SELECTION_ARROW = new ImageView(new Image("images/gameboard_screen/Game_Die_Select.png"));
     private final ImageView NORMAL_DIE_BG = new ImageView(new Image("images/gameboard_screen/Game_Die_0.png"));
     private final Text NORMAL_DIE_0 = new Text("1");
     private final Text NORMAL_DIE_1 = new Text("2");
@@ -304,7 +304,7 @@ public class DiceUI extends AnchorPane {
                 HBox.setMargin(specialDie4, new Insets(0, 0, 0, 0));
                 HBox.setMargin(specialDie5, new Insets(0, 0, 0, 0));
             }
-            default -> System.out.println("Character not found"); // only the names in the above ifs should be possible
+            default -> System.out.println("Character not found"); // only the names in the above ifs should be possible or else there was an error when creating the characters
         }
     }
 
@@ -450,16 +450,17 @@ public class DiceUI extends AnchorPane {
 
             int indexOfRolledNumber;
 
+            // add the index of the found (same as rolled) number to equalsFound (there could be more than 1)
             for (int i = 0; i < dieUsed.length; i++) {
                 if (numberRolled == dieUsed[i]) {
                     equalsFound.add(i);
                 }
             }
 
-            if (equalsFound.size() > 1) {
+            if (equalsFound.size() > 1) { // if there are multiple same numbers in a die a random one of them is selected here
                 Random random = new Random();
                 indexOfRolledNumber = equalsFound.get(random.nextInt(equalsFound.size()));
-            } else {
+            } else { // if there was only one number found (most cases) indexOfRolledNumber is simply the one index saved in equalsFound
                 indexOfRolledNumber = equalsFound.get(0);
             }
 

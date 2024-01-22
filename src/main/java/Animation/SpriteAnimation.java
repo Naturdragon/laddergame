@@ -34,7 +34,7 @@ public class SpriteAnimation extends Transition {
         this.width = width;
         this.height = height;
 
-        duration = Duration.millis(DURATION_OF_SINGLE_FRAME * totalFrames); // duration is calucalted based on fps (=> DURATION_SINGLE_FRAME) and totalFrames
+        duration = Duration.millis(DURATION_OF_SINGLE_FRAME * totalFrames); // duration is calculated based on fps (=> DURATION_SINGLE_FRAME) and totalFrames
         setCycleDuration(duration);
         setInterpolator(Interpolator.LINEAR);
     }

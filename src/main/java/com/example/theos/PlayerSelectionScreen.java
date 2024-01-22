@@ -232,7 +232,6 @@ public class PlayerSelectionScreen {
             }
 
             ImageView characterImage = createCharacterImageView(characterImagePaths[i], i);
-            ImageView deselectButton = createDeselectButton(i, characterImage);
 
             characters[i] = new Character(characterNames[i]);
             players[i] = new Player(characters[i], null);
@@ -250,9 +249,7 @@ public class PlayerSelectionScreen {
             playerInfoBox.setAlignment(Pos.CENTER);
 
             StackPane characterPane = new StackPane();
-            characterPane.getChildren().addAll(playerInfoBox, deselectButton);
-            StackPane.setAlignment(deselectButton, Pos.TOP_RIGHT);
-            StackPane.setMargin(deselectButton, new Insets(DESELECT_BUTTON_OFFSET_Y, DESELECT_BUTTON_OFFSET_X, 0, 0));
+            characterPane.getChildren().addAll(playerInfoBox);
             charactersGrid.add(characterPane, columnIndex, rowIndex);
 
             columnIndex += 2;
@@ -280,21 +277,6 @@ public class PlayerSelectionScreen {
         return imageView;
     }
 
-
-    private static ImageView createDeselectButton(int playerIndex, ImageView characterImage) {
-        Image deselectImage = new Image("images/player_select_screen/Player_Deselect.PNG", 35, 35, true, true);
-        ImageView deselectImageView = new ImageView(deselectImage);
-
-        playerSelectedProperties[playerIndex] = new SimpleBooleanProperty(false);
-
-        deselectImageView.visibleProperty().bind(playerSelectedProperties[playerIndex]);
-
-        deselectImageView.setOnMouseClicked(event -> {
-            deselectPlayer(playerIndex, characterImage);
-        });
-
-        return deselectImageView;
-    }
     //toggles player selection status for a given player index
     private static void togglePlayerSelection(int playerIndex, ImageView characterImage) {
         Player currentPlayer = players[playerIndex];
@@ -374,22 +356,22 @@ public class PlayerSelectionScreen {
 
     /*
     Based on the information in  players[] array a (com.example.theos.)Player List is created and filled with the corresponding characters in the order they were selected
-    This list is used to initialized the playerList of the gameBoard
+    This list is used to initialize the playerList of the gameBoard
     Returns a List<com.example.theos.Player>
      */
     public static List<com.example.theos.Player> createPlayerList() {
         List<com.example.theos.Player> selectedPlayers = new ArrayList<>();
 
-        for (int i = 0; i < players.length; i++) {
+        for (int i = 0; i < players.length; i++) { // null objects are added to the list so the players can later be added to it at the correct index
             selectedPlayers.add(null);
         }
 
         for (int i = 0; i < players.length; i++) {
-            if (players[i].playerNumber > 0) {
+            if (players[i].playerNumber > 0) { // if the playerNumber is > 0 that means the character was selected
                 com.example.theos.Player player;
                 Field spawn;
 
-                switch (i) {
+                switch (i) { // every character has a fixed index in players[], so based on which iteration of the for loop it is the correct com.example.theos.Player and their unique spawn field can be created
                     case 0:
                         player = new com.example.theos.Player("Diva O'Hara", new int[]{-3, -3, 5, 6, 6, 7}, Paths.get("images/player_icons/Icon_1.PNG"), Paths.get("images/winning_screen/Win_1.PNG"), Paths.get("images/gameboard_screen/Game_O_1.PNG"), Paths.get("images/sprites/Sprites_1.png"));
                         spawn = new Field(Field.fieldType.NormalField, 4.8, 60.1 - 1);
@@ -419,11 +401,11 @@ public class PlayerSelectionScreen {
                 }
 
                 player.setCurrentField(spawn);
-                selectedPlayers.set(players[i].playerNumber - 1, player);
+                selectedPlayers.set(players[i].playerNumber - 1, player); // the selected character of the player is added to the List based on the players[].playerNumber, this keeps the correct selection order
             }
         }
 
-        selectedPlayers.removeIf(Objects::isNull);
+        selectedPlayers.removeIf(Objects::isNull); // all empty leftover spots are removed again
 
         return selectedPlayers;
     }

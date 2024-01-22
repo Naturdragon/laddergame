@@ -2,12 +2,12 @@ package com.example.theos;
 
 public class Field {
 
-    static int idCounter = 0;
+    private static int idCounter = 0; // used to assign ongoing id to every new Field
     private int id;
     private fieldType type;
     private Coordinates coordinates;
 
-    public Field(fieldType type, double xPercentage, double yPercentage) {
+    public Field(fieldType type, double xPercentage, double yPercentage) { // field coordinates are calculated based on percentage, idea is to make the layout more flexible
         id = idCounter;
         idCounter++;
         this.type = type;
@@ -36,14 +36,14 @@ public class Field {
     // Types of Fields
     public enum fieldType {
         NormalField,
-        LadderField,
+        LadderField, // includes snakes (are seen as the same gameplay wise)
         SpecialChargeField,
         CrossoverField
     }
 
-    class Coordinates { // nested class for coordinates of fields; TODO: place getX and getY methods in coordinate class? like so: field.getCoordinates.getX()
+    class Coordinates { // nested class for coordinates of fields;
 
-        int x;
-        int y;
+        private int x;
+        private int y;
     }
 }

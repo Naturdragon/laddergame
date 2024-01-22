@@ -33,39 +33,31 @@ public class GameBoard {
     private Field crossoverField1;
     private Field crossoverField2;
 
+    // Default constructor: just initializes the most important variables with their default constructor
     public GameBoard() {
 
         boardGraph = new BoardGraph();
-
         playerList = new ArrayList<>();
-
-        BackgroundImage backgroundImg = new BackgroundImage(
-                new Image("images/gameboard_screen/Game_BG.PNG"),
-                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-                new BackgroundSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT, false, false, true, true));
-
-        background = new Background(backgroundImg);
-
-        BackgroundImage backgroundImgTop = new BackgroundImage(
-                new Image("images/gameboard_screen/Game_BG_Top.PNG"),
-                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-                new BackgroundSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT, false, false, true, true));
-
-        backgroundTop = new Background(backgroundImgTop);
-
-        diceUI = new DiceUI();
-
         winningFields = new ArrayList<>();
-
         finishedPlayers = new ArrayList<>();
-
+        diceUI = new DiceUI();
         rootLayout = new Pane();
     }
 
-    public GameBoard(BoardGraph boardGraph, List<Player> playerList, Background background) {
-        this.boardGraph = boardGraph;
+    /*
+    Constructor which takes in a list of players (created by the PlayerSelectScreen) and calls fillGraphData
+    (fillGraphData logically has to happen after the correct player list is assigned)
+     */
+    public GameBoard(List<Player> playerList) {
         this.playerList = playerList;
-        this.background = background;
+
+        boardGraph = new BoardGraph();
+        winningFields = new ArrayList<>();
+        finishedPlayers = new ArrayList<>();
+        diceUI = new DiceUI();
+        rootLayout = new Pane();
+
+        fillGraphData();
     }
 
     public BoardGraph getBoardGraph() {
@@ -86,14 +78,6 @@ public class GameBoard {
 
     public Background getBackground() {
         return background;
-    }
-
-    public boolean isGameDone() {
-        return gameDone;
-    }
-
-    public void setGameDone(boolean gameDone) {
-        this.gameDone = gameDone;
     }
 
     public List<Player> getFinishedPlayers() {
@@ -128,9 +112,27 @@ public class GameBoard {
 
     /*
     Creates the scene/screen view of the gameboard
+    Backgrounds are set, DiceUI and instructionsWindow are placed on screen
+    All characters are placed on screen and playGameStartAnimation() is called, afterwards userinput is unlocked
     Returns a scene object, which can be used for the stage object in TheOs start() method
      */
     public Scene createGameBoardScreen() {
+
+        // Creating and setting the game background (image of the board), backgroundTop is later added to the layout (its only the waterfall)
+        BackgroundImage backgroundImg = new BackgroundImage(
+                new Image("images/gameboard_screen/Game_BG.PNG"),
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+                new BackgroundSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT, false, false, true, true));
+
+        background = new Background(backgroundImg);
+
+        BackgroundImage backgroundImgTop = new BackgroundImage(
+                new Image("images/gameboard_screen/Game_BG_Top.PNG"),
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+                new BackgroundSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT, false, false, true, true));
+
+        backgroundTop = new Background(backgroundImgTop);
+
         rootLayout.setBackground(background);
 
         // Placing the diceUI on the sceen
@@ -139,14 +141,12 @@ public class GameBoard {
         diceUI.setTranslateY(800 - 215);
         rootLayout.getChildren().add(diceUI);
 
-        // the ImageViews of all players in playerList are placed on screen at the coordinates of their spawnfield
+        // the ImageViews of all players in playerList are placed on screen at the coordinates of their spawn field
         for (Player player : playerList) {
             rootLayout.getChildren().add(player.getImageView());
             player.getImageView().setX(player.getCurrentField().getX() - 27);
             player.getImageView().setY(player.getCurrentField().getY() - 27 - 15);
         }
-
-        playGameStartAnimation(); // plays the spawn in animation of the characters (so that only afterwards the users can input something)
 
         // Placing the top background (water fall section)
         Region backgroundTopRegion = new Region();
@@ -170,7 +170,9 @@ public class GameBoard {
         VBox buttonLayout = new VBox(closeAppButton, mainMenuButton, instructionsButton, musicButton);
         rootLayout.getChildren().add(buttonLayout);
 
-        showInstructions(); // when the scene is created the instructionsWindow should be shown on screen for new players
+        this.playGameStartAnimation(); // plays the spawn in animation of the characters
+
+        this.showInstructions(); // when the scene is created the instructionsWindow should be shown on screen for new players
 
         //selectPathEvent(crossoverField2, 0); // TODO delete later, only for simulating a crossover
 
@@ -183,7 +185,7 @@ public class GameBoard {
     The window can in later use be added to the screen or hidden from the screen
     Returns an AnchorPane
      */
-    AnchorPane createInstructionsWindow() {
+    private AnchorPane createInstructionsWindow() {
         VBox instructionsText = new VBox();
 
         Text text1 = new Text("Landing on a        - Field makes your Character" + System.lineSeparator() + "take a shortcut");
@@ -316,6 +318,11 @@ public class GameBoard {
         closeAnimation.setOnFinished(actionEvent -> rootLayout.getChildren().remove(INSTRUCTIONS_WINDOW));
     }
 
+    /*
+    Creates backend part of the gameboard, meaning: all logical fields are created,
+    the BoardGraph is filled with the fields (as vertexes) and ladders/snakes (as edges),
+    special fields (waterfall, winning fields) are loaded into the respective variables of GameBoard
+     */
     public void fillGraphData() {
         List<Field> fieldListUpperPath = new ArrayList<>();
 
@@ -814,16 +821,20 @@ public class GameBoard {
 
     /*
     This method is meant to be called when a player lands at a crossover
-    The arrows to select the paths are placed on the screen (and animated)
-    The player can click on an arrow to select this path to move forward
+    The arrows for the user to select a path are created and placed on screen
+    Normal user input (UP / DOWN / SPACE) is locked during this event
+    After an arrow was clicked with the mouse they dissapear, and the method to further move the player along the chosen path is called
      */
     public void selectPathEvent(Field field, int hopsLeft) {
+        TheOs.waitingForUserInput = false;
+
         ImageView pathOneArrow = new ImageView("images/gameboard_screen/Game_Crossover_Arrow.PNG");
+        ImageView pathTwoArrow = new ImageView("images/gameboard_screen/Game_Crossover_Arrow.PNG");
+
         pathOneArrow.setFitWidth(55);
         pathOneArrow.setPreserveRatio(true);
         pathOneArrow.setOpacity(0.85);
 
-        ImageView pathTwoArrow = new ImageView("images/gameboard_screen/Game_Crossover_Arrow.PNG");
         pathTwoArrow.setFitWidth(55);
         pathTwoArrow.setPreserveRatio(true);
         pathTwoArrow.setOpacity(0.85);
