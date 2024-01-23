@@ -38,13 +38,6 @@ public class Player {
         turnCount = 0;
     }
 
-    // Methode to create a character
-    public Player(String characterName, int[] specialDiceArray, Path path, Path winningImagePath, Field currentCharacterField) {
-        this(characterName, specialDiceArray, path);
-        this.winningImagePath = winningImagePath;
-        currentField = currentCharacterField;
-    }
-
     public Player(String characterName, int[] specialDiceArray, Path path, Path winningImagePath, Path nextPlayerImagePath, Path spriteImagePath) {
         this(characterName, specialDiceArray, path);
         this.winningImagePath = winningImagePath;

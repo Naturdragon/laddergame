@@ -6,8 +6,7 @@ Once all players reach the end, a ranking based on their turns will be displayed
 
 > To start the game, you must run TheOs.java (laddergame > src > main > java > com.example.theos > TheOs)!
 
-The **crossover fields** must be fixed, since currently animation mistakes happen right after choosing your path; these will be fixed.
-Furthermore, **more animations** will be added in the future to enhance the overall aesthetic of the game;
+**More animations** will be added in the future to enhance the overall aesthetic of the game;
 however, we didn't have enough time to implement them successfully.
 
 Some of the commits have been done by one person, even though multiple people worked on the code, since we worked on it together & sometimes used the same device with multiple people.
