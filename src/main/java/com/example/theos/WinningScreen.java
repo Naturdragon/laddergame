@@ -64,10 +64,8 @@ public class WinningScreen {
         // Event handler for pressing SPACE key or pressing the mouse
         EventHandler<MouseEvent> pressHandler = event -> {
             // Toggle opacity for spaceText and menuButton
-            double currentOpacity = spaceText.getOpacity();
-            double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.5, but not below 0.5
-            spaceText.setOpacity(newOpacity);
-            menuButton.setOpacity(newOpacity);
+            spaceText.setOpacity(0.5);
+            menuButton.setOpacity(0.5);
         };
 
         // Event handler for releasing SPACE key or releasing the mouse

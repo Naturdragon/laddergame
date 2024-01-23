@@ -77,10 +77,8 @@ public class TitleScreen {
         // Event handler for pressing SPACE key / using mouse
         EventHandler<Event> pressHandler = event -> {
             // Toggle opacity for SPACE_TEXT & SPACE_BUTTON
-            double currentOpacity = SPACE_TEXT.getOpacity();
-            double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.5, but not below 0.5
-            SPACE_TEXT.setOpacity(newOpacity);
-            SPACE_BUTTON.setOpacity(newOpacity);
+            SPACE_TEXT.setOpacity(0.5);
+            SPACE_BUTTON.setOpacity(0.5);
         };
 
         // Event handler for releasing SPACE key / mouse
@@ -88,6 +86,7 @@ public class TitleScreen {
             // Reset opacity for SPACE_TEXT & SPACE_BUTTON to normal
             SPACE_TEXT.setOpacity(1.0);
             SPACE_BUTTON.setOpacity(1.0);
+
             // switching to PlayerSelectionScreen
             SceneController.showPlayerSelectScreen();
         };
