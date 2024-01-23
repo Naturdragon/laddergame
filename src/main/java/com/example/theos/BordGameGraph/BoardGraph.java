@@ -5,6 +5,7 @@ import com.example.theos.Field;
 import com.example.theos.GameBoard;
 import com.example.theos.Player;
 import javafx.animation.PathTransition;
+import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.LineTo;
@@ -20,8 +21,7 @@ public class BoardGraph {
 
     private Random rnd = new Random();
 
-    public BoardGraph()
-    {
+    public BoardGraph() {
         /*
         Initialises two Graphs. One for forwards movememnt and one for backwards movement. We decided to use two graphs because a graph does not have a direction, our game does.
          */
@@ -33,8 +33,7 @@ public class BoardGraph {
     Adds a Vertex to both Graphs
     Takes generic Data
     */
-    public <T> void addVertex(T data)
-    {
+    public <T> void addVertex(T data) {
         forwardGraph.addVertex(data);
         backwardGraph.addVertex(data);
     }
@@ -43,8 +42,7 @@ public class BoardGraph {
     Removes a Vertex from both graphs
     The data to be Removed from the Hashmap
      */
-    public <T> void removeVertex(T data)
-    {
+    public <T> void removeVertex(T data) {
         forwardGraph.removeVertex(data);
         backwardGraph.removeVertex(data);
     }
@@ -53,51 +51,42 @@ public class BoardGraph {
     Adds an edge which goes in both directions
 
      */
-    public <T> void addEdge(T source, T target)
-    {
+    public <T> void addEdge(T source, T target) {
         forwardGraph.addOneDirectionalEdge(source, target);
         backwardGraph.addOneDirectionalEdge(target, source);
     }
 
-    public <T> void addEdge(T source, T target, Weight weight)
-    {
+    public <T> void addEdge(T source, T target, Weight weight) {
         forwardGraph.addOneDirectionalEdge(source, target, weight);
         backwardGraph.addOneDirectionalEdge(target, source, weight);
     }
 
-    public <T> void addEdge(T source, T target, T weight, edgeType type)
-    {
+    public <T> void addEdge(T source, T target, T weight, edgeType type) {
         forwardGraph.addOneDirectionalEdge(source, target, new Weight(weight, type));
         backwardGraph.addOneDirectionalEdge(target, source, new Weight(weight, type));
     }
 
-    public <T> void addOneDirectionalEdgeForward(T source, T target)
-    {
+    public <T> void addOneDirectionalEdgeForward(T source, T target) {
         forwardGraph.addOneDirectionalEdge(source, target);
     }
 
-    public <T> void addOneDirectionalEdgeForward(T source, T target, Weight weight)
-    {
+    public <T> void addOneDirectionalEdgeForward(T source, T target, Weight weight) {
         forwardGraph.addOneDirectionalEdge(source, target, weight);
     }
 
-    public <T> void addOneDirectionalEdgeForward(T source, T target, T weight, edgeType type)
-    {
+    public <T> void addOneDirectionalEdgeForward(T source, T target, T weight, edgeType type) {
         forwardGraph.addOneDirectionalEdge(source, target, new Weight(weight, type));
     }
 
-    public <T> void addOneDirectionalEdgeBackward(T source, T target)
-    {
+    public <T> void addOneDirectionalEdgeBackward(T source, T target) {
         backwardGraph.addOneDirectionalEdge(target, source);
     }
 
-    public <T> void addOneDirectionalEdgeBackward(T source, T target, Weight weight)
-    {
+    public <T> void addOneDirectionalEdgeBackward(T source, T target, Weight weight) {
         backwardGraph.addOneDirectionalEdge(source, target, weight);
     }
 
-    public <T> void addOneDirectionalEdgeBackward(T source, T target, T weight, edgeType type)
-    {
+    public <T> void addOneDirectionalEdgeBackward(T source, T target, T weight, edgeType type) {
         backwardGraph.addOneDirectionalEdge(source, target, new Weight(weight, type));
     }
 
@@ -105,8 +94,7 @@ public class BoardGraph {
     Removes a Edge
     The Data from the two Vertexes of which the edge should be deleted
      */
-    public <T> void removeEdge(T source, T targed)
-    {
+    public <T> void removeEdge(T source, T targed) {
         forwardGraph.removeEdge(source, targed);
         backwardGraph.removeEdge(targed, source);
     }
@@ -114,8 +102,7 @@ public class BoardGraph {
     /*
     Used to traverse the graph in both directions. Takes care of Lader Fields and Crossings
      */
-    public Field hopCountTraversal(Field root, int hops)
-    {
+    public Field hopCountTraversal(Field root, int hops) {
         if (hops == 0) return root; // Whenn a zero got roled nothing needs to be done. Return the current field
 
         Field vertexData = root;
@@ -192,8 +179,7 @@ public class BoardGraph {
 
     Primar Methode: This methode is to be called before the hopCountTraversal. I also handels the Crossings, which hopCountTraversal does not.
      */
-    public SequentialTransition getAnimationPathFromGraph(Field root, int hops, int animationOffsetX, int animationOffsetY, Player currentPlayer, GameBoard gameBord)
-    {
+    public SequentialTransition getAnimationPathFromGraph(Field root, int hops, int animationOffsetX, int animationOffsetY, Player currentPlayer, GameBoard gameBord) {
         SequentialTransition seqtrans = new SequentialTransition();
 
         // see below code block
@@ -203,7 +189,12 @@ public class BoardGraph {
         seqtrans.getChildren().add(pathTrans);
         // Adds a basic non Moving Transsition. This allows the returning of the seqtrans at any point after the code block above.
 
-        if (hops == 0) return seqtrans; // Nothing Happens
+        if (hops == 0) {
+            seqtrans.getChildren().remove(pathTrans);
+            PauseTransition pause = new PauseTransition(Duration.millis(10));
+            seqtrans.getChildren().add(pause);
+            return seqtrans;
+        } // Nothing Happens; CHANGED: a 10 millisecond pause transition is played, prevents that the player disappears until the next move
 
         Path standartPath = new Path(); // Path to be used for normale movement
         standartPath.getElements().add(new MoveTo(root.getX() - animationOffsetX, root.getY() - animationOffsetY));
@@ -236,7 +227,13 @@ public class BoardGraph {
                         standartPathTransition.setPath(standartPath);
                         standartPathTransition.setDuration(Duration.millis(standartDurration));
                         seqtrans.getChildren().add(standartPathTransition);
-                        gameBord.selectPathEvent(i-1,currentPlayer,seqtrans);     // Crossing
+
+                        currentPlayer.setCurrentField(this.hopCountTraversal(currentPlayer.getCurrentField(), hops)); // set the current field of the player to the crossover field
+
+                        if (i == 0) seqtrans = null; // this addresses problems that arise when a player lands directly on a crossover, in selectPathEvent it is checked if seqtrans is null
+
+                        gameBord.selectPathEvent(hops - i, currentPlayer, seqtrans); // Calls the event for the player to select a path
+                        return null;
                     } else {
                         // The user can stand at this point on a lande because he went backwards. When walking backwards Laders do not trigger.
                         for (var item : forwardGraph.getAdjacenctVertexEdges(vertexData)) {
@@ -345,20 +342,19 @@ public class BoardGraph {
         }
     }
 
-    public Field crossingMove(Field root, edgeType edgetype){
-        if(root.getType() != Field.fieldType.CrossoverField) return root;
+    public Field crossingMove(Field root, edgeType edgetype) {
+        if (root.getType() != Field.fieldType.CrossoverField) return root;
 
-        for (Edge edge: forwardGraph.getAdjacenctVertexEdges(root)) {
-            Weight tempWeight = (Weight)edge.getWeight();
-            if(tempWeight.getType() == edgetype){
-                return (edge.getSource() == root)? (Field)edge.getTarget():(Field)edge.getSource();
+        for (Edge edge : forwardGraph.getAdjacenctVertexEdges(root)) {
+            Weight tempWeight = (Weight) edge.getWeight();
+            if (tempWeight.getType() == edgetype) {
+                return (edge.getSource() == root) ? (Field) edge.getTarget() : (Field) edge.getSource();
             }
         }
         return root; // An error is accured. No Crossing should have no two crossing Edges. Returning Root for damage minomizaton.
     }
 
-    public void checkGraph()
-    {
+    public void checkGraph() {
         // TODO: (OPTONAL) Checking if the graph is a valide one.
         /*
         Forward Graph
