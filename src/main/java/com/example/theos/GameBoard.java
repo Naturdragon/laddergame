@@ -206,7 +206,7 @@ public class GameBoard {
         Text text5 = new Text("You can use your Special Die only 3 Times at" + System.lineSeparator() + "the Start");
         text5.setFont(DiceUI.CUSTOM_FONT_VARELA);
         text5.setFill(TheOs.BROWN);
-        Text text6 = new Text("Passing a        - Field increases your Charges");
+        Text text6 = new Text("Landing on a        - Field increases your Charges");
         text6.setFont(DiceUI.CUSTOM_FONT_VARELA);
         text6.setFill(TheOs.BROWN);
         Text text7 = new Text("Select which Die to use with");
@@ -263,7 +263,7 @@ public class GameBoard {
         AnchorPane.setTopAnchor(snakeFieldIMG, 145.0);
         AnchorPane.setLeftAnchor(snakeFieldIMG, 183.0);
         AnchorPane.setTopAnchor(specialFieldIMG, 488.0);
-        AnchorPane.setLeftAnchor(specialFieldIMG, 147.0);
+        AnchorPane.setLeftAnchor(specialFieldIMG, 182.0);
         AnchorPane.setTopAnchor(playerArrowsIMG, 560.0);
         AnchorPane.setLeftAnchor(playerArrowsIMG, 350.0);
 
