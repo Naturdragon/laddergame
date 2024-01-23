@@ -131,12 +131,10 @@ public class PlayerSelectionScreen {
         startButton.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.SPACE) {
                 // Toggle opacity for spaceText and menuButton
-                double currentOpacity = row6.getOpacity();
-                double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.2, but not below 0.2
-                row6.setOpacity(newOpacity);
-                spaceButton.setOpacity(newOpacity);
-                row6.setTranslateY(-480);
-                spaceButton.setTranslateY(1075);
+                row7.setOpacity(0.5);
+                spaceButton.setOpacity(0.5);
+                row7.setTranslateY(-42);
+                spaceButton.setTranslateY(1078);
             }
         });
 
@@ -144,9 +142,9 @@ public class PlayerSelectionScreen {
         startButton.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.SPACE) {
                 // Reset opacity to normal when the button is released
-                row6.setOpacity(1.0);
+                row7.setOpacity(1.0);
                 spaceButton.setOpacity(1.0);
-                row6.setTranslateY(-480);
+                row7.setTranslateY(-45);
                 spaceButton.setTranslateY(1075);
 
                 // The scene is switched to the GameBoard with the current list of selected characters if at least 2 characters are selected
