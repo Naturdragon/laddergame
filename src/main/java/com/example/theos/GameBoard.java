@@ -763,7 +763,6 @@ public class GameBoard {
         // Add normal edges from spawn area to first field
         for (Player player : playerList) {
             boardGraph.addVertex(player.getCurrentField());
-            boardGraph.addOneDirectionalEdgeForward(player.getCurrentField(), field101, 500, BoardGraph.edgeType.NormalEdge);
             switch (player.getName()) {
                 case "Diva O'Hara" -> boardGraph.addOneDirectionalEdgeForward(player.getCurrentField(), field101, 2100, BoardGraph.edgeType.NormalEdge);
                 case "Y'Olanda" -> boardGraph.addOneDirectionalEdgeForward(player.getCurrentField(), field101, 1500, BoardGraph.edgeType.NormalEdge);
