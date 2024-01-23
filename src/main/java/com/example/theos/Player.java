@@ -22,7 +22,7 @@ public class Player {
     private Path nextPlayerImagePath;
     private Path spriteImagePath;
     private Field currentField; // Current Field where the player is
-    private Transition currentAnimation;    // The current animation of the Player. aka. Walking, standing, etc.
+    private Transition currentAnimation; // The current animation of the Player. aka. Walking, standing, etc.
     private ImageView imageView; //used to represent the character of the player on screen
     private int turnCount;
 

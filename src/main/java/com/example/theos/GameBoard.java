@@ -8,8 +8,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -161,7 +159,7 @@ public class GameBoard {
 
         // Create option buttons
         HBox closeAppButton = OptionButtons.createCloseAppButton();
-        HBox mainMenuButton = OptionButtons.createReturnToMainMenuButton();
+        HBox mainMenuButton = OptionButtons.createReturnToTitleButton();
         HBox instructionsButton = OptionButtons.createInstructionsButton(this);
         HBox musicButton = OptionButtons.createMusicButton();
         closeAppButton.setTranslateX(20);
@@ -974,7 +972,7 @@ public class GameBoard {
 
         player.playWalk();  // Begins Player Animation
 
-        // Gets SequentialPath from teh Graph and plays it
+        // Gets SequentialPath from the Graph and plays it
         SequentialTransition sequentialTransition = boardGraph.getAnimationPathFromGraph(player.getCurrentField(), fieldsToMove, animationOffsetX, animationOffsetY, player, this);
 
         // this should only happen in the case of traversing a crossover (getAnimationPathFromGraph returns null then), the rest of the player turn is continued elsewhere in this case (selectPathEvent() and crossingManager())
