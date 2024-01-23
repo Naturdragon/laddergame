@@ -360,15 +360,15 @@ public class BoardGraph {
         }
     }
 
-    public Field crossingMoveAnimationAndMove(Player currentPlayer, edgeType edgetype) {
+    public Field crossingMoveAnimationAndMove(Player currentPlayer, edgeType edgetype, int hops) {
         Field root = currentPlayer.getCurrentField();
         if (root.getType() != Field.fieldType.CrossoverField) return root;
 
         for (Edge edge : forwardGraph.getAdjacenctVertexEdges(root)) {
             Weight tempWeight = (Weight) edge.getWeight();
             if (tempWeight.getType() == edgetype) {
-                Field returnField = (edge.getSource() == root) ? (Field) edge.getTarget() : (Field) edge.getSource();
-                if(returnField.getType() != Field.fieldType.LadderField) return returnField;    // Normal Field
+                Field returnField = (edge.getSource() == root) ? (Field) edge.getTarget() : (Field) edge.getSource(); // The Field after the Crossing
+                if(returnField.getType() != Field.fieldType.LadderField || hops > 1) return returnField;    // Normal Field
 
                 for (Edge item:forwardGraph.getAdjacenctVertexEdges(returnField)) {         // In case the first field after the Crossing is a ladder / snake
                     Weight tmpWeight = (Weight) item.getWeight();

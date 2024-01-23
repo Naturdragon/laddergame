@@ -826,6 +826,7 @@ public class GameBoard {
         getBoardGraph().addOneDirectionalEdgeForward(field347, win6, 500, BoardGraph.edgeType.NormalEdge);
 
         /*
+        // TODO Testing
         for (Player player : playerList) {
             player.setCurrentField(field208);
         }
@@ -1061,7 +1062,7 @@ public class GameBoard {
     public void crossingManager(int fieldsToMove, Player player, BoardGraph.edgeType edgeType) {
         Field startField = player.getCurrentField(); // TODO remove once the animation at crossovers was fixed (teleporting to first field)
 
-        player.setCurrentField(boardGraph.crossingMoveAnimationAndMove(player, edgeType)); // Moves once
+        player.setCurrentField(boardGraph.crossingMoveAnimationAndMove(player, edgeType, fieldsToMove)); // Moves once
 
         player.playWalk();
 
