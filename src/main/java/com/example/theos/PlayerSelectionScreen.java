@@ -34,13 +34,11 @@ public class PlayerSelectionScreen {
     private static final int SPACING_VALUE = 10;
     private static final int MIN_PLAYERS = 2;
     private static final double SELECTED_IMAGE_TRANSLATE_Y = 5; // Adjust this value
-    private static final double DESELECT_BUTTON_OFFSET_X = 50; // Adjust this value
-    private static final double DESELECT_BUTTON_OFFSET_Y = 50;  // Adjust this value
 
     /*Gridpane for characters, BooleanProperties to track selection,
     arrays for characters and players characters, and playerCounter*/
     private static GridPane charactersGrid;
-    static private BooleanProperty[] playerSelectedProperties;
+    private static BooleanProperty[] playerSelectedProperties;
     private static Character[] characters;
     private static Player[] players;
     private static int playerCounter = 1;
@@ -66,7 +64,7 @@ public class PlayerSelectionScreen {
 
         // Create close and return-to-main-menu buttons
         HBox closeButton = OptionButtons.createCloseAppButton();
-        HBox mainMenuButton = OptionButtons.createReturnToMainMenuButton();
+        HBox mainMenuButton = OptionButtons.createReturnToTitleButton();
         HBox musicButton = OptionButtons.createMusicButton();
         closeButton.setTranslateX(-388);
         closeButton.setTranslateY(-306);
