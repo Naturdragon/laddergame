@@ -24,6 +24,9 @@ import static com.example.theos.TheOs.BROWN;
 
 // Der folgende Code wurde teilweise angepasst von [ChatGPT]
 public class PlayerSelectionScreen {
+
+    /*constants for screen width, number of columns, character image size,
+    padding values, minimum players and offsets  */
     private static final double SCREEN_WIDTH = 1422;
     private static final int NUM_COLUMNS = 3;
     private static final double CHARACTER_IMAGE_SIZE = SCREEN_WIDTH / (NUM_COLUMNS + 2);
@@ -34,6 +37,8 @@ public class PlayerSelectionScreen {
     private static final double DESELECT_BUTTON_OFFSET_X = 50; // Adjust this value
     private static final double DESELECT_BUTTON_OFFSET_Y = 50;  // Adjust this value
 
+    /*Gridpane for characters, BooleanProperties to track selection,
+    arrays for characters and players characters, and playerCounter*/
     private static GridPane charactersGrid;
     static private BooleanProperty[] playerSelectedProperties;
     private static Character[] characters;
