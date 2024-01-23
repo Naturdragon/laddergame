@@ -13,12 +13,26 @@ public class SceneController {
         Scene scene = TitleScreen.createTitleScreen();
         stage.setScene(scene);
         stage.show();
+
+        scene.setOnKeyReleased(event -> { // Adds additional functionality to music button
+            if (event.getCode() == KeyCode.M) {
+                OptionButtons.toggleMusicState();
+                event.consume();
+            }
+        });
     }
 
     public static void showPlayerSelectScreen() {
         Scene scene = PlayerSelectionScreen.createPlayerSelectionScreen();
         stage.setScene(scene);
         stage.show();
+
+        scene.setOnKeyReleased(event -> { // Adds additional functionality to music button
+            if (event.getCode() == KeyCode.M) {
+                OptionButtons.toggleMusicState();
+                event.consume();
+            }
+        });
     }
 
     /*
@@ -49,12 +63,17 @@ public class SceneController {
                 }
             }
 
-            /*
             if (event.getCode() == KeyCode.ENTER) { // TODO: delete later, only there to quickly access the winning screen
                 showWinningScreen(gameBoard.getPlayerList());
                 OptionButtons.instructionsOn = true;
             }
-             */
+        });
+
+        scene.setOnKeyReleased(event -> { // Adds additional functionality to music button
+            if (event.getCode() == KeyCode.M) {
+                OptionButtons.toggleMusicState();
+                event.consume();
+            }
         });
     }
 

@@ -3,6 +3,7 @@ package com.example.theos;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -12,6 +13,7 @@ import javafx.scene.shape.Rectangle;
 public class OptionButtons {
     static boolean instructionsOn = true;
     private static boolean musicOn = true;
+    private static StackPane musicButtonPane;
     private GameBoard gameBoard; // Add reference to GameBoard for createCloseInstructionsButton()
     public OptionButtons(GameBoard gameBoard) {
         this.gameBoard = gameBoard;
@@ -145,7 +147,7 @@ public class OptionButtons {
         hitbox.setFill(Color.TRANSPARENT);
 
         // StackPane overlays image/hitbox & creates HBox
-        StackPane musicButtonPane = new StackPane(musicIMG, hitbox);
+        musicButtonPane = new StackPane(musicIMG, hitbox);
         HBox musicButtonBox = new HBox(musicButtonPane);
 
         // Make sure right state displayed when loaded in (music on/off)
@@ -158,20 +160,23 @@ public class OptionButtons {
         }
 
         // Change state once clicked
-        musicButtonBox.setOnMouseClicked(event -> {
-            if (musicOn) {
-                musicButtonPane.setOpacity(0.5);
-                musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() + 5);
-                musicOn = false;
-                SoundGame.setVolume(0);
-            } else {
-                musicButtonPane.setOpacity(1.0);
-                musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() - 5);
-                musicOn = true;
-                SoundGame.setVolume(0.1);
-                }
-        });
+        musicButtonBox.setOnMouseClicked(event -> toggleMusicState());
 
         return musicButtonBox;
+    }
+
+    // Helper method to toggle music state
+    public static void toggleMusicState() {
+        if (musicOn) {
+            musicButtonPane.setOpacity(0.5);
+            musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() + 5);
+            musicOn = false;
+            SoundGame.setVolume(0);
+        } else {
+            musicButtonPane.setOpacity(1.0);
+            musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() - 5);
+            musicOn = true;
+            SoundGame.setVolume(0.1);
+        }
     }
 }
