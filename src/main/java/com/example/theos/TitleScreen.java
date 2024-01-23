@@ -42,7 +42,7 @@ public class TitleScreen {
         mainLayout.setStyle("-fx-background-image: " + backgroundImage + "; " +
                 "-fx-background-size: cover;");
 
-        // Create return-to-main-menu button
+        // Create close application button
         HBox closeAppButton = OptionButtons.createCloseAppButton();
         closeAppButton.setTranslateX(-815);
         closeAppButton.setTranslateY(-358);
@@ -87,7 +87,7 @@ public class TitleScreen {
             SPACE_TEXT.setOpacity(1.0);
             SPACE_BUTTON.setOpacity(1.0);
 
-            // switching to PlayerSelectionScreen
+            // Switching to PlayerSelectionScreen
             SceneController.showPlayerSelectScreen();
         };
 
