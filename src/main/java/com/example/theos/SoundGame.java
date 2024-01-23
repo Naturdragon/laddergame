@@ -3,6 +3,7 @@ package com.example.theos;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+// Der folgende Code wurde teilweise angepasst von [ChatGPT]
 public class SoundGame {
     private static MediaPlayer mediaPlayer;
 

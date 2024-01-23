@@ -8,6 +8,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+// Der folgende Code wurde teilweise angepasst von [ChatGPT]
 public class OptionButtons {
     static boolean instructionsOn = true;
     private static boolean musicOn = true;
