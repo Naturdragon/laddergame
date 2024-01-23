@@ -14,6 +14,7 @@ import javafx.scene.shape.Path;
 import javafx.util.Duration;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class BoardGraph {
     private Graph forwardGraph;
@@ -173,12 +174,21 @@ public class BoardGraph {
         }
     }
 
+    /*
+    public SequentialTransition getSequentialAnimationAndMakeMove(Player currentPlayer, int hops, int animationOffsetX, int animationOffsetY, GameBoard gameBord){
+        SequentialTransition sequenTransis = new SequentialTransition();
+
+        PathTransition standartPath = new PathTransition();
+        standartPath.setPath(new Line(currentPlayer.getCurrentField().getX() - animationOffsetX, currentPlayer.getCurrentField().getX() - animationOffsetY, currentPlayer.getCurrentField().getX() - animationOffsetX, currentPlayer.getCurrentField().getX() - animationOffsetY ));
+        standartPath.setDuration(Duration.UNKNOWN);
+
+        sequenTransis.getChildren().add(sequenTransis);
+    }
+    */
 
     /*
-
-
     Primar Methode: This methode is to be called before the hopCountTraversal. I also handels the Crossings, which hopCountTraversal does not.
-     */
+    */
     public SequentialTransition getAnimationPathFromGraph(Field root, int hops, int animationOffsetX, int animationOffsetY, Player currentPlayer, GameBoard gameBord) {
         SequentialTransition seqtrans = new SequentialTransition();
 
@@ -330,6 +340,14 @@ public class BoardGraph {
                     standartPathTransition.setDuration(Duration.millis(standartDurration));
                     seqtrans.getChildren().add(standartPathTransition);
 
+
+                    // May fix the end of Graph endles Walk bug
+                    if(seqtrans.getChildren().size() == 0) {
+                        seqtrans.getChildren().remove(pathTrans);
+                        PauseTransition pause = new PauseTransition(Duration.millis(10));
+                        seqtrans.getChildren().add(pause);
+                    }
+
                     return seqtrans;  // End of Graph
                 }
             }
@@ -342,13 +360,22 @@ public class BoardGraph {
         }
     }
 
-    public Field crossingMove(Field root, edgeType edgetype) {
+    public Field crossingMoveAnimationAndMove(Player currentPlayer, edgeType edgetype) {
+        Field root = currentPlayer.getCurrentField();
         if (root.getType() != Field.fieldType.CrossoverField) return root;
 
         for (Edge edge : forwardGraph.getAdjacenctVertexEdges(root)) {
             Weight tempWeight = (Weight) edge.getWeight();
             if (tempWeight.getType() == edgetype) {
-                return (edge.getSource() == root) ? (Field) edge.getTarget() : (Field) edge.getSource();
+                Field returnField = (edge.getSource() == root) ? (Field) edge.getTarget() : (Field) edge.getSource();
+                if(returnField.getType() != Field.fieldType.LadderField) return returnField;    // Normal Field
+
+                for (Edge item:forwardGraph.getAdjacenctVertexEdges(returnField)) {         // In case the first field after the Crossing is a ladder / snake
+                    Weight tmpWeight = (Weight) item.getWeight();
+                    if(tmpWeight.getType() == edgeType.LadderEdge) {
+                        return (item.getSource() == returnField) ? (Field) item.getTarget() : (Field) item.getSource();
+                    }
+                }
             }
         }
         return root; // An error is accured. No Crossing should have no two crossing Edges. Returning Root for damage minomizaton.
