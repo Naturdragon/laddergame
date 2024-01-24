@@ -1,11 +1,16 @@
 package com.example.theos;
 
+import javafx.animation.Animation;
+import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -14,6 +19,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -21,6 +27,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.example.theos.TheOs.BROWN;
+import static com.example.theos.TheOs.OLANDA_RED;
 
 // Der folgende Code wurde teilweise angepasst von [ChatGPT]
 public class PlayerSelectionScreen {
@@ -42,6 +49,7 @@ public class PlayerSelectionScreen {
     private static Character[] characters;
     private static Player[] players;
     private static int playerCounter = 1;
+    private static boolean animationCooldown = false;
 
     static final Font CAVEAT = Font.loadFont(PlayerSelectionScreen.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), -1);
     static final Font VARELA = Font.loadFont(PlayerSelectionScreen.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), -1);
@@ -148,7 +156,12 @@ public class PlayerSelectionScreen {
                 spaceButton.setTranslateY(1075);
 
                 // The scene is switched to the GameBoard with the current list of selected characters if at least 2 characters are selected
-                if (allowPlayability()) SceneController.showGameBoardScreen(PlayerSelectionScreen.createPlayerList());
+                if (allowPlayability()) {
+                    SceneController.showGameBoardScreen(PlayerSelectionScreen.createPlayerList());
+                } else {
+                    row3.setFill(OLANDA_RED);
+                    animateText(row3);
+                }
             }
         });
 
@@ -352,6 +365,25 @@ public class PlayerSelectionScreen {
             System.out.println(player);
         }
         System.out.println();
+    }
+
+    public static void animateText(Node text) { // Animates player amount alert text
+        if (!animationCooldown) {
+            animationCooldown = true;
+
+            TranslateTransition transition = new TranslateTransition(Duration.millis(100), text);
+            transition.setByX(5); // Movement
+            transition.setCycleCount(4); // Repetition
+            transition.setAutoReverse(true); // Bouncing effect
+
+            // Set up a pause after the animation finishes to escape an animation collide
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
+            pause.setOnFinished(event -> animationCooldown = false);
+
+            // Play the animation and then the pause
+            transition.setOnFinished(event -> pause.play());
+            transition.play();
+        }
     }
 
     /*
