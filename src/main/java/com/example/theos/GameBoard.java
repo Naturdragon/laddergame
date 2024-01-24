@@ -825,13 +825,13 @@ public class GameBoard {
         getBoardGraph().addOneDirectionalEdgeForward(field195, win6, 500, BoardGraph.edgeType.NormalEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field347, win6, 500, BoardGraph.edgeType.NormalEdge);
 
-        /*
+
         // TODO Testing
         for (Player player : playerList) {
             player.setCurrentField(field208);
         }
 
-         */
+
 
     }
 
@@ -841,9 +841,7 @@ public class GameBoard {
     Normal user input (UP / DOWN / SPACE) is locked during this event
     After an arrow was clicked with the mouse they dissapear, and the method to further move the player along the chosen path is called
      */
-    public void selectPathEvent(int hopsLeft, Player player, SequentialTransition sequentialTransition) {
-
-        //TheOs.waitingForUserInput = false; // this isn't needed here, userInput is already locked when entering this method
+    public void selectPathEvent(int hopsLeft, Player player) {
 
         // Creating the arrows with the image and setting their size and opacity
         ImageView pathOneArrow = new ImageView("images/gameboard_screen/Game_Crossover_Arrow.PNG");
@@ -895,21 +893,8 @@ public class GameBoard {
         idleArrowTwo.setAutoReverse(true);
         idleArrowTwo.play();
 
+        rootLayout.getChildren().addAll(pathOneArrow, pathTwoArrow);
 
-        if (sequentialTransition == null) { // this happpens when a player is already on a crossover field since there is no animation to get there left (getAnimationPathFromGraph returns null in that case)
-            player.playIdle();
-            rootLayout.getChildren().addAll(pathOneArrow, pathTwoArrow); // after the player has graphically moved to the crossing field the arrows are added to the layout
-        } else {
-            // Plays the Sequential Transition given by the getAnimationPathMethode Methode
-            sequentialTransition.setNode(player.getImageView());
-            sequentialTransition.play();
-            //player.setCurrentField(boardGraph.hopCountTraversal(player.getCurrentField(), hopsLeft)); // Sets the currentField of the Player to the Crossing Field, TODO should be safe to remove now
-
-            sequentialTransition.setOnFinished(event -> {
-                player.playIdle();
-                rootLayout.getChildren().addAll(pathOneArrow, pathTwoArrow); // after the player has graphically moved to the crossing field the arrows are added to the layout
-            });
-        }
 
         // on mouse press the target arrow gets highlighted and on release both are removed form the layout and the rest of the move is done via crossingManager()
         pathOneArrow.setOnMousePressed(event -> {
@@ -963,27 +948,13 @@ public class GameBoard {
     Returns nothing
     */
     public void movePlayer(Player player, int fieldsToMove) {
-        /* Does not fix the zero bug when the end of Graph has been reached // this has been handled elsewhere now
-        if (fieldsToMove == 0) {
-            player.increaseTurns();
-            diceUI.switchPlayerTurn(this);
-            return;
-        }
-         */
 
         player.playWalk();  // Begins Player Animation
 
         // Gets SequentialPath from the Graph and plays it
-        SequentialTransition sequentialTransition = boardGraph.getAnimationPathFromGraph(player.getCurrentField(), fieldsToMove, animationOffsetX, animationOffsetY, player, this);
-
-        // this should only happen in the case of traversing a crossover (getAnimationPathFromGraph returns null then), the rest of the player turn is continued elsewhere in this case (selectPathEvent() and crossingManager())
-        if (sequentialTransition == null) return;
-
+        SequentialTransition sequentialTransition = boardGraph.getSequentialAnimationAndMakeMove(player, fieldsToMove, animationOffsetX, animationOffsetY, this, null);
         sequentialTransition.setNode(player.getImageView());
         sequentialTransition.play();
-
-        // Chaches the current field of the Player to the new field
-        player.setCurrentField(boardGraph.hopCountTraversal(player.getCurrentField(), fieldsToMove));
 
         sequentialTransition.setOnFinished(event -> {
             // Check if the new field of the player is a specialChargeField
@@ -1060,23 +1031,9 @@ public class GameBoard {
     Special Methode that gets called by the Cklick on the Arrows at a crossing.
      */
     public void crossingManager(int fieldsToMove, Player player, BoardGraph.edgeType edgeType) {
-        Field startField = player.getCurrentField(); // TODO remove once the animation at crossovers was fixed (teleporting to first field)
-
-        player.setCurrentField(boardGraph.crossingMoveAnimationAndMove(player, edgeType, fieldsToMove)); // Moves once
-
-        player.playWalk();
-
-        if (fieldsToMove == 1) { // TODO remove once the animation at crossovers was fixed (teleporting to first field)
-            PathTransition pathTransition = new PathTransition(Duration.millis(500),
-                    new Line(startField.getX() - animationOffsetX, startField.getY() -animationOffsetY, player.getCurrentField().getX() - animationOffsetX, player.getCurrentField().getY() - animationOffsetY));
-            pathTransition.setNode(player.getImageView());
-            pathTransition.play();
-        }
-
-        SequentialTransition sequentialTransition = boardGraph.getAnimationPathFromGraph(player.getCurrentField(), fieldsToMove - 1, animationOffsetX, animationOffsetY, player, this);  // Animation for Walking after the crossing
+        SequentialTransition sequentialTransition =boardGraph.getSequentialAnimationAndMakeMove(player,fieldsToMove,animationOffsetX,animationOffsetY,this,edgeType);
         sequentialTransition.setNode(player.getImageView());
         sequentialTransition.play();
-        player.setCurrentField(boardGraph.hopCountTraversal(player.getCurrentField(), fieldsToMove - 1)); // Already moved once
 
         sequentialTransition.setOnFinished(event -> {
             // Check if the new field of the player is a specialChargeField
