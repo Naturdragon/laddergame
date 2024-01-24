@@ -9,9 +9,10 @@ Once all players reach the end, a ranking based on their turns will be displayed
 Some of the commits have been done by one person, even though multiple people worked on the code, since we worked on it together & sometimes used the same device with multiple people.
 Additionally, Lisa Freund was unable to commit her code in the early stages of programming, so Marko Zdravkovic committed it for her on his device.
 
-TODO (as a small add-on after the project has concluded):
-1. More animations to enhance the overall aesthetic of the game. (Waterfall, end animations)
-2. Implement the possibility to use ladders and snakes if negative fields are rolled
+TODO (as an add-on after the project has concluded):
+1. More animations to enhance the overall aesthetic of the game. (playFallWaterfall + end animations)
+2. Implement possibility to use ladders/snakes if negative fields are rolled with die
 3. Correct crossing with new branch
 4. Invert images when going left
-5. Spread out in bowl
+5. Spread out characters in bowl
+6. Add music button to winning screen

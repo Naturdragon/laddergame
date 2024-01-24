@@ -13,6 +13,7 @@ import javafx.scene.shape.Rectangle;
 public class OptionButtons {
     static boolean instructionsOn = true;
     private static boolean musicOn = true;
+    static boolean musicTogglePressed = false;
     private static StackPane musicButtonPane;
     private GameBoard gameBoard; // Add reference to GameBoard for createCloseInstructionsButton()
     public OptionButtons(GameBoard gameBoard) {
@@ -150,26 +151,43 @@ public class OptionButtons {
         musicButtonPane = new StackPane(musicIMG, hitbox);
         HBox musicButtonBox = new HBox(musicButtonPane);
 
-        // Make sure right state displayed when loaded in (music on/off)
+        // Set right state when loaded in (music on/off)
         if (musicOn) {
             musicButtonPane.setOpacity(1.0);
-            musicButtonPane.setTranslateY(0);
         } else {
             musicButtonPane.setOpacity(0.5);
-            musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() + 5);
         }
 
-        // Change state once clicked
-        musicButtonBox.setOnMouseClicked(event -> toggleMusicState());
+        // Change positioning once pressed
+        musicButtonBox.setOnMousePressed(event -> {
+            toggleMusicStatePressed();
+        });
+
+        // Change state once released
+        musicButtonBox.setOnMouseReleased(event -> {
+            toggleMusicStateReleased();
+        });
 
         return musicButtonBox;
     }
 
-    // Helper method to toggle music state
-    public static void toggleMusicState() {
+    // Helper method to toggle music state when pressed
+    public static void toggleMusicStatePressed() {
         if (musicOn) {
             musicButtonPane.setOpacity(0.5);
             musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() + 5);
+        } else {
+            musicButtonPane.setOpacity(0.25);
+            musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() + 5);
+        }
+        musicTogglePressed = true;
+    }
+
+    // Helper method to toggle music state when released
+    public static void toggleMusicStateReleased() {
+        if (musicOn) {
+            musicButtonPane.setOpacity(0.5);
+            musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() - 5);
             musicOn = false;
             SoundGame.setVolume(0);
         } else {
@@ -178,5 +196,6 @@ public class OptionButtons {
             musicOn = true;
             SoundGame.setVolume(0.1);
         }
+        musicTogglePressed = false;
     }
 }

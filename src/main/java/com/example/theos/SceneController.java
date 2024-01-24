@@ -14,9 +14,15 @@ public class SceneController {
         stage.setScene(scene);
         stage.show();
 
-        scene.setOnKeyReleased(event -> { // Adds additional functionality to music button
+        scene.setOnKeyPressed(event -> { // Adds additional functionality to music button
+            if (event.getCode() == KeyCode.M && OptionButtons.musicTogglePressed == false) {
+                OptionButtons.toggleMusicStatePressed();
+                event.consume();
+            }
+        });
+        scene.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.M) {
-                OptionButtons.toggleMusicState();
+                OptionButtons.toggleMusicStateReleased();
                 event.consume();
             }
         });
@@ -27,9 +33,15 @@ public class SceneController {
         stage.setScene(scene);
         stage.show();
 
-        scene.setOnKeyReleased(event -> { // Adds additional functionality to music button
+        scene.setOnKeyPressed(event -> { // Adds additional functionality to music button
+            if (event.getCode() == KeyCode.M && OptionButtons.musicTogglePressed == false) {
+                OptionButtons.toggleMusicStatePressed();
+                event.consume();
+            }
+        });
+        scene.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.M) {
-                OptionButtons.toggleMusicState();
+                OptionButtons.toggleMusicStateReleased();
                 event.consume();
             }
         });
@@ -60,10 +72,14 @@ public class SceneController {
                     TheOs.waitingForUserInput = false;
                     gameBoard.playerTurn(gameBoard.getPlayerList().get(0));
                     gameBoard.hideInstructions();
+                    OptionButtons.instructionsOn = false;
                 }
             }
-
-            if (event.getCode() == KeyCode.ENTER) { // TODO: delete later, only there to quickly access the winning screen
+            if (event.getCode() == KeyCode.M && OptionButtons.musicTogglePressed == false) {
+                OptionButtons.toggleMusicStatePressed();
+                event.consume();
+            }
+            if (event.getCode() == KeyCode.ENTER) { // ! Only there to quickly access the winning screen, debugging purposes !
                 showWinningScreen(gameBoard.getPlayerList());
                 OptionButtons.instructionsOn = true;
             }
@@ -71,7 +87,7 @@ public class SceneController {
 
         scene.setOnKeyReleased(event -> { // Adds additional functionality to music button
             if (event.getCode() == KeyCode.M) {
-                OptionButtons.toggleMusicState();
+                OptionButtons.toggleMusicStateReleased();
                 event.consume();
             }
         });
