@@ -6,8 +6,12 @@ Once all players reach the end, a ranking based on their turns will be displayed
 
 > To start the game, you must run TheOs.java (laddergame > src > main > java > com.example.theos > TheOs)!
 
-**More animations** will be added in the future to enhance the overall aesthetic of the game;
-however, we didn't have enough time to implement them successfully.
-
 Some of the commits have been done by one person, even though multiple people worked on the code, since we worked on it together & sometimes used the same device with multiple people.
 Additionally, Lisa Freund was unable to commit her code in the early stages of programming, so Marko Zdravkovic committed it for her on his device.
+
+TODO (as a small add-on after the project has concluded):
+1. More animations to enhance the overall aesthetic of the game. (Waterfall, end animations)
+2. Implement the possibility to use ladders and snakes if negative fields are rolled
+3. Correct crossing with new branch
+4. Invert images when going left
+5. Spread out in bowl
