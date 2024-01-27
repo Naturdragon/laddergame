@@ -1,5 +1,6 @@
 package com.example.theos;
 
+import javafx.animation.ParallelTransition;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -115,43 +116,49 @@ public class WinningScreen { // Displays winning screen with leaderboard & optio
     private static GridPane createLeaderboard(List<Player> players) {
         GridPane leaderboardGrid = new GridPane();
         leaderboardGrid.setAlignment(Pos.CENTER);
-        leaderboardGrid.setHgap(5);
         leaderboardGrid.setVgap(35);
 
         // Add header
         Text rankingTitle = new Text("RANKING");
-        rankingTitle.setFont(Font.font(TheOs.VARELA.getFamily(), 60)); // Increased font size
+        rankingTitle.setFont(Font.font(TheOs.VARELA.getFamily(), 60));
         rankingTitle.setFill(TheOs.BROWN);
-        leaderboardGrid.add(rankingTitle, 0, 0, 4, 1); // Span 4 columns for the bigger header
-        Text turnsTitle = new Text("  Turns");
+        leaderboardGrid.add(rankingTitle, 0, 0, 4, 1);
+        Text turnsTitle = new Text("Turns");
         turnsTitle.setFont(Font.font(TheOs.VARELA.getFamily(), 30));
         turnsTitle.setFill(TheOs.BROWN);
-        leaderboardGrid.add(turnsTitle, 4, 0);
+        leaderboardGrid.add(turnsTitle, 3, 0);
+
+        // Column size
+        ColumnConstraints col0 = new ColumnConstraints(40); // ranking text
+        ColumnConstraints col1 = new ColumnConstraints(60); // picture of character
+        ColumnConstraints col2 = new ColumnConstraints(234); // name of character
+        ColumnConstraints col3 = new ColumnConstraints(110); // turns
+        leaderboardGrid.getColumnConstraints().addAll(col0, col1, col2, col3);
 
         // Add player data to the leaderboard
         for (int i = 0; i < players.size(); i++) {
-            ImageView characterImageView = new ImageView(new Image(players.get(i).getImage()));
+            ImageView characterImageView = new ImageView(new Image(players.get(i).getPixelImagePath()));
             characterImageView.setFitWidth(50);
             characterImageView.setFitHeight(50);
+            characterImageView.setTranslateY(-8);
 
-            Text rankingText = new Text(String.valueOf(i + 1)); // Ranking starts from 1
+            Text rankingText = new Text(String.valueOf(i + 1));
             rankingText.setFont(Font.font(TheOs.VARELA.getFamily(), 36));
             rankingText.setFill(TheOs.BROWN);
             Text playerNameText = new Text(players.get(i).getName());
             playerNameText.setFont(Font.font(TheOs.VARELA.getFamily(), 36));
             playerNameText.setFill(TheOs.BROWN);
-            Text turnsText = new Text("     " + players.get(i).getTurnCount());
-            turnsText.setFont(Font.font(TheOs.VARELA.getFamily(), 36)); // Adjust the font size
+            Text turnsText = new Text("  " + players.get(i).getTurnCount());
+            turnsText.setFont(Font.font(TheOs.VARELA.getFamily(), 36));
             turnsText.setFill(TheOs.BROWN);
 
             leaderboardGrid.add(rankingText, 0, i + 1);
             leaderboardGrid.add(characterImageView, 1, i + 1);
             leaderboardGrid.add(playerNameText, 2, i + 1);
-            leaderboardGrid.add(turnsText, 4, i + 1);
+            leaderboardGrid.add(turnsText, 3, i + 1);
         }
 
-        // Set padding for right side
-        leaderboardGrid.setPadding(new Insets(125, 0, 0, 925)); // Adjust values accordingly
+        leaderboardGrid.setPadding(new Insets(125, 0, 0, 930));
 
         return leaderboardGrid;
     }
