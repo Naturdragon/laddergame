@@ -9,7 +9,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -20,8 +19,6 @@ import java.util.Random;
 public class DiceUI extends AnchorPane {
 
     // accessing the custom font fix: https://stackoverflow.com/questions/30245085/javafx-embed-custom-font-not-working
-    public static final Font CUSTOM_FONT_VARELA = Font.loadFont(TheOs.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), 22);
-    public static final Font CUSTOM_FONT_CAVEAT = Font.loadFont(TheOs.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), 25);
     private final ImageView SELECTION_ARROW = new ImageView(new Image("images/gameboard_screen/Game_Die_Select.png")); // TODO origin of the selection arrow bug: all these variables/constants shouldn't be static
     private final ImageView NORMAL_DIE_BG = new ImageView(new Image("images/gameboard_screen/Game_Die_0.png"));
     private final Text NORMAL_DIE_0 = new Text("1");
@@ -65,31 +62,31 @@ public class DiceUI extends AnchorPane {
         spaceBarBG.setPreserveRatio(true);
 
         Text spaceButtonLabel = new Text("SPACE");
-        spaceButtonLabel.setFont(CUSTOM_FONT_VARELA);
+        spaceButtonLabel.setFont(TheOs.VARELA);
         spaceButtonLabel.setFill(TheOs.BROWN);
 
         Text pressToRollText = new Text("Press to Roll");
-        pressToRollText.setFont(CUSTOM_FONT_VARELA);
+        pressToRollText.setFont(TheOs.VARELA);
         pressToRollText.setFill(TheOs.BROWN);
 
         NORMAL_DIE_BG.setFitWidth(224);
         NORMAL_DIE_BG.setPreserveRatio(true);
 
         Text normalDieUsages = new Text("∞");
-        normalDieUsages.setFont(CUSTOM_FONT_VARELA);
+        normalDieUsages.setFont(TheOs.VARELA);
         normalDieUsages.setFill(TheOs.BROWN);
 
-        NORMAL_DIE_0.setFont(CUSTOM_FONT_VARELA);
+        NORMAL_DIE_0.setFont(TheOs.VARELA);
         NORMAL_DIE_0.setFill(TheOs.BROWN);
-        NORMAL_DIE_1.setFont(CUSTOM_FONT_VARELA);
+        NORMAL_DIE_1.setFont(TheOs.VARELA);
         NORMAL_DIE_1.setFill(TheOs.BROWN);
-        NORMAL_DIE_2.setFont(CUSTOM_FONT_VARELA);
+        NORMAL_DIE_2.setFont(TheOs.VARELA);
         NORMAL_DIE_2.setFill(TheOs.BROWN);
-        NORMAL_DIE_3.setFont(CUSTOM_FONT_VARELA);
+        NORMAL_DIE_3.setFont(TheOs.VARELA);
         NORMAL_DIE_3.setFill(TheOs.BROWN);
-        NORMAL_DIE_4.setFont(CUSTOM_FONT_VARELA);
+        NORMAL_DIE_4.setFont(TheOs.VARELA);
         NORMAL_DIE_4.setFill(TheOs.BROWN);
-        NORMAL_DIE_5.setFont(CUSTOM_FONT_VARELA);
+        NORMAL_DIE_5.setFont(TheOs.VARELA);
         NORMAL_DIE_5.setFill(TheOs.BROWN);
 
         for (int i = 0; i < 5; i++) {
@@ -109,11 +106,11 @@ public class DiceUI extends AnchorPane {
         playerPortrait.setPreserveRatio(true);
 
         playerName = new Text();
-        playerName.setFont(CUSTOM_FONT_CAVEAT);
+        playerName.setFont(TheOs.CAVEAT);
         playerName.setFill(TheOs.BROWN);
 
         specialDieUsages = new Text();
-        specialDieUsages.setFont(CUSTOM_FONT_VARELA);
+        specialDieUsages.setFont(TheOs.VARELA);
         specialDieUsages.setFill(TheOs.BROWN);
 
         specialDie0 = new Text();
@@ -123,12 +120,12 @@ public class DiceUI extends AnchorPane {
         specialDie4 = new Text();
         specialDie5 = new Text();
 
-        specialDie0.setFont(CUSTOM_FONT_VARELA);
-        specialDie1.setFont(CUSTOM_FONT_VARELA);
-        specialDie2.setFont(CUSTOM_FONT_VARELA);
-        specialDie3.setFont(CUSTOM_FONT_VARELA);
-        specialDie4.setFont(CUSTOM_FONT_VARELA);
-        specialDie5.setFont(CUSTOM_FONT_VARELA);
+        specialDie0.setFont(TheOs.VARELA);
+        specialDie1.setFont(TheOs.VARELA);
+        specialDie2.setFont(TheOs.VARELA);
+        specialDie3.setFont(TheOs.VARELA);
+        specialDie4.setFont(TheOs.VARELA);
+        specialDie5.setFont(TheOs.VARELA);
 
         // Creating the layout:
 
@@ -226,12 +223,12 @@ public class DiceUI extends AnchorPane {
             }
             case "Y'Olanda" -> {
                 specialDieBG.setImage(new Image("images/gameboard_screen/Game_Die_2.PNG"));
-                specialDie0.setFill(TheOs.OLANDA_RED);
-                specialDie1.setFill(TheOs.OLANDA_RED);
-                specialDie2.setFill(TheOs.OLANDA_RED);
-                specialDie3.setFill(TheOs.OLANDA_RED);
-                specialDie4.setFill(TheOs.OLANDA_RED);
-                specialDie5.setFill(TheOs.OLANDA_RED);
+                specialDie0.setFill(TheOs.YOLANDA_RED);
+                specialDie1.setFill(TheOs.YOLANDA_RED);
+                specialDie2.setFill(TheOs.YOLANDA_RED);
+                specialDie3.setFill(TheOs.YOLANDA_RED);
+                specialDie4.setFill(TheOs.YOLANDA_RED);
+                specialDie5.setFill(TheOs.YOLANDA_RED);
 
                 HBox.setMargin(specialDie0, new Insets(0, 0, 0, 0));
                 HBox.setMargin(specialDie1, new Insets(0, 0, 0, 0));
@@ -242,12 +239,12 @@ public class DiceUI extends AnchorPane {
             }
             case "Kidd'O" -> {
                 specialDieBG.setImage(new Image("images/gameboard_screen/Game_Die_3.PNG"));
-                specialDie0.setFill(TheOs.KIDD_YELLOW);
-                specialDie1.setFill(TheOs.KIDD_YELLOW);
-                specialDie2.setFill(TheOs.KIDD_YELLOW);
-                specialDie3.setFill(TheOs.KIDD_YELLOW);
-                specialDie4.setFill(TheOs.KIDD_YELLOW);
-                specialDie5.setFill(TheOs.KIDD_YELLOW);
+                specialDie0.setFill(TheOs.KIDDO_YELLOW);
+                specialDie1.setFill(TheOs.KIDDO_YELLOW);
+                specialDie2.setFill(TheOs.KIDDO_YELLOW);
+                specialDie3.setFill(TheOs.KIDDO_YELLOW);
+                specialDie4.setFill(TheOs.KIDDO_YELLOW);
+                specialDie5.setFill(TheOs.KIDDO_YELLOW);
 
                 HBox.setMargin(specialDie0, new Insets(0, 0, 0, -3.5));
                 HBox.setMargin(specialDie1, new Insets(0, 0, 0, -9));
@@ -258,12 +255,12 @@ public class DiceUI extends AnchorPane {
             }
             case "Mint'O Lint" -> {
                 specialDieBG.setImage(new Image("images/gameboard_screen/Game_Die_4.PNG"));
-                specialDie0.setFill(TheOs.MINT_GREEN);
-                specialDie1.setFill(TheOs.MINT_GREEN);
-                specialDie2.setFill(TheOs.MINT_GREEN);
-                specialDie3.setFill(TheOs.MINT_GREEN);
-                specialDie4.setFill(TheOs.MINT_GREEN);
-                specialDie5.setFill(TheOs.MINT_GREEN);
+                specialDie0.setFill(TheOs.MINTO_GREEN);
+                specialDie1.setFill(TheOs.MINTO_GREEN);
+                specialDie2.setFill(TheOs.MINTO_GREEN);
+                specialDie3.setFill(TheOs.MINTO_GREEN);
+                specialDie4.setFill(TheOs.MINTO_GREEN);
+                specialDie5.setFill(TheOs.MINTO_GREEN);
 
                 HBox.setMargin(specialDie0, new Insets(0, 0, 0, 0));
                 HBox.setMargin(specialDie1, new Insets(0, 0, 0, 0));
@@ -290,12 +287,12 @@ public class DiceUI extends AnchorPane {
             }
             case "O'Fitz" -> {
                 specialDieBG.setImage(new Image("images/gameboard_screen/Game_Die_6.PNG"));
-                specialDie0.setFill(TheOs.FITZ_PURPLE);
-                specialDie1.setFill(TheOs.FITZ_PURPLE);
-                specialDie2.setFill(TheOs.FITZ_PURPLE);
-                specialDie3.setFill(TheOs.FITZ_PURPLE);
-                specialDie4.setFill(TheOs.FITZ_PURPLE);
-                specialDie5.setFill(TheOs.FITZ_PURPLE);
+                specialDie0.setFill(TheOs.OFITZ_PURPLE);
+                specialDie1.setFill(TheOs.OFITZ_PURPLE);
+                specialDie2.setFill(TheOs.OFITZ_PURPLE);
+                specialDie3.setFill(TheOs.OFITZ_PURPLE);
+                specialDie4.setFill(TheOs.OFITZ_PURPLE);
+                specialDie5.setFill(TheOs.OFITZ_PURPLE);
 
                 HBox.setMargin(specialDie0, new Insets(0, 0, 0, -4));
                 HBox.setMargin(specialDie1, new Insets(0, 0, 0, -5));
@@ -541,7 +538,7 @@ public class DiceUI extends AnchorPane {
             specialDie5.setScaleX(1);
         });
     }
-
+    
     public enum state {
         NormalDieSelected,
         SpecialDieSelected

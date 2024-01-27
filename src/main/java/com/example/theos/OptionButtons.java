@@ -1,16 +1,19 @@
 package com.example.theos;
 
+import javafx.animation.Animation;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
-// Der folgende Code wurde teilweise angepasst von [ChatGPT]
-public class OptionButtons {
+// The following code has been partially adapted from ChatGPT
+public class OptionButtons { // Creates option buttons, toggles states & manages button animation
     static boolean instructionsOn = true;
     private static boolean musicOn = true;
     static boolean musicTogglePressed = false;
@@ -36,7 +39,7 @@ public class OptionButtons {
         // Opacity & translation effects
         closeAppButtonBox.setOnMousePressed(event -> {
             closeAppButtonPane.setOpacity(0.5);
-            closeAppButtonPane.setTranslateY(closeAppButtonPane.getTranslateY() + 5);
+            closeAppButtonPane.setTranslateY(closeAppButtonPane.getTranslateY() + 3);
         });
 
         // Close application
@@ -61,7 +64,7 @@ public class OptionButtons {
         // Opacity & translation effects
         returnButtonBox.setOnMousePressed(event -> {
             returnButtonPane.setOpacity(0.5);
-            returnButtonPane.setTranslateY(returnButtonPane.getTranslateY() + 5);
+            returnButtonPane.setTranslateY(returnButtonPane.getTranslateY() + 3);
             instructionsOn = true;
         });
 
@@ -87,13 +90,13 @@ public class OptionButtons {
         // Opacity & translation effects
         instructionsButtonBox.setOnMousePressed(event -> {
             instructionsButtonPane.setOpacity(0.5);
-            instructionsButtonPane.setTranslateY(instructionsButtonPane.getTranslateY() + 5);
+            instructionsButtonPane.setTranslateY(instructionsButtonPane.getTranslateY() + 3);
         });
 
         instructionsButtonBox.setOnMouseReleased(event -> {
             // Opacity & translation effects
             instructionsButtonPane.setOpacity(1.0);
-            instructionsButtonPane.setTranslateY(instructionsButtonPane.getTranslateY() - 5);
+            instructionsButtonPane.setTranslateY(instructionsButtonPane.getTranslateY() - 3);
 
             // Show / hide instructions window
             if (instructionsOn) {
@@ -124,13 +127,13 @@ public class OptionButtons {
         // Opacity & translation effects
         closeInstructionsButtonBox.setOnMousePressed(event -> {
             closeInstructionsButtonPane.setOpacity(0.5);
-            closeInstructionsButtonPane.setTranslateY(closeInstructionsButtonPane.getTranslateY() + 5);
+            closeInstructionsButtonPane.setTranslateY(closeInstructionsButtonPane.getTranslateY() + 3);
         });
 
         // Reset opacity & translation + close instructions window
         closeInstructionsButtonBox.setOnMouseReleased(event -> {
             closeInstructionsButtonPane.setOpacity(1.0);
-            closeInstructionsButtonPane.setTranslateY(closeInstructionsButtonPane.getTranslateY() - 5);
+            closeInstructionsButtonPane.setTranslateY(closeInstructionsButtonPane.getTranslateY() - 3);
             gameBoard.hideInstructions();
             instructionsOn = false;
         });
@@ -158,12 +161,10 @@ public class OptionButtons {
             musicButtonPane.setOpacity(0.5);
         }
 
-        // Change positioning once pressed
+        // Change positioning once pressed / released
         musicButtonBox.setOnMousePressed(event -> {
             toggleMusicStatePressed();
         });
-
-        // Change state once released
         musicButtonBox.setOnMouseReleased(event -> {
             toggleMusicStateReleased();
         });
@@ -175,11 +176,10 @@ public class OptionButtons {
     public static void toggleMusicStatePressed() {
         if (musicOn) {
             musicButtonPane.setOpacity(0.5);
-            musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() + 5);
         } else {
             musicButtonPane.setOpacity(0.25);
-            musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() + 5);
         }
+        musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() + 3);
         musicTogglePressed = true;
     }
 
@@ -187,15 +187,25 @@ public class OptionButtons {
     public static void toggleMusicStateReleased() {
         if (musicOn) {
             musicButtonPane.setOpacity(0.5);
-            musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() - 5);
             musicOn = false;
             SoundGame.setVolume(0);
         } else {
             musicButtonPane.setOpacity(1.0);
-            musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() - 5);
             musicOn = true;
             SoundGame.setVolume(0.1);
         }
+        musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() - 3);
         musicTogglePressed = false;
+    }
+
+    // Add up-and-down bouncing animation to buttons
+    public static void animateButtonBounce(Node... buttons) {
+        for (Node button : buttons) {
+            TranslateTransition transition = new TranslateTransition(Duration.millis(500), button);
+            transition.setByY(-5); // Movement
+            transition.setCycleCount(Animation.INDEFINITE); // Repetition
+            transition.setAutoReverse(true); // Bouncing effect
+            transition.play();
+        }
     }
 }

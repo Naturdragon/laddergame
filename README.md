@@ -15,4 +15,4 @@ TODO (as an add-on after the project has concluded):
 3. Correct crossing with new branch
 4. Invert images when going left
 5. Spread out characters in bowl
-6. Add music button to winning screen
+6. Make it possible to play full-screen

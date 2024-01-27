@@ -1,154 +1,109 @@
 package com.example.theos;
 
-import javafx.animation.Animation;
-import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 
-// Der folgende Code wurde teilweise angepasst von [ChatGPT]
+// The following code has been partially adapted from ChatGPT
+public class TitleScreen { // Displays title screen
+    static final Text DESCRIPTION_TEXT = new Text("Start Game"); // Text shown on screen above SPACE button
+    static final Text SPACE_TEXT = new Text("SPACE"); // SPACE Text on button
+    static final ImageView SPACE_BUTTON = new ImageView(new Image("images/option_button_extras/Button_Space_Big.PNG")); // Button image
+    static final Button START_BUTTON = new Button("Start game");
 
-/*
-The TitleScreen class displays the TitleScreen.
- */
-public class TitleScreen {
-    static final Font VARELA = Font.loadFont(Application.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), -1);
-    static final ImageView SPACE_BUTTON = new ImageView(new Image("images/option_button_extras/Button_Space_Big.PNG"));
-    static final Text START_GAME = new Text("Start Game");
-    static final Text SPACE_TEXT = new Text("SPACE");
+    public static Scene createTitleScreen() { // Creates scene for title screen
 
-    public static Scene createTitleScreen() {
+        // Create main layout
+        AnchorPane startButton = createStartButton();
+        AnchorPane optionButtons = createOptionButtons();
+        Pane mainLayout = new Pane(startButton, optionButtons);
 
-        // Creating main layout
-        VBox instructionsBox = createTitleBox();
-        HBox mainLayout = new HBox(instructionsBox);
-        mainLayout.setAlignment(Pos.CENTER);
-        mainLayout.setFillHeight(false);
-
-        // Setting background image
+        // Set background image
         String backgroundImage = "url('images/title_screen/Title_BG.PNG')";
         mainLayout.setStyle("-fx-background-image: " + backgroundImage + "; " +
                 "-fx-background-size: cover;");
 
-        // Create close application button
-        HBox closeAppButton = OptionButtons.createCloseAppButton();
-        closeAppButton.setTranslateX(-815);
-        closeAppButton.setTranslateY(-358);
-
-        // Create music button
-        HBox musicButton = OptionButtons.createMusicButton();
-        musicButton.setTranslateX(465);
-        musicButton.setTranslateY(-360);
-
-        // Add buttons to main layout
-        mainLayout.getChildren().add(closeAppButton);
-        mainLayout.getChildren().add(musicButton);
         return new Scene(mainLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
     }
 
-    private static VBox createTitleBox() {
-        // Text shown on screen above SPACE button
-        START_GAME.setFont(Font.font(VARELA.getFamily(), 30));
-        START_GAME.setFill(TheOs.BROWN);
+    private static AnchorPane createStartButton() { // Creates start button
 
-        // SPACE Text on button
-        SPACE_TEXT.setFont(Font.font(VARELA.getFamily(), 32));
+        // Format of start button
+        DESCRIPTION_TEXT.setFont(Font.font(TheOs.VARELA.getFamily(), 30));
+        DESCRIPTION_TEXT.setFill(TheOs.BROWN);
+        SPACE_TEXT.setFont(Font.font(TheOs.VARELA.getFamily(), 32));
         SPACE_TEXT.setFill(TheOs.BROWN);
-
-        // Button image
         SPACE_BUTTON.setPreserveRatio(true);
         SPACE_BUTTON.setFitWidth(348);
+        START_BUTTON.setFont(Font.font(TheOs.VARELA.getFamily(), 30));
+        START_BUTTON.setOpacity(0);
+        START_BUTTON.setPrefSize(348, 77);
 
-        // Button to start game
-        Button startButton = new Button("Start game");
+        // Create AnchorPane for start button
+        AnchorPane startButton = new AnchorPane(SPACE_BUTTON, DESCRIPTION_TEXT, SPACE_TEXT, START_BUTTON);
+        startButton.setTranslateX(537);
+        startButton.setTranslateY(690);
 
-        // Event handler for pressing SPACE key / using mouse
+        // Position & animation of start button
+        AnchorPane.setLeftAnchor(DESCRIPTION_TEXT, 90.0);
+        AnchorPane.setTopAnchor(DESCRIPTION_TEXT, -40.0);
+        AnchorPane.setLeftAnchor(SPACE_TEXT, 115.0);
+        AnchorPane.setTopAnchor(SPACE_TEXT, 18.0);
+        OptionButtons.animateButtonBounce(START_BUTTON, SPACE_TEXT, DESCRIPTION_TEXT, SPACE_BUTTON);
+
+        // Event handlers for pressing & releasing
         EventHandler<Event> pressHandler = event -> {
-            // Toggle opacity for SPACE_TEXT & SPACE_BUTTON
+            // Lower opacity
             SPACE_TEXT.setOpacity(0.5);
             SPACE_BUTTON.setOpacity(0.5);
         };
-
-        // Event handler for releasing SPACE key / mouse
         EventHandler<Event> releaseHandler = event -> {
-            // Reset opacity for SPACE_TEXT & SPACE_BUTTON to normal
+            // Reset opacity
             SPACE_TEXT.setOpacity(1.0);
             SPACE_BUTTON.setOpacity(1.0);
 
-            // Switching to PlayerSelectionScreen
+            // Switch to Player Selection Screen
             SceneController.showPlayerSelectScreen();
         };
 
-        // Set event handlers for both SPACE key & mouse if pressed
-        startButton.setOnKeyPressed(event -> {
+        // Call press & release handlers for mouse
+        START_BUTTON.setOnMousePressed(pressHandler);
+        START_BUTTON.setOnMouseReleased(releaseHandler);
+
+        // Call press & release handlers for SPACE key
+        START_BUTTON.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.SPACE) {
-                pressHandler.handle(null); // Call the press handler
+                pressHandler.handle(null);
+            }
+        });
+        START_BUTTON.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.SPACE) {
+                releaseHandler.handle(null);
             }
         });
 
-        // Set event handlers for both SPACE key & mouse if released
-        startButton.setOnKeyReleased(event -> {
-            if (event.getCode() == KeyCode.SPACE) {
-                releaseHandler.handle(null); // Call the release handler
-            }
-        });
-
-        startButton.setOnMousePressed(pressHandler); // Call the press handler when the mouse is pressed
-        startButton.setOnMouseReleased(releaseHandler); // Call the release handler when the mouse is released
-
-        // Format & size
-        startButton.setFont(Font.font(VARELA.getFamily(), 30));
-        startButton.setOpacity(0);
-        startButton.setPrefWidth(346);
-        startButton.setPrefSize(346, 70);
-        startButton.setTranslateY(95);
-
-        // Positioning & animation
-        SPACE_TEXT.setTranslateY(250);
-        SPACE_BUTTON.setTranslateY(545);
-        START_GAME.setTranslateY(328);
-        animateButtons(startButton, SPACE_BUTTON, SPACE_TEXT, START_GAME);
-
-        // VBOX for Layout
-        VBox frontPage = new VBox(startButton,START_GAME, SPACE_TEXT, SPACE_BUTTON);
-        frontPage.setAlignment(Pos.CENTER);
-        frontPage.setSpacing(100);
-
-        // Changing position for z-coordinate
-        SPACE_TEXT.toFront();
-        startButton.toFront();
-        SPACE_BUTTON.toBack();
-
-        // Creating main layout
-        HBox mainLayout = new HBox(frontPage);
-        mainLayout.setAlignment(Pos.CENTER);
-        mainLayout.setSpacing(100);
-
-        return frontPage;
+        return startButton;
     }
 
-    /*
-    Animates the specified JavaFX buttons with a bouncing effect.
-     */
-    public static void animateButtons(Node... buttons) {
-        for (Node button : buttons) {
-            TranslateTransition transition = new TranslateTransition(Duration.millis(500), button);
-            transition.setByY(-5); // Movement
-            transition.setCycleCount(Animation.INDEFINITE); // Repetition
-            transition.setAutoReverse(true); // Bouncing effect
-            transition.play();
-        }
+    // Create option buttons
+    private static AnchorPane createOptionButtons() {
+        HBox closeAppButton = OptionButtons.createCloseAppButton();
+        HBox musicButton = OptionButtons.createMusicButton();
+        AnchorPane buttonLayout = new AnchorPane(closeAppButton, musicButton);
+        buttonLayout.setTranslateX(20);
+        buttonLayout.setTranslateY(18);
+        AnchorPane.setLeftAnchor(musicButton, 1333.0);
+
+        return buttonLayout;
     }
 }

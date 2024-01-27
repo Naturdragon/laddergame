@@ -36,7 +36,6 @@ public class GameBoard {
     private int animationOffsetY = 15;
 
     // Default constructor: just initializes the most important variables with their default constructor
-
     public GameBoard() {
 
         boardGraph = new BoardGraph();
@@ -159,19 +158,16 @@ public class GameBoard {
 
         // Create option buttons
         HBox closeAppButton = OptionButtons.createCloseAppButton();
-        HBox mainMenuButton = OptionButtons.createReturnToTitleButton();
+        HBox returnToTitleButton = OptionButtons.createReturnToTitleButton();
         HBox instructionsButton = OptionButtons.createInstructionsButton(this);
         HBox musicButton = OptionButtons.createMusicButton();
-        closeAppButton.setTranslateX(20);
-        closeAppButton.setTranslateY(19);
-        mainMenuButton.setTranslateX(79);
-        mainMenuButton.setTranslateY(-31);
-        instructionsButton.setTranslateX(1295);
-        instructionsButton.setTranslateY(-85);
-        musicButton.setTranslateX(1352);
-        musicButton.setTranslateY(-134);
-        VBox buttonLayout = new VBox(closeAppButton, mainMenuButton, instructionsButton, musicButton);
+        AnchorPane buttonLayout = new AnchorPane(closeAppButton, returnToTitleButton, instructionsButton, musicButton);
         rootLayout.getChildren().add(buttonLayout);
+        buttonLayout.setTranslateX(20);
+        buttonLayout.setTranslateY(18);
+        AnchorPane.setLeftAnchor(returnToTitleButton, 60.0);
+        AnchorPane.setLeftAnchor(instructionsButton, 1273.0);
+        AnchorPane.setLeftAnchor(musicButton, 1333.0);
 
         this.playGameStartAnimation(); // plays the spawn in animation of the characters
 
@@ -192,25 +188,25 @@ public class GameBoard {
         VBox instructionsText = new VBox();
 
         Text text1 = new Text("Landing on a        - Field makes your Character" + System.lineSeparator() + "take a shortcut");
-        text1.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text1.setFont(TheOs.VARELA);
         text1.setFill(TheOs.BROWN);
         Text text2 = new Text("Landing on a        - Field makes your Character " + System.lineSeparator() + "be set backwards, try to avoid them!");
-        text2.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text2.setFont(TheOs.VARELA);
         text2.setFill(TheOs.BROWN);
         Text text3 = new Text("Every Character has a Normal Die" + System.lineSeparator() + "and a Special Die");
-        text3.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text3.setFont(TheOs.VARELA);
         text3.setFill(TheOs.BROWN);
         Text text4 = new Text("The Numbers on the Special Die are different" + System.lineSeparator() + "for each Character, choose carefully!");
-        text4.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text4.setFont(TheOs.VARELA);
         text4.setFill(TheOs.BROWN);
         Text text5 = new Text("You can use your Special Die only 3 Times at" + System.lineSeparator() + "the Start");
-        text5.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text5.setFont(TheOs.VARELA);
         text5.setFill(TheOs.BROWN);
         Text text6 = new Text("Landing on a        - Field increases your Charges");
-        text6.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text6.setFont(TheOs.VARELA);
         text6.setFill(TheOs.BROWN);
         Text text7 = new Text("Select which Die to use with");
-        text7.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text7.setFont(TheOs.VARELA);
         text7.setFill(TheOs.BROWN);
 
         instructionsText.getChildren().addAll(text1, text2, text3, text4, text5, text6, text7);
@@ -1010,7 +1006,7 @@ public class GameBoard {
     public void playChargeAddedAnimation() {
         Text text = new Text("Special Die Charges +1");
         text.setFill(TheOs.BROWN);
-        text.setFont(Font.font(DiceUI.CUSTOM_FONT_VARELA.getFamily(), 65));
+        text.setFont(Font.font(TheOs.VARELA.getFamily(), 65));
         /* Adding a white stroke to the text makes it look better and more legible,
         but the animation becomes really laggy for some reason (maybe only on my pc):
 

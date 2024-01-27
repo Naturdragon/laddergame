@@ -1,8 +1,6 @@
 package com.example.theos;
 
-import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
-import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -26,10 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.theos.TheOs.BROWN;
-import static com.example.theos.TheOs.OLANDA_RED;
-
-// Der folgende Code wurde teilweise angepasst von [ChatGPT]
+// The following code has been partially adapted from ChatGPT
 public class PlayerSelectionScreen {
 
     /*constants for screen width, number of columns, character image size,
@@ -37,8 +32,6 @@ public class PlayerSelectionScreen {
     private static final double SCREEN_WIDTH = 1422;
     private static final int NUM_COLUMNS = 3;
     private static final double CHARACTER_IMAGE_SIZE = SCREEN_WIDTH / (NUM_COLUMNS + 2);
-    private static final int PADDING_VALUE = 20;
-    private static final int SPACING_VALUE = 10;
     private static final int MIN_PLAYERS = 2;
     private static final double SELECTED_IMAGE_TRANSLATE_Y = 5; // Adjust this value
 
@@ -50,90 +43,101 @@ public class PlayerSelectionScreen {
     private static Player[] players;
     private static int playerCounter = 1;
     private static boolean animationCooldown = false;
-
-    static final Font CAVEAT = Font.loadFont(PlayerSelectionScreen.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), -1);
-    static final Font VARELA = Font.loadFont(PlayerSelectionScreen.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), -1);
+    static final ImageView MOUSE_DISPLAY = new ImageView(new Image("images/player_select_screen/Player_Mouse.PNG"));
 
     /*creates and returns PlayerSelectionScreen including
     character selection grid, instructions and buttons */
     public static Scene createPlayerSelectionScreen() {
         playerCounter = 1;
 
-        VBox instructionsBox = createInstructionsBox();
+        AnchorPane controlsBox = createControlsBox();
         charactersGrid = createCharactersGrid();
-
-        HBox mainLayout = new HBox(instructionsBox, charactersGrid);
-        mainLayout.setAlignment(Pos.CENTER);
-        mainLayout.setSpacing(SPACING_VALUE);
-        mainLayout.setFillHeight(false);
+        Pane mainLayout = new Pane(controlsBox, charactersGrid);
 
         String backgroundImage = "images/player_select_screen/Player_Selection_Screen.PNG";
         mainLayout.setStyle("-fx-background-image: url('" + backgroundImage + "'); -fx-background-size: cover;");
 
-        // Create close and return-to-main-menu buttons
-        HBox closeButton = OptionButtons.createCloseAppButton();
-        HBox mainMenuButton = OptionButtons.createReturnToTitleButton();
+        // Create option buttons
+        HBox closeAppButton = OptionButtons.createCloseAppButton();
+        HBox returnToTitleButton = OptionButtons.createReturnToTitleButton();
         HBox musicButton = OptionButtons.createMusicButton();
-        closeButton.setTranslateX(-388);
-        closeButton.setTranslateY(-306);
-        mainMenuButton.setTranslateX(-329);
-        mainMenuButton.setTranslateY(-356);
-        musicButton.setTranslateX(943);
-        musicButton.setTranslateY(-408);
-
-        // Add buttons to the layout
-        VBox buttonLayout = new VBox(closeButton, mainMenuButton, musicButton);
+        AnchorPane buttonLayout = new AnchorPane(closeAppButton, returnToTitleButton, musicButton);
         mainLayout.getChildren().add(buttonLayout);
-        charactersGrid.toFront();
+        buttonLayout.setTranslateX(20);
+        buttonLayout.setTranslateY(18);
+        AnchorPane.setLeftAnchor(returnToTitleButton, 60.0);
+        AnchorPane.setLeftAnchor(musicButton, 1333.0);
 
         return new Scene(mainLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
     }
     //creates VBox and includes instruction text and images for controls
-    private static VBox createInstructionsBox() {
+    private static AnchorPane createControlsBox() {
 
         Text controls = new Text("CONTROLS");
-        controls.setFont(Font.font(VARELA.getFamily(), 58));
-        controls.setFill(BROWN);
+        controls.setFont(Font.font(TheOs.VARELA.getFamily(), 58));
+        controls.setFill(TheOs.BROWN);
 
         Text row1 = new Text("Clicking on a Character" + System.lineSeparator() +
                 "selects the Player" + System.lineSeparator());
-        row1.setFont(Font.font(VARELA.getFamily(), 28));
-        row1.setFill(BROWN);
+        row1.setFont(Font.font(TheOs.VARELA.getFamily(), 28));
+        row1.setFill(TheOs.BROWN);
 
         Text row2 = new Text("Clicking on a Character" + System.lineSeparator() +
                 "after Selection deselects" + System.lineSeparator() +
                 "the Player" + System.lineSeparator());
-        row2.setFont(Font.font(VARELA.getFamily(), 28));
-        row2.setFill(BROWN);
+        row2.setFont(Font.font(TheOs.VARELA.getFamily(), 28));
+        row2.setFill(TheOs.BROWN);
 
         Text row3 = new Text("You must select" + System.lineSeparator() +
                 "at least two Characters!" + System.lineSeparator());
-        row3.setFont(Font.font(VARELA.getFamily(), 28));
-        row3.setFill(BROWN);
+        row3.setFont(Font.font(TheOs.VARELA.getFamily(), 28));
+        row3.setFill(TheOs.BROWN);
 
         Text row4 = new Text("Dice" + System.lineSeparator() +
                 "Select");
-        row4.setFont(Font.font(VARELA.getFamily(), 30));
-        row4.setFill(BROWN);
+        row4.setFont(Font.font(TheOs.VARELA.getFamily(), 30));
+        row4.setFill(TheOs.BROWN);
 
         Text row5 = new Text("Player Select" + System.lineSeparator() +
                 "Option Select");
-        row5.setFont(Font.font(VARELA.getFamily(), 30));
-        row5.setFill(BROWN);
+        row5.setFont(Font.font(TheOs.VARELA.getFamily(), 30));
+        row5.setFill(TheOs.BROWN);
 
         Text row6 = new Text("Start");
-        row6.setFont(Font.font(VARELA.getFamily(), 30));
-        row6.setFill(BROWN);
+        row6.setFont(Font.font(TheOs.VARELA.getFamily(), 30));
+        row6.setFill(TheOs.BROWN);
 
         Text row7 = new Text("SPACE");
-        row7.setFont(Font.font(VARELA.getFamily(), 28));
-        row7.setFill(BROWN);
+        row7.setFont(Font.font(TheOs.VARELA.getFamily(), 25));
+        row7.setFill(TheOs.BROWN);
 
         ImageView spaceButton = new ImageView(new Image("images/option_button_extras/Button_Space_Small.PNG"));
         spaceButton.setPreserveRatio(true);
         spaceButton.setFitWidth(165);
 
+        MOUSE_DISPLAY.setPreserveRatio(true);
+        MOUSE_DISPLAY.setFitWidth(30);
+
         Button startButton = new Button();
+        startButton.setOpacity(0);
+
+        AnchorPane controlsBox = new AnchorPane(controls, row1, row2, row3, row4, row5, row6, spaceButton, row7, startButton, MOUSE_DISPLAY);
+        controlsBox.setTranslateX(70);
+        controlsBox.setTranslateY(155);
+        AnchorPane.setLeftAnchor(controls, -5.0);
+        AnchorPane.setTopAnchor(row1,30.0);
+        AnchorPane.setTopAnchor(row2,115.0);
+        AnchorPane.setTopAnchor(row3,235.0);
+        AnchorPane.setLeftAnchor(row4,220.0);
+        AnchorPane.setTopAnchor(row4,330.0);
+        AnchorPane.setTopAnchor(row5,425.0);
+        AnchorPane.setLeftAnchor(MOUSE_DISPLAY,250.0);
+        AnchorPane.setTopAnchor(MOUSE_DISPLAY,440.0);
+        AnchorPane.setLeftAnchor(row6,220.0);
+        AnchorPane.setTopAnchor(row6,527.0);
+        AnchorPane.setLeftAnchor(row7,41.0);
+        AnchorPane.setTopAnchor(row7,531.0);
+        AnchorPane.setTopAnchor(spaceButton,525.0);
 
         // Event handler for pressing SPACE key
         startButton.setOnKeyPressed(event -> {
@@ -141,8 +145,8 @@ public class PlayerSelectionScreen {
                 // Toggle opacity for spaceText and menuButton
                 row7.setOpacity(0.5);
                 spaceButton.setOpacity(0.5);
-                row7.setTranslateY(-42);
-                spaceButton.setTranslateY(1078);
+                row7.setTranslateY(row7.getY() + 1);
+                spaceButton.setTranslateY(spaceButton.getY() + 1);
             }
         });
 
@@ -152,66 +156,27 @@ public class PlayerSelectionScreen {
                 // Reset opacity to normal when the button is released
                 row7.setOpacity(1.0);
                 spaceButton.setOpacity(1.0);
-                row7.setTranslateY(-45);
-                spaceButton.setTranslateY(1075);
+                row7.setTranslateY(row7.getY() - 1);
+                spaceButton.setTranslateY(spaceButton.getY() - 1);
 
                 // The scene is switched to the GameBoard with the current list of selected characters if at least 2 characters are selected
                 if (allowPlayability()) {
                     SceneController.showGameBoardScreen(PlayerSelectionScreen.createPlayerList());
                 } else {
-                    row3.setFill(OLANDA_RED);
+                    row3.setFill(TheOs.YOLANDA_RED);
                     animateText(row3);
                 }
             }
         });
 
-        startButton.setOpacity(0);
-
-        //Vbox (left side)
-        VBox leftSide = new VBox(controls, row1, row2, row3, row4, row6,row7, spaceButton, row5, startButton);
-        leftSide.setAlignment(Pos.CENTER);
-        leftSide.setSpacing(100);
-
-        controls.setTranslateX(-8);
-        controls.setTranslateY(355);
-
-        row1.setTranslateX(-16);
-        row1.setTranslateY(268);
-
-        row2.setTranslateX(-6);
-        row2.setTranslateY(150);
-
-        row3.setTranslateX(-11);
-        row3.setTranslateY(33);
-
-        row4.setTranslateX(87);
-        row4.setTranslateY(-75);
-
-        row5.setTranslateX(-65);
-        row5.setTranslateY(-283);
-
-        row6.setTranslateX(93);
-        row6.setTranslateY(-480);
-
-        row7.setTranslateX(-77);
-        row7.setTranslateY(-45);
-
-        spaceButton.setTranslateX(-79);
-        spaceButton.setTranslateY(1075);
-
-        spaceButton.toBack();
-        row6.toFront();
-
-        return leftSide;
+        return controlsBox;
     }
 
     /*Gridpane contains character images, names and deselect buttons,
     allowing select or deselect characters*/
     private static GridPane createCharactersGrid() {
         charactersGrid = new GridPane();
-        charactersGrid.setPadding(new Insets(PADDING_VALUE));
-        charactersGrid.setHgap(-3);
-        charactersGrid.setVgap(-10);
+        charactersGrid.setPadding(new Insets(75, 0, 0, 500));
 
         characters = new Character[NUM_COLUMNS * 2];
         players = new Player[NUM_COLUMNS * 2];
@@ -250,12 +215,12 @@ public class PlayerSelectionScreen {
             players[i] = new Player(characters[i], null);
 
             Text playerNameText = new Text(characters[i].getName());
-            playerNameText.setFont(Font.font(CAVEAT.getFamily(), 28));
-            playerNameText.setFill(BROWN);
+                playerNameText.setFont(Font.font(TheOs.CAVEAT.getFamily(), 28));
+            playerNameText.setFill(TheOs.BROWN);
 
             Text playerInfoText = new Text();
-            playerInfoText.setFont(Font.font(VARELA.getFamily(), 20));
-            playerInfoText.setFill(BROWN);
+            playerInfoText.setFont(Font.font(TheOs.VARELA.getFamily(), 20));
+            playerInfoText.setFill(TheOs.BROWN);
             playerInfoText.textProperty().bind(players[i].playerInfoProperty()); // Bind the player info property
 
             VBox playerInfoBox = new VBox(characterImage, playerNameText, playerInfoText);
@@ -283,8 +248,19 @@ public class PlayerSelectionScreen {
         imageView.setFitWidth(CHARACTER_IMAGE_SIZE); // changed resizing to be done on the ImageView, not the Image itself (looks better / less pixelated)
         imageView.setPreserveRatio(true);
 
-        imageView.setOnMouseClicked(event -> {
+        imageView.setOnMousePressed(event -> {
+            Player currentPlayer = players[playerIndex];
+            if (currentPlayer.getPlayerNumber() == 0) {
+                imageView.setOpacity(0.5);
+            } else {
+                imageView.setOpacity(0.25);
+            }
+            imageView.setTranslateY(imageView.getY() + 3);
+        });
+
+        imageView.setOnMouseReleased(event -> {
             togglePlayerSelection(playerIndex, imageView);
+            imageView.setTranslateY(imageView.getY() - 3);
         });
 
         return imageView;
@@ -320,7 +296,6 @@ public class PlayerSelectionScreen {
         playerCounter--;
 
         currentPlayer.setPlayerNumber(0);
-        characterImage.setTranslateY(0);
         characterImage.setOpacity(1.0);
 
         System.out.println("Deselected: " + currentPlayer);
