@@ -113,14 +113,14 @@ public class GameBoard {
     }
 
     /*
-    Creates the scene/screen view of the gameboard
+    Creates the scene/screen view of the game board
     Backgrounds are set, DiceUI and instructionsWindow are placed on screen
     All characters are placed on screen and playGameStartAnimation() is called, afterwards userinput is unlocked
     Returns a scene object, which can be used for the stage object in TheOs start() method
      */
     public Scene createGameBoardScreen() {
 
-        // Creating and setting the game background (image of the board), backgroundTop is later added to the layout (its only the waterfall)
+        // Creating and setting the game background (image of the board), backgroundTop is later added to the layout (it's only the waterfall)
         BackgroundImage backgroundImg = new BackgroundImage(
                 new Image("images/gameboard_screen/Game_BG.PNG"),
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
@@ -156,18 +156,8 @@ public class GameBoard {
         backgroundTopRegion.setPrefSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
         rootLayout.getChildren().add(backgroundTopRegion);
 
-        // Create option buttons
-        HBox closeAppButton = OptionButtons.createCloseAppButton();
-        HBox returnToTitleButton = OptionButtons.createReturnToTitleButton();
-        HBox instructionsButton = OptionButtons.createInstructionsButton(this);
-        HBox musicButton = OptionButtons.createMusicButton();
-        AnchorPane buttonLayout = new AnchorPane(closeAppButton, returnToTitleButton, instructionsButton, musicButton);
-        rootLayout.getChildren().add(buttonLayout);
-        buttonLayout.setTranslateX(20);
-        buttonLayout.setTranslateY(18);
-        AnchorPane.setLeftAnchor(returnToTitleButton, 60.0);
-        AnchorPane.setLeftAnchor(instructionsButton, 1273.0);
-        AnchorPane.setLeftAnchor(musicButton, 1333.0);
+        AnchorPane optionButtons = OptionButtons.createOptionButtonsSet(this, true, true, true, true);
+        rootLayout.getChildren().add(optionButtons);
 
         this.playGameStartAnimation(); // plays the spawn in animation of the characters
 
@@ -215,14 +205,14 @@ public class GameBoard {
         VBox.setMargin(text4, new Insets(-35, 0, 0, 0));
         VBox.setMargin(text6, new Insets(-35, 0, 0, 0));
 
-        ImageView instructionsBG = new ImageView("images/gameboard_screen/Instructions_BG.png");
+        ImageView instructionsBG = new ImageView("images/gameboard_screen/Instructions_BG.PNG");
         instructionsBG.setOpacity(0.85);
 
         ImageView normalDieIMG = new ImageView("images/gameboard_screen/Game_Die_0.PNG");
         normalDieIMG.setFitWidth(140);
         normalDieIMG.setPreserveRatio(true);
 
-        ImageView specialDieIMG = new ImageView("images/gameboard_screen/Game_Die_All.png");
+        ImageView specialDieIMG = new ImageView("images/gameboard_screen/Game_Die_All.PNG");
         specialDieIMG.setFitWidth(140);
         specialDieIMG.setPreserveRatio(true);
 

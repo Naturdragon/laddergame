@@ -26,12 +26,9 @@ public class SceneController {
         manageMouseAction(scene);
     }
 
-    /*
-    Shows the Gameboard screen, also:
-    the instance of the Gameboard which holds all data of the game (number of players, finished players, etc.) is created here
-     */
+    // Shows game board screen (is instance which holds all data of game: number of players, finished players, etc.)
     public static void showGameBoardScreen(List<Player> playerList) {
-        TheOs.waitingForUserInput = false; // the user input is unlocked after the spawn in animation is played (happens inside createGameBoardScreen, line 32)
+        TheOs.waitingForUserInput = false; // User input is unlocked after spawn-in animation is played (happens inside createGameBoardScreen, line 32)
         GameBoard gameBoard = new GameBoard(playerList);
 
         Scene scene = gameBoard.createGameBoardScreen();
@@ -65,7 +62,7 @@ public class SceneController {
                     OptionButtons.instructionsOn = false;
                 }
             }
-            if (event.getCode() == KeyCode.M && OptionButtons.musicTogglePressed == false) {
+            if (event.getCode() == KeyCode.M && !OptionButtons.musicTogglePressed) {
                 event.consume();
                 OptionButtons.toggleMusicStatePressed();
             }
@@ -84,7 +81,7 @@ public class SceneController {
 
     public static void manageMusicButtonAction(Scene scene) { // Manage M key for music
         scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.M && OptionButtons.musicTogglePressed == false) {
+            if (event.getCode() == KeyCode.M && !OptionButtons.musicTogglePressed) {
                 event.consume();
                 OptionButtons.toggleMusicStatePressed();
             }

@@ -1,15 +1,23 @@
 package com.example.theos;
 
 import javafx.animation.Animation;
+import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 // The following code has been partially adapted from ChatGPT
@@ -17,13 +25,46 @@ public class OptionButtons { // Creates option buttons, toggles states & manages
     static boolean instructionsOn = true;
     private static boolean musicOn = true;
     static boolean musicTogglePressed = false;
+    private static boolean animationCooldown = false;
     private static StackPane musicButtonPane;
-    private GameBoard gameBoard; // Add reference to GameBoard for createCloseInstructionsButton()
+    private final GameBoard gameBoard; // Add reference to GameBoard for createCloseInstructionsButton()
     public OptionButtons(GameBoard gameBoard) {
         this.gameBoard = gameBoard;
     }
 
-    public static HBox createCloseAppButton() {
+    // Create entire option buttons set
+    public static AnchorPane createOptionButtonsSet(GameBoard gameBoard, boolean includeCloseAppButton, boolean includeReturnToTitleButton, boolean includeInstructionsButton, boolean includeMusicButton) {
+        AnchorPane optionButtons = new AnchorPane();
+        optionButtons.setTranslateX(20);
+        optionButtons.setTranslateY(18);
+
+        // Create buttons according to boolean
+        HBox closeAppButton = includeCloseAppButton ? createCloseAppButton() : null;
+        HBox returnToTitleButton = includeReturnToTitleButton ? createReturnToTitleButton() : null;
+        HBox instructionsButton = includeInstructionsButton ? createInstructionsButton(gameBoard) : null;
+        HBox musicButton = includeMusicButton ? createMusicButton() : null;
+
+        // Add existing buttons to AnchorPane
+        if (includeCloseAppButton) {
+            optionButtons.getChildren().add(closeAppButton);
+        }
+        if (includeReturnToTitleButton) {
+            AnchorPane.setLeftAnchor(returnToTitleButton, 60.0);
+            optionButtons.getChildren().add(returnToTitleButton);
+        }
+        if (includeInstructionsButton) {
+            AnchorPane.setLeftAnchor(instructionsButton, 1273.0);
+            optionButtons.getChildren().add(instructionsButton);
+        }
+        if (includeMusicButton) {
+            AnchorPane.setLeftAnchor(musicButton, 1333.0);
+            optionButtons.getChildren().add(musicButton);
+        }
+
+        return optionButtons;
+    }
+
+    private static HBox createCloseAppButton() {
         ImageView closeAppIMG = new ImageView(new Image("images/option_button_extras/Button_Exit.PNG"));
         closeAppIMG.setFitWidth(50);
         closeAppIMG.setPreserveRatio(true);
@@ -48,7 +89,7 @@ public class OptionButtons { // Creates option buttons, toggles states & manages
         return closeAppButtonBox;
     }
 
-    public static HBox createReturnToTitleButton() {
+    private static HBox createReturnToTitleButton() {
         ImageView returnIMG = new ImageView(new Image("images/option_button_extras/Button_Main.PNG"));
         returnIMG.setFitWidth(50);
         returnIMG.setPreserveRatio(true);
@@ -74,7 +115,7 @@ public class OptionButtons { // Creates option buttons, toggles states & manages
         return returnButtonBox;
     }
 
-    public static HBox createInstructionsButton(GameBoard gameBoard) {
+    private static HBox createInstructionsButton(GameBoard gameBoard) {
         ImageView instructionsIMG = new ImageView(new Image("images/option_button_extras/Button_Instructions.PNG"));
         instructionsIMG.setFitHeight(50);
         instructionsIMG.setPreserveRatio(true);
@@ -141,7 +182,7 @@ public class OptionButtons { // Creates option buttons, toggles states & manages
         return closeInstructionsButtonBox;
     }
 
-    public static HBox createMusicButton() {
+    private static HBox createMusicButton() {
         ImageView musicIMG = new ImageView(new Image("images/option_button_extras/Button_Sound.PNG"));
         musicIMG.setFitWidth(50);
         musicIMG.setPreserveRatio(true);
@@ -162,12 +203,8 @@ public class OptionButtons { // Creates option buttons, toggles states & manages
         }
 
         // Change positioning once pressed / released
-        musicButtonBox.setOnMousePressed(event -> {
-            toggleMusicStatePressed();
-        });
-        musicButtonBox.setOnMouseReleased(event -> {
-            toggleMusicStateReleased();
-        });
+        musicButtonBox.setOnMousePressed(event -> toggleMusicStatePressed());
+        musicButtonBox.setOnMouseReleased(event -> toggleMusicStateReleased());
 
         return musicButtonBox;
     }
@@ -198,13 +235,80 @@ public class OptionButtons { // Creates option buttons, toggles states & manages
         musicTogglePressed = false;
     }
 
-    // Add up-and-down bouncing animation to buttons
+    // Generic space button format
+    public static void spaceButtonFormat(Text descriptionText, Text spaceText, ImageView spaceButton, Button button, Runnable releaseAction) {
+
+        descriptionText.setFont(Font.font(TheOs.VARELA.getFamily(), 30));
+        descriptionText.setFill(TheOs.BROWN);
+        AnchorPane.setTopAnchor(descriptionText, -40.0);
+
+        spaceText.setFont(Font.font(TheOs.VARELA.getFamily(), 32));
+        spaceText.setFill(TheOs.BROWN);
+        AnchorPane.setLeftAnchor(spaceText, 115.0);
+        AnchorPane.setTopAnchor(spaceText, 18.0);
+
+        spaceButton.setPreserveRatio(true);
+        spaceButton.setFitWidth(348);
+
+        button.setFont(Font.font(TheOs.VARELA.getFamily(), 30));
+        button.setOpacity(0);
+        button.setPrefSize(348, 77);
+
+        // Event handlers for pressing & releasing
+        EventHandler<Event> pressHandler = event -> {
+            spaceText.setOpacity(0.5);
+            spaceButton.setOpacity(0.5);
+        };
+        EventHandler<Event> releaseHandler = event -> {
+            spaceText.setOpacity(1.0);
+            spaceButton.setOpacity(1.0);
+            releaseAction.run(); // Run specified action
+        };
+
+        // Call press & release handlers for mouse
+        button.setOnMousePressed(pressHandler);
+        button.setOnMouseReleased(releaseHandler);
+
+        // Call press & release handlers for SPACE key
+        button.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.SPACE) {
+                pressHandler.handle(null);
+            }
+        });
+        button.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.SPACE) {
+                releaseHandler.handle(null);
+            }
+        });
+    }
+
+    // Up-and-down bouncing animation
     public static void animateButtonBounce(Node... buttons) {
         for (Node button : buttons) {
             TranslateTransition transition = new TranslateTransition(Duration.millis(500), button);
             transition.setByY(-5); // Movement
             transition.setCycleCount(Animation.INDEFINITE); // Repetition
             transition.setAutoReverse(true); // Bouncing effect
+            transition.play();
+        }
+    }
+
+    // Left-and-right shake animation
+    public static void animateTextShake(Node text) {
+        if (!animationCooldown) {
+            animationCooldown = true;
+
+            TranslateTransition transition = new TranslateTransition(Duration.millis(100), text);
+            transition.setByX(5); // Movement
+            transition.setCycleCount(4); // Repetition
+            transition.setAutoReverse(true); // Shake effect
+
+            // Set up a pause after the animation finishes to escape an animation collide
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
+            pause.setOnFinished(event -> animationCooldown = false);
+
+            // Play the animation and then the pause
+            transition.setOnFinished(event -> pause.play());
             transition.play();
         }
     }
