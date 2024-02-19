@@ -88,9 +88,17 @@ public class Graph {
         List<Edge> eVert1 = AdjacencyList.get(vert1);
         List<Edge> eVert2 = AdjacencyList.get(vert2);
 
-        if (eVert1 != null) eVert1.remove(vert2);
-        if (eVert2 != null) eVert2.remove(vert1);
+        // Iterate over edges of vert1 and remove the edge with vert2 as target
+        if (eVert1 != null) {
+            eVert1.removeIf(edge -> edge.getTarget().equals(Data2));
+        }
+
+        // Iterate over edges of vert2 and remove the edge with vert1 as target
+        if (eVert2 != null) {
+            eVert2.removeIf(edge -> edge.getTarget().equals(Data1));
+        }
     }
+
 
     /*
     Returns the adjacent Vertexies

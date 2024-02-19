@@ -22,8 +22,8 @@ public class GameBoard {
     private Background backgroundTop;
     private DiceUI diceUI;
     private List<Player> finishedPlayers;
-
     private List<Field> winningFields;
+    private List<Field> lastFields;
     private Pane rootLayout;
     private final AnchorPane INSTRUCTIONS_WINDOW = createInstructionsWindow();
     private Field waterfallField1;
@@ -55,6 +55,7 @@ public class GameBoard {
 
         boardGraph = new BoardGraph();
         winningFields = new ArrayList<>();
+        lastFields = new ArrayList<>();
         finishedPlayers = new ArrayList<>();
         diceUI = new DiceUI();
         rootLayout = new Pane();
@@ -530,6 +531,8 @@ public class GameBoard {
         fieldListUpperPath.add(field194);
         fieldListUpperPath.add(field195);
 
+        lastFields.add(field195);
+
         // Fields on shortest path
         List<Field> fieldListMiddlePath = new ArrayList<>();
 
@@ -691,7 +694,8 @@ public class GameBoard {
         fieldListLowerPath.add(field346);
         fieldListLowerPath.add(field347);
 
-        // Fields for winning area
+        lastFields.add(field347);
+
         Field win1 = new Field(Field.fieldType.NormalField, 82.4, 29.1);
         Field win2 = new Field(Field.fieldType.NormalField, 84.5, 31.3);
         Field win3 = new Field(Field.fieldType.NormalField, 85.1, 26.1);
@@ -699,8 +703,12 @@ public class GameBoard {
         Field win5 = new Field(Field.fieldType.NormalField, 88.4, 26.5);
         Field win6 = new Field(Field.fieldType.NormalField, 88.9, 31.1);
 
-        // TODO: add all winning fields to this list
         winningFields.add(win1);
+        winningFields.add(win2);
+        winningFields.add(win3);
+        winningFields.add(win4);
+        winningFields.add(win5);
+        winningFields.add(win6);
 
         for (int i = 0; i < fieldListUpperPath.size(); i++) {
             getBoardGraph().addVertex(fieldListUpperPath.get(i));
@@ -786,12 +794,8 @@ public class GameBoard {
         getBoardGraph().addOneDirectionalEdgeForward(field340, field328, 2600, BoardGraph.edgeType.LadderEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field346, field322, 1500, BoardGraph.edgeType.LadderEdge);
 
-        // Add normal edges from last fields to winning area
+
         getBoardGraph().addVertex(win1);
-
-        getBoardGraph().addOneDirectionalEdgeForward(field195, win1, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdgeForward(field347, win1, 500, BoardGraph.edgeType.NormalEdge);
-
         getBoardGraph().addVertex(win2);
         getBoardGraph().addVertex(win3);
         getBoardGraph().addVertex(win4);
@@ -799,25 +803,31 @@ public class GameBoard {
         getBoardGraph().addVertex(win6);
 
         getBoardGraph().addOneDirectionalEdgeForward(field195, win1, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdgeForward(field347, win1, 500, BoardGraph.edgeType.NormalEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field195, win2, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdgeForward(field347, win2, 500, BoardGraph.edgeType.NormalEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field195, win3, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdgeForward(field347, win3, 500, BoardGraph.edgeType.NormalEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field195, win4, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdgeForward(field347, win4, 500, BoardGraph.edgeType.NormalEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field195, win5, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdgeForward(field347, win5, 500, BoardGraph.edgeType.NormalEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field195, win6, 500, BoardGraph.edgeType.NormalEdge);
+
+       // Add normal edges from last fields to winning area
+
+        getBoardGraph().addOneDirectionalEdgeForward(field347, win1, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field347, win2, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field347, win3, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field347, win4, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field347, win5, 500, BoardGraph.edgeType.NormalEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field347, win6, 500, BoardGraph.edgeType.NormalEdge);
 
-        /*
-        // TODO Testing
+/*
         for (Player player : playerList) {
-            player.setCurrentField(field208);
+            player.setCurrentField(field148);
         }
 
-         */
+ */
+
+
+
+
 
     }
 
@@ -825,7 +835,7 @@ public class GameBoard {
     This method is meant to be called when a player lands at a crossover
     The arrows for the user to select a path are created and placed on screen
     Normal user input (UP / DOWN / SPACE) is locked during this event
-    After an arrow was clicked with the mouse they dissapear, and the method to further move the player along the chosen path is called
+    After an arrow was clicked with the mouse they disappear, and the method to further move the player along the chosen path is called
      */
     public void selectPathEvent(int hopsLeft, Player player, SequentialTransition sequentialTransition) {
 
@@ -882,7 +892,7 @@ public class GameBoard {
         idleArrowTwo.play();
 
 
-        if (sequentialTransition == null) { // this happpens when a player is already on a crossover field since there is no animation to get there left (getAnimationPathFromGraph returns null in that case)
+        if (sequentialTransition == null) { // this happens when a player is already on a crossover field since there is no animation to get there left (getAnimationPathFromGraph returns null in that case)
             player.playIdle();
             rootLayout.getChildren().addAll(pathOneArrow, pathTwoArrow); // after the player has graphically moved to the crossing field the arrows are added to the layout
         } else {
@@ -1032,6 +1042,16 @@ public class GameBoard {
     public boolean addFinishedPlayer(Player player) {
         Field lastField = boardGraph.hopCountTraversal(player.getCurrentField(), Integer.MAX_VALUE);
 
+            for (int i = 0; i < this.getWinningFields().size(); i++) {
+                if (player.getCurrentField().getX()  == getWinningFields().get(i).getX()
+                        && player.getCurrentField().getY() == getWinningFields().get(i).getY()) {
+                        boardGraph.removeEdge(lastFields.get(0), getWinningFields().get(i));
+                        boardGraph.removeEdge(lastFields.get(1), getWinningFields().get(i));
+                        getWinningFields().remove(i);
+
+                    }
+                }
+
         if (lastField != null && lastField.getType() != Field.fieldType.LadderField) {
             if (boardGraph.hopCountTraversal(player.getCurrentField(), Integer.MAX_VALUE) != null) {
                 // Player has reached or passed the last field
@@ -1043,7 +1063,7 @@ public class GameBoard {
     }
 
     /*
-    Special Methode that gets called by the Cklick on the Arrows at a crossing.
+    Special Methode that gets called by the Click on the Arrows at a crossing.
      */
     public void crossingManager(int fieldsToMove, Player player, BoardGraph.edgeType edgeType) {
         Field startField = player.getCurrentField(); // TODO remove once the animation at crossovers was fixed (teleporting to first field)
