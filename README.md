@@ -12,7 +12,10 @@ Additionally, Lisa Freund was unable to commit her code in the early stages of p
 TODO (as an add-on after the project has concluded):
 1. More animations to enhance the overall aesthetic of the game. (playFallWaterfall + end animations)
 2. Implement possibility to use ladders/snakes if negative fields are rolled with die
-3. Correct crossing with new branch
+3. Correct crossing with new branch (von Martin Schindler)
 4. Invert images when going left
-5. Spread out characters in bowl
+5. Spread out characters in bowl once finishing game
 6. Make it possible to play full-screen
+
+BUGS:
+1. Crossing fields don't work well when rolling negative numbers (Ist man beispielsweise bei field302, würfelt mit Diva eine -3, so wird man nur bis field301 zurückgesetzt & man kann nicht auf field208 gebracht werden.)
