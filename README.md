@@ -13,7 +13,7 @@ TODO (as an add-on after the project has concluded):
 1. More animations to enhance the overall aesthetic of the game. (playFallWaterfall + end animations; Mateo)
 2. Implement possibility to use ladders/snakes if negative fields are rolled with die (Aleyna)
 3. Correct crossing with new branch, movePlayer() (Martin)
-4. Spread out characters in bowl once finishing game (Lisa)
+4. Spread out characters in bowl once finishing game (Lisa) - fixed
 5. Make it possible to play full-screen (Marko)
 6. (Invert images when going left)
 
