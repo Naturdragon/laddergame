@@ -9,7 +9,7 @@ public class TheOs extends javafx.application.Application {
 
     /* scene width and height are used for scene size and field class
        (–> x and y parameters of field constructor are in percent, useful for resizing)
-        */
+        */ 
     public static final int SCENE_WIDTH = 1422;
     public static final int SCENE_HEIGHT = 800;
 

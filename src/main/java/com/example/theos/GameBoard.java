@@ -818,12 +818,14 @@ public class GameBoard {
         getBoardGraph().addOneDirectionalEdgeForward(field347, win5, 500, BoardGraph.edgeType.NormalEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field347, win6, 500, BoardGraph.edgeType.NormalEdge);
 
-/*
+
         for (Player player : playerList) {
-            player.setCurrentField(field148);
+            player.setCurrentField(field209);
         }
 
- */
+
+
+
 
 
 
@@ -852,6 +854,15 @@ public class GameBoard {
         pathTwoArrow.setFitWidth(55);
         pathTwoArrow.setPreserveRatio(true);
         pathTwoArrow.setOpacity(0.85);
+
+        String turns = String.valueOf(hopsLeft);
+        Text remainingTurns = new Text(turns);
+        remainingTurns.setFont(Font.font(TheOs.VARELA.getFamily(), 50));
+        remainingTurns.setFill(TheOs.BROWN);
+
+        remainingTurns.setTranslateX(player.getCurrentField().getX() - 10);
+        remainingTurns.setTranslateY(player.getCurrentField().getY() - 50);
+
 
         // Positioning the arrows
         if (player.getCurrentField() == crossoverField1) { // position the arrows at the first crossover
@@ -894,7 +905,7 @@ public class GameBoard {
 
         if (sequentialTransition == null) { // this happens when a player is already on a crossover field since there is no animation to get there left (getAnimationPathFromGraph returns null in that case)
             player.playIdle();
-            rootLayout.getChildren().addAll(pathOneArrow, pathTwoArrow); // after the player has graphically moved to the crossing field the arrows are added to the layout
+            rootLayout.getChildren().addAll(pathOneArrow, pathTwoArrow, remainingTurns); // after the player has graphically moved to the crossing field the arrows are added to the layout
         } else {
             // Plays the Sequential Transition given by the getAnimationPathMethode Methode
             sequentialTransition.setNode(player.getImageView());
@@ -903,7 +914,7 @@ public class GameBoard {
 
             sequentialTransition.setOnFinished(event -> {
                 player.playIdle();
-                rootLayout.getChildren().addAll(pathOneArrow, pathTwoArrow); // after the player has graphically moved to the crossing field the arrows are added to the layout
+                rootLayout.getChildren().addAll(pathOneArrow, pathTwoArrow, remainingTurns); // after the player has graphically moved to the crossing field the arrows are added to the layout
             });
         }
 
@@ -914,7 +925,7 @@ public class GameBoard {
             pathOneArrow.setScaleY(1.4);
         });
         pathOneArrow.setOnMouseReleased(event -> {
-            rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow);
+            rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow, remainingTurns);
             crossingManager(hopsLeft, player, BoardGraph.edgeType.CrossoverPathOne);
         });
 
@@ -924,7 +935,7 @@ public class GameBoard {
             pathTwoArrow.setScaleY(1.4);
         });
         pathTwoArrow.setOnMouseReleased(event -> {
-            rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow);
+            rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow, remainingTurns);
             crossingManager(hopsLeft, player, BoardGraph.edgeType.CrossoverPathTwo);
         });
     }
@@ -1039,6 +1050,10 @@ public class GameBoard {
         parallelTransition.setOnFinished(actionEvent -> rootLayout.getChildren().remove(text));
     }
 
+    /*
+    Method that checks, whether a player has finished the game and are then added to a list for the ranking
+    also removes the edge from the last field to a WinningField, if the winningField is already in use
+     */
     public boolean addFinishedPlayer(Player player) {
         Field lastField = boardGraph.hopCountTraversal(player.getCurrentField(), Integer.MAX_VALUE);
 
