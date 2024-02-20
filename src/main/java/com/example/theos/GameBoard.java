@@ -846,6 +846,7 @@ public class GameBoard {
         // Creating the arrows with the image and setting their size and opacity
         ImageView pathOneArrow = new ImageView("images/gameboard_screen/Game_Crossover_Arrow.PNG");
         ImageView pathTwoArrow = new ImageView("images/gameboard_screen/Game_Crossover_Arrow.PNG");
+        ImageView dieBG = new ImageView("images/gameboard_screen/Game_Die_BG.PNG");
 
         pathOneArrow.setFitWidth(55);
         pathOneArrow.setPreserveRatio(true);
@@ -855,14 +856,19 @@ public class GameBoard {
         pathTwoArrow.setPreserveRatio(true);
         pathTwoArrow.setOpacity(0.85);
 
+        dieBG.setFitWidth(50);
+        dieBG.setPreserveRatio(true);
+        dieBG.setOpacity(0.85);
+
         String turns = String.valueOf(hopsLeft);
         Text remainingTurns = new Text(turns);
-        remainingTurns.setFont(Font.font(TheOs.VARELA.getFamily(), 50));
+        remainingTurns.setFont(Font.font(TheOs.VARELA.getFamily(), 35));
         remainingTurns.setFill(TheOs.BROWN);
 
-        remainingTurns.setTranslateX(player.getCurrentField().getX() - 10);
-        remainingTurns.setTranslateY(player.getCurrentField().getY() - 50);
-
+        remainingTurns.setTranslateX(player.getCurrentField().getX() - 11);
+        remainingTurns.setTranslateY(player.getCurrentField().getY() - 63);
+        dieBG.setTranslateX(player.getCurrentField().getX() - 25);
+        dieBG.setTranslateY(player.getCurrentField().getY() - 100);
 
         // Positioning the arrows
         if (player.getCurrentField() == crossoverField1) { // position the arrows at the first crossover
@@ -896,16 +902,53 @@ public class GameBoard {
         idleArrowOne.setAutoReverse(true);
         idleArrowOne.play();
 
+        FadeTransition fadeArrowOne = new FadeTransition(Duration.millis(200), pathOneArrow);
+        fadeArrowOne.setFromValue(0);
+        fadeArrowOne.setToValue(1);
+
         TranslateTransition idleArrowTwo = new TranslateTransition(Duration.millis(600), pathTwoArrow);
         idleArrowTwo.setByY(-5);
         idleArrowTwo.setCycleCount(Animation.INDEFINITE);
         idleArrowTwo.setAutoReverse(true);
         idleArrowTwo.play();
 
+        FadeTransition fadeArrowTwo = new FadeTransition(Duration.millis(200), pathTwoArrow);
+        fadeArrowTwo.setFromValue(0);
+        fadeArrowTwo.setToValue(1);
+
+        TranslateTransition idleTurns = new TranslateTransition(Duration.millis(600), remainingTurns);
+        idleTurns.setByY(-5);
+        idleTurns.setCycleCount(Animation.INDEFINITE);
+        idleTurns.setAutoReverse(true);
+        idleTurns.play();
+
+        TranslateTransition idleBG = new TranslateTransition(Duration.millis(600), dieBG);
+        idleBG.setByY(-5);
+        idleBG.setCycleCount(Animation.INDEFINITE);
+        idleBG.setAutoReverse(true);
+        idleBG.play();
+
+        ScaleTransition scaleNumber = new ScaleTransition(Duration.millis(300), remainingTurns);
+        ScaleTransition scaleBG =  new ScaleTransition(Duration.millis(300), dieBG);
+        scaleNumber.setToX(1);
+        scaleNumber.setToY(1);
+        scaleBG.setToX(1);
+        scaleBG.setToY(1);
+        // second part of the animation is a fadetransition to 0 % opacity
+        FadeTransition fadeNumber = new FadeTransition(Duration.millis(200), remainingTurns);
+        FadeTransition fadeBG = new FadeTransition(Duration.millis(200), dieBG);
+        fadeNumber.setFromValue(0.0);
+        fadeNumber.setToValue(1.0);
+        fadeBG.setFromValue(0);
+        fadeBG.setToValue(0.85);
+        // the two transitions are played simultaneously
+        ParallelTransition parallel = new ParallelTransition(fadeArrowOne, fadeArrowTwo, scaleNumber, fadeNumber, scaleBG, fadeBG);
+        parallel.play();
+
 
         if (sequentialTransition == null) { // this happens when a player is already on a crossover field since there is no animation to get there left (getAnimationPathFromGraph returns null in that case)
             player.playIdle();
-            rootLayout.getChildren().addAll(pathOneArrow, pathTwoArrow, remainingTurns); // after the player has graphically moved to the crossing field the arrows are added to the layout
+            rootLayout.getChildren().addAll(pathOneArrow, pathTwoArrow, dieBG, remainingTurns); // after the player has graphically moved to the crossing field the arrows are added to the layout
         } else {
             // Plays the Sequential Transition given by the getAnimationPathMethode Methode
             sequentialTransition.setNode(player.getImageView());
@@ -914,7 +957,7 @@ public class GameBoard {
 
             sequentialTransition.setOnFinished(event -> {
                 player.playIdle();
-                rootLayout.getChildren().addAll(pathOneArrow, pathTwoArrow, remainingTurns); // after the player has graphically moved to the crossing field the arrows are added to the layout
+                rootLayout.getChildren().addAll(pathOneArrow, pathTwoArrow, dieBG, remainingTurns); // after the player has graphically moved to the crossing field the arrows are added to the layout
             });
         }
 
@@ -925,7 +968,7 @@ public class GameBoard {
             pathOneArrow.setScaleY(1.4);
         });
         pathOneArrow.setOnMouseReleased(event -> {
-            rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow, remainingTurns);
+            rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow, dieBG, remainingTurns);
             crossingManager(hopsLeft, player, BoardGraph.edgeType.CrossoverPathOne);
         });
 
@@ -935,7 +978,7 @@ public class GameBoard {
             pathTwoArrow.setScaleY(1.4);
         });
         pathTwoArrow.setOnMouseReleased(event -> {
-            rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow, remainingTurns);
+            rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow, dieBG, remainingTurns);
             crossingManager(hopsLeft, player, BoardGraph.edgeType.CrossoverPathTwo);
         });
     }
