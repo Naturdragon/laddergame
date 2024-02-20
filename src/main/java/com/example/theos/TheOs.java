@@ -41,7 +41,7 @@ public class TheOs extends javafx.application.Application {
         // Set application icon
         Image icon = new Image("/images/application_icon/Application_Icon.PNG");
         stage.getIcons().add(icon);
-        }
+    }
 
     public static void main(String[] args) {
         launch();

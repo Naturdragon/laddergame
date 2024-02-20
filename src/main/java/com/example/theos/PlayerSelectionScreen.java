@@ -45,7 +45,7 @@ public class PlayerSelectionScreen {
 
         AnchorPane controlsBox = createControlsBox();
         charactersGrid = createCharactersGrid();
-        AnchorPane optionButtons = OptionButtons.createOptionButtonsSet(null, true, true, false, true);
+        AnchorPane optionButtons = OptionButtons.createOptionButtonsSet(null, true, true, true, false, true);
         Pane mainLayout = new Pane(controlsBox, charactersGrid, optionButtons);
         String backgroundIMG = "images/player_select_screen/Player_Selection_Screen.PNG";
         mainLayout.setStyle("-fx-background-image: url('" + backgroundIMG + "'); -fx-background-size: cover;");

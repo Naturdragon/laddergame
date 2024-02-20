@@ -156,7 +156,7 @@ public class GameBoard {
         backgroundTopRegion.setPrefSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
         rootLayout.getChildren().add(backgroundTopRegion);
 
-        AnchorPane optionButtons = OptionButtons.createOptionButtonsSet(this, true, true, true, true);
+        AnchorPane optionButtons = OptionButtons.createOptionButtonsSet(this, true, true, true, true, true);
         rootLayout.getChildren().add(optionButtons);
 
         this.playGameStartAnimation(); // plays the spawn in animation of the characters

@@ -30,7 +30,7 @@ public class WinningScreen { // Displays winning screen with leaderboard & optio
         // Create main layout & set background
         AnchorPane leftSide = createLeftSide(winner);
         GridPane leaderboardGrid = createLeaderboard(players);
-        AnchorPane optionButtons = OptionButtons.createOptionButtonsSet(null, true, true, false, true);
+        AnchorPane optionButtons = OptionButtons.createOptionButtonsSet(null, true, true, true, false, true);
         Pane mainLayout = new Pane(leftSide, leaderboardGrid, optionButtons);
         String backgroundIMG = "images/winning_screen/Winning_Screen.PNG";
         mainLayout.setStyle("-fx-background-image: url('" + backgroundIMG + "'); -fx-background-size: cover;");
