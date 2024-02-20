@@ -961,23 +961,28 @@ public class GameBoard {
             });
         }
 
+
         // on mouse press the target arrow gets highlighted and on release both are removed form the layout and the rest of the move is done via crossingManager()
         pathOneArrow.setOnMousePressed(event -> {
-            pathOneArrow.setOpacity(1);
-            pathOneArrow.setScaleX(1.4);
-            pathOneArrow.setScaleY(1.4);
+            pathOneArrow.setOpacity(0.5);
+            //pathOneArrow.setScaleX(1.4);
+            //pathOneArrow.setScaleY(1.4);
+
+
         });
         pathOneArrow.setOnMouseReleased(event -> {
+            pathOneArrow.setOpacity(1);
             rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow, dieBG, remainingTurns);
             crossingManager(hopsLeft, player, BoardGraph.edgeType.CrossoverPathOne);
         });
 
         pathTwoArrow.setOnMousePressed(event -> {
-            pathTwoArrow.setOpacity(1);
-            pathTwoArrow.setScaleX(1.4);
-            pathTwoArrow.setScaleY(1.4);
+            pathTwoArrow.setOpacity(0.5);
+            //pathTwoArrow.setScaleX(1.4);
+            //pathTwoArrow.setScaleY(1.4);
         });
         pathTwoArrow.setOnMouseReleased(event -> {
+            pathTwoArrow.setOpacity(1);
             rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow, dieBG, remainingTurns);
             crossingManager(hopsLeft, player, BoardGraph.edgeType.CrossoverPathTwo);
         });
