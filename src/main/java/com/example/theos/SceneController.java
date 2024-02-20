@@ -1,7 +1,10 @@
 package com.example.theos;
 
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.util.List;
@@ -10,18 +13,17 @@ import static com.example.theos.PlayerSelectionScreen.MOUSE_DISPLAY;
 
 public class SceneController {
     static Stage stage;
+    static boolean fullscreenOn = false; // Add a static variable to track fullscreen state
 
     public static void showTitleScreen() {
         Scene scene = TitleScreen.createTitleScreen();
-        stage.setScene(scene);
-        stage.show();
+        toggleCurrentScreenSizeState(scene);
         manageMusicButtonAction(scene);
     }
 
     public static void showPlayerSelectScreen() {
         Scene scene = PlayerSelectionScreen.createPlayerSelectionScreen();
-        stage.setScene(scene);
-        stage.show();
+        toggleCurrentScreenSizeState(scene);
         manageMusicButtonAction(scene);
         manageMouseAction(scene);
     }
@@ -32,17 +34,27 @@ public class SceneController {
         GameBoard gameBoard = new GameBoard(playerList);
 
         Scene scene = gameBoard.createGameBoardScreen();
-        stage.setScene(scene);
-        stage.show();
+        toggleCurrentScreenSizeState(scene);
         manageGameBoardAction(scene, gameBoard);
     }
 
     public static void showWinningScreen(List<Player> finishedPlayers) {
         Scene scene = WinningScreen.createWinningScreen(finishedPlayers);
-        stage.setScene(scene);
-        stage.show();
+        toggleCurrentScreenSizeState(scene);
         OptionButtons.instructionsOn = true;
         manageMusicButtonAction(scene);
+    }
+
+    public static void toggleCurrentScreenSizeState(Scene scene) {
+        stage.setScene(scene);
+        Stage stage = SceneController.stage;
+        stage.setFullScreen(fullscreenOn);
+        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+        stage.show();
+    }
+
+    public static void swapScenes(Parent newContent){
+        stage.getScene().setRoot(newContent);
     }
 
     public static void manageGameBoardAction(Scene scene, GameBoard gameBoard) { // Manage keys for game board

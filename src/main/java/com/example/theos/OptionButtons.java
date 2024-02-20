@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -18,7 +19,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import static com.example.theos.SceneController.fullscreenOn;
 
 // The following code has been partially adapted from ChatGPT
 public class OptionButtons { // Creates option buttons, toggles states & manages button animation
@@ -33,13 +38,14 @@ public class OptionButtons { // Creates option buttons, toggles states & manages
     }
 
     // Create entire option buttons set
-    public static AnchorPane createOptionButtonsSet(GameBoard gameBoard, boolean includeCloseAppButton, boolean includeReturnToTitleButton, boolean includeInstructionsButton, boolean includeMusicButton) {
+    public static AnchorPane createOptionButtonsSet(GameBoard gameBoard, boolean includeCloseAppButton, boolean includeScreenSizeButton, boolean includeReturnToTitleButton, boolean includeInstructionsButton, boolean includeMusicButton) {
         AnchorPane optionButtons = new AnchorPane();
         optionButtons.setTranslateX(20);
         optionButtons.setTranslateY(18);
 
         // Create buttons according to boolean
         HBox closeAppButton = includeCloseAppButton ? createCloseAppButton() : null;
+        HBox screenSizeButton = includeScreenSizeButton ? createScreenSizeButton() : null;
         HBox returnToTitleButton = includeReturnToTitleButton ? createReturnToTitleButton() : null;
         HBox instructionsButton = includeInstructionsButton ? createInstructionsButton(gameBoard) : null;
         HBox musicButton = includeMusicButton ? createMusicButton() : null;
@@ -48,8 +54,12 @@ public class OptionButtons { // Creates option buttons, toggles states & manages
         if (includeCloseAppButton) {
             optionButtons.getChildren().add(closeAppButton);
         }
+        if (includeScreenSizeButton) {
+            AnchorPane.setLeftAnchor(screenSizeButton, 60.0);
+            optionButtons.getChildren().add(screenSizeButton);
+        }
         if (includeReturnToTitleButton) {
-            AnchorPane.setLeftAnchor(returnToTitleButton, 60.0);
+            AnchorPane.setLeftAnchor(returnToTitleButton, 120.0);
             optionButtons.getChildren().add(returnToTitleButton);
         }
         if (includeInstructionsButton) {
@@ -87,6 +97,45 @@ public class OptionButtons { // Creates option buttons, toggles states & manages
         closeAppButtonBox.setOnMouseReleased(event -> Platform.exit());
 
         return closeAppButtonBox;
+    }
+
+    private static HBox createScreenSizeButton() {
+        ImageView screenSizeIMG = new ImageView(new Image("images/option_button_extras/Button_Instructions.PNG"));
+        screenSizeIMG.setFitHeight(50);
+        screenSizeIMG.setPreserveRatio(true);
+
+        // Create invisible hitbox
+        Rectangle hitbox = new Rectangle(50, 50);
+        hitbox.setFill(Color.TRANSPARENT);
+
+        // StackPane overlays image/hitbox & creates HBox
+        StackPane screenSizeButtonPane = new StackPane(screenSizeIMG, hitbox);
+        HBox screenSizeButtonBox = new HBox(screenSizeButtonPane);
+
+        // Opacity & translation effects
+        screenSizeButtonBox.setOnMousePressed(event -> {
+            screenSizeButtonPane.setOpacity(0.5);
+            screenSizeButtonPane.setTranslateY(screenSizeButtonPane.getTranslateY() + 3);
+        });
+
+        screenSizeButtonBox.setOnMouseReleased(event -> {
+            // Opacity & translation effects
+            screenSizeButtonPane.setOpacity(1.0);
+            screenSizeButtonPane.setTranslateY(screenSizeButtonPane.getTranslateY() - 3);
+            changeScreenSize();
+        });
+
+        return screenSizeButtonBox;
+    }
+
+    public static void changeScreenSize() {
+        Stage stage = SceneController.stage;
+        if (fullscreenOn) {
+            stage.setFullScreen(false);
+        } else {
+            stage.setFullScreen(true);
+        }
+        fullscreenOn = !fullscreenOn; // Changes value
     }
 
     private static HBox createReturnToTitleButton() {

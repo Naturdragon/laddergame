@@ -17,7 +17,7 @@ public class TitleScreen { // Displays title screen
 
     public static Scene createTitleScreen() { // Create scene for title screen
         AnchorPane startButton = createStartButton();
-        AnchorPane optionButtons = OptionButtons.createOptionButtonsSet(null, true, false, false, true);
+        AnchorPane optionButtons = OptionButtons.createOptionButtonsSet(null, true, true, false, false, true);
         Pane mainLayout = new Pane(startButton, optionButtons);
         String backgroundIMG = "images/title_screen/Title_BG.PNG";
         mainLayout.setStyle("-fx-background-image: url('" + backgroundIMG + "'); -fx-background-size: cover;");
