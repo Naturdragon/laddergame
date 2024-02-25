@@ -2,7 +2,6 @@ package com.example.theos;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,27 +14,29 @@ import java.util.List;
 
 // The following code has been partially adapted from ChatGPT
 public class WinningScreen { // Displays winning screen with leaderboard & options to return to title screen
+    private static final Image BACKGROUND_IMG = new Image("images/winning_screen/Winning_Screen.PNG");
     private static final Text DESCRIPTION_TEXT = new Text("Return to Main Menu"); // Text shown on screen above SPACE button
     private static final Text SPACE_TEXT = new Text("SPACE"); // SPACE text on button
     private static final ImageView SPACE_BUTTON = new ImageView(new Image("images/option_button_extras/Button_Space_Big.PNG")); // Button image
     private static final Button RETURN_BUTTON = new Button("Return to Main Menu"); // Button to return to title screen
 
-    public static Scene createWinningScreen(List<Player> finishedPlayers) { // Create winning screen
-
+    public static Pane createWinningScreen(List<Player> finishedPlayers) { // Create winning screen
         // Extract winner & initialize game
         Player winner = finishedPlayers.get(0);
         Player[] playersArray = finishedPlayers.toArray(new Player[0]);
         List<Player> players = Arrays.asList(playersArray);
 
         // Create main layout & set background
+        Pane mainLayout = new Pane();
+        SceneController.createBackgroundRegion(BACKGROUND_IMG, mainLayout);
         AnchorPane leftSide = createLeftSide(winner);
         GridPane leaderboardGrid = createLeaderboard(players);
         AnchorPane optionButtons = OptionButtons.createOptionButtonsSet(null, true, true, true, false, true);
-        Pane mainLayout = new Pane(leftSide, leaderboardGrid, optionButtons);
-        String backgroundIMG = "images/winning_screen/Winning_Screen.PNG";
-        mainLayout.setStyle("-fx-background-image: url('" + backgroundIMG + "'); -fx-background-size: cover;");
+        mainLayout.getChildren().add(leftSide);
+        mainLayout.getChildren().add(leaderboardGrid);
+        mainLayout.getChildren().add(optionButtons);
 
-        return new Scene(mainLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
+        return mainLayout;
     }
 
     private static AnchorPane createLeftSide(Player winner) { // Create left side with winning character image & return button

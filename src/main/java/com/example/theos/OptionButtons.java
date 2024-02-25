@@ -11,7 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -19,18 +18,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
 import javafx.util.Duration;
-
-import static com.example.theos.SceneController.fullscreenOn;
 
 // The following code has been partially adapted from ChatGPT
 public class OptionButtons { // Creates option buttons, toggles states & manages button animation
+    static boolean fullscreenOn = false;
+    static boolean fullscreenCooldown = false;
     static boolean instructionsOn = true;
     private static boolean musicOn = true;
-    static boolean musicTogglePressed = false;
+    static boolean musicCooldown = false;
     private static boolean animationCooldown = false;
+    public static StackPane fullscreenButtonPane;
     private static StackPane musicButtonPane;
     private final GameBoard gameBoard; // Add reference to GameBoard for createCloseInstructionsButton()
     public OptionButtons(GameBoard gameBoard) {
@@ -38,14 +36,14 @@ public class OptionButtons { // Creates option buttons, toggles states & manages
     }
 
     // Create entire option buttons set
-    public static AnchorPane createOptionButtonsSet(GameBoard gameBoard, boolean includeCloseAppButton, boolean includeScreenSizeButton, boolean includeReturnToTitleButton, boolean includeInstructionsButton, boolean includeMusicButton) {
+    public static AnchorPane createOptionButtonsSet(GameBoard gameBoard, boolean includeCloseAppButton, boolean includeFullscreenButton, boolean includeReturnToTitleButton, boolean includeInstructionsButton, boolean includeMusicButton) {
         AnchorPane optionButtons = new AnchorPane();
         optionButtons.setTranslateX(20);
         optionButtons.setTranslateY(18);
 
         // Create buttons according to boolean
         HBox closeAppButton = includeCloseAppButton ? createCloseAppButton() : null;
-        HBox screenSizeButton = includeScreenSizeButton ? createScreenSizeButton() : null;
+        HBox fullscreenButton = includeFullscreenButton ? createFullscreenButton() : null;
         HBox returnToTitleButton = includeReturnToTitleButton ? createReturnToTitleButton() : null;
         HBox instructionsButton = includeInstructionsButton ? createInstructionsButton(gameBoard) : null;
         HBox musicButton = includeMusicButton ? createMusicButton() : null;
@@ -54,9 +52,9 @@ public class OptionButtons { // Creates option buttons, toggles states & manages
         if (includeCloseAppButton) {
             optionButtons.getChildren().add(closeAppButton);
         }
-        if (includeScreenSizeButton) {
-            AnchorPane.setLeftAnchor(screenSizeButton, 60.0);
-            optionButtons.getChildren().add(screenSizeButton);
+        if (includeFullscreenButton) {
+            AnchorPane.setLeftAnchor(fullscreenButton, 60.0);
+            optionButtons.getChildren().add(fullscreenButton);
         }
         if (includeReturnToTitleButton) {
             AnchorPane.setLeftAnchor(returnToTitleButton, 120.0);
@@ -99,43 +97,57 @@ public class OptionButtons { // Creates option buttons, toggles states & manages
         return closeAppButtonBox;
     }
 
-    private static HBox createScreenSizeButton() {
-        ImageView screenSizeIMG = new ImageView(new Image("images/option_button_extras/Button_Instructions.PNG"));
-        screenSizeIMG.setFitHeight(50);
-        screenSizeIMG.setPreserveRatio(true);
+    private static HBox createFullscreenButton() {
+        ImageView fullscreenIMG = new ImageView(new Image("images/option_button_extras/Button_Fullscreen.PNG"));
+        fullscreenIMG.setFitHeight(50);
+        fullscreenIMG.setPreserveRatio(true);
 
         // Create invisible hitbox
         Rectangle hitbox = new Rectangle(50, 50);
         hitbox.setFill(Color.TRANSPARENT);
 
         // StackPane overlays image/hitbox & creates HBox
-        StackPane screenSizeButtonPane = new StackPane(screenSizeIMG, hitbox);
-        HBox screenSizeButtonBox = new HBox(screenSizeButtonPane);
+        fullscreenButtonPane = new StackPane(fullscreenIMG, hitbox);
+        HBox fullscreenButtonBox = new HBox(fullscreenButtonPane);
+
+        // Set right state when loaded in (fullscreen on/off)
+        if (fullscreenOn) {
+            fullscreenButtonPane.setOpacity(0.5);
+        } else {
+            fullscreenButtonPane.setOpacity(1.0);
+        }
 
         // Opacity & translation effects
-        screenSizeButtonBox.setOnMousePressed(event -> {
-            screenSizeButtonPane.setOpacity(0.5);
-            screenSizeButtonPane.setTranslateY(screenSizeButtonPane.getTranslateY() + 3);
-        });
+        fullscreenButtonBox.setOnMousePressed(event -> toggleFullscreenPressed());
+        fullscreenButtonBox.setOnMouseReleased(event -> toggleFullscreenReleased());
 
-        screenSizeButtonBox.setOnMouseReleased(event -> {
-            // Opacity & translation effects
-            screenSizeButtonPane.setOpacity(1.0);
-            screenSizeButtonPane.setTranslateY(screenSizeButtonPane.getTranslateY() - 3);
-            changeScreenSize();
-        });
-
-        return screenSizeButtonBox;
+        return fullscreenButtonBox;
     }
 
-    public static void changeScreenSize() {
-        Stage stage = SceneController.stage;
+    // Helper method to toggle fullscreen when pressed
+    public static void toggleFullscreenPressed() {
         if (fullscreenOn) {
-            stage.setFullScreen(false);
+            fullscreenButtonPane.setOpacity(0.25);
         } else {
-            stage.setFullScreen(true);
+            fullscreenButtonPane.setOpacity(0.5);
         }
-        fullscreenOn = !fullscreenOn; // Changes value
+        fullscreenButtonPane.setTranslateY(fullscreenButtonPane.getTranslateY() + 3);
+        fullscreenCooldown = true;
+    }
+
+    // Helper method to toggle fullscreen when pressed
+    public static void toggleFullscreenReleased() {
+        fullscreenButtonPane.setTranslateY(fullscreenButtonPane.getTranslateY() - 3);
+        if (fullscreenOn) {
+            fullscreenButtonPane.setOpacity(1.0);
+            TheOs.mainStage.setFullScreen(false);
+            fullscreenOn = false;
+        } else {
+            fullscreenButtonPane.setOpacity(0.5);
+            TheOs.mainStage.setFullScreen(true);
+            fullscreenOn = true;
+        }
+        fullscreenCooldown = false;
     }
 
     private static HBox createReturnToTitleButton() {
@@ -251,7 +263,7 @@ public class OptionButtons { // Creates option buttons, toggles states & manages
             musicButtonPane.setOpacity(0.5);
         }
 
-        // Change positioning once pressed / released
+        // Opacity & translation effects
         musicButtonBox.setOnMousePressed(event -> toggleMusicStatePressed());
         musicButtonBox.setOnMouseReleased(event -> toggleMusicStateReleased());
 
@@ -266,7 +278,7 @@ public class OptionButtons { // Creates option buttons, toggles states & manages
             musicButtonPane.setOpacity(0.25);
         }
         musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() + 3);
-        musicTogglePressed = true;
+        musicCooldown = true;
     }
 
     // Helper method to toggle music state when released
@@ -281,7 +293,7 @@ public class OptionButtons { // Creates option buttons, toggles states & manages
             SoundGame.setVolume(0.1);
         }
         musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() - 3);
-        musicTogglePressed = false;
+        musicCooldown = false;
     }
 
     // Generic space button format

@@ -1,31 +1,25 @@
 package com.example.theos;
 
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCombination;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
+import javafx.scene.layout.*;
 
 import java.util.List;
 
 import static com.example.theos.PlayerSelectionScreen.MOUSE_DISPLAY;
 
 public class SceneController {
-    static Stage stage;
-    static boolean fullscreenOn = false; // Add a static variable to track fullscreen state
 
     public static void showTitleScreen() {
-        Scene scene = TitleScreen.createTitleScreen();
-        toggleCurrentScreenSizeState(scene);
-        manageMusicButtonAction(scene);
+        Pane pane = TitleScreen.createTitleScreen();
+        TheOs.mainStage.getScene().setRoot(pane);
     }
 
     public static void showPlayerSelectScreen() {
-        Scene scene = PlayerSelectionScreen.createPlayerSelectionScreen();
-        toggleCurrentScreenSizeState(scene);
-        manageMusicButtonAction(scene);
-        manageMouseAction(scene);
+        Pane pane = PlayerSelectionScreen.createPlayerSelectionScreen();
+        TheOs.mainStage.getScene().setRoot(pane);
+        manageMouseAction(TheOs.mainStage.getScene());
     }
 
     // Shows game board screen (is instance which holds all data of game: number of players, finished players, etc.)
@@ -33,28 +27,28 @@ public class SceneController {
         TheOs.waitingForUserInput = false; // User input is unlocked after spawn-in animation is played (happens inside createGameBoardScreen, line 32)
         GameBoard gameBoard = new GameBoard(playerList);
 
-        Scene scene = gameBoard.createGameBoardScreen();
-        toggleCurrentScreenSizeState(scene);
-        manageGameBoardAction(scene, gameBoard);
+        Pane pane = gameBoard.createGameBoardScreen();
+        TheOs.mainStage.getScene().setRoot(pane);
+        manageGameBoardAction(TheOs.mainStage.getScene(), gameBoard);
     }
 
     public static void showWinningScreen(List<Player> finishedPlayers) {
-        Scene scene = WinningScreen.createWinningScreen(finishedPlayers);
-        toggleCurrentScreenSizeState(scene);
+        Pane pane = WinningScreen.createWinningScreen(finishedPlayers);
+        TheOs.mainStage.getScene().setRoot(pane);
         OptionButtons.instructionsOn = true;
-        manageMusicButtonAction(scene);
     }
 
-    public static void toggleCurrentScreenSizeState(Scene scene) {
-        stage.setScene(scene);
-        Stage stage = SceneController.stage;
-        stage.setFullScreen(fullscreenOn);
-        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-        stage.show();
-    }
+    public static void createBackgroundRegion(Image image, Pane mainLayout) {
+        BackgroundImage backgroundImg = new BackgroundImage(
+                image,
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+                new BackgroundSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT, false, false, false, false));
+        Region backgroundRegion = new Region();
+        backgroundRegion.setBackground(new Background(backgroundImg));
+        backgroundRegion.setPrefSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
+        mainLayout.getChildren().add(backgroundRegion);
 
-    public static void swapScenes(Parent newContent){
-        stage.getScene().setRoot(newContent);
+        mainLayout.setClip(new javafx.scene.shape.Rectangle(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT)); // Limits scene size to 1422x800 in all window sizes
     }
 
     public static void manageGameBoardAction(Scene scene, GameBoard gameBoard) { // Manage keys for game board
@@ -74,7 +68,11 @@ public class SceneController {
                     OptionButtons.instructionsOn = false;
                 }
             }
-            if (event.getCode() == KeyCode.M && !OptionButtons.musicTogglePressed) {
+            if (event.getCode() == KeyCode.F && !OptionButtons.fullscreenCooldown) {
+                event.consume();
+                OptionButtons.toggleFullscreenPressed();
+            }
+            if (event.getCode() == KeyCode.M && !OptionButtons.musicCooldown) {
                 event.consume();
                 OptionButtons.toggleMusicStatePressed();
             }
@@ -82,24 +80,48 @@ public class SceneController {
                 showWinningScreen(gameBoard.getPlayerList());
                 OptionButtons.instructionsOn = true;
             }
+            TheOs.mainStage.fullScreenProperty().addListener((obs, oldValue, newValue) -> {
+                if (!newValue) { // If fullscreen is exited
+                    OptionButtons.fullscreenButtonPane.setOpacity(1.0);
+                    OptionButtons.fullscreenOn = false;
+                }
+            });
         });
         scene.setOnKeyReleased(event -> {
-            if (event.getCode() == KeyCode.M) {
+            if (event.getCode() == KeyCode.F && OptionButtons.fullscreenCooldown) {
+                event.consume();
+                OptionButtons.toggleFullscreenReleased();
+            }
+            if (event.getCode() == KeyCode.M && OptionButtons.musicCooldown) {
                 event.consume();
                 OptionButtons.toggleMusicStateReleased();
             }
         });
     }
 
-    public static void manageMusicButtonAction(Scene scene) { // Manage M key for music
+    public static void manageStateButtonAction(Scene scene) { // Manage keys for screen size & music
         scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.M && !OptionButtons.musicTogglePressed) {
+            if (event.getCode() == KeyCode.F && !OptionButtons.fullscreenCooldown) {
+                event.consume();
+                OptionButtons.toggleFullscreenPressed();
+            }
+            if (event.getCode() == KeyCode.M && !OptionButtons.musicCooldown) {
                 event.consume();
                 OptionButtons.toggleMusicStatePressed();
             }
+            TheOs.mainStage.fullScreenProperty().addListener((obs, oldValue, newValue) -> {
+                if (!newValue) { // If fullscreen is exited
+                    OptionButtons.fullscreenButtonPane.setOpacity(1.0);
+                    OptionButtons.fullscreenOn = false;
+                }
+            });
         });
         scene.setOnKeyReleased(event -> {
-            if (event.getCode() == KeyCode.M) {
+            if (event.getCode() == KeyCode.F && OptionButtons.fullscreenCooldown) {
+                event.consume();
+                OptionButtons.toggleFullscreenReleased();
+            }
+            if (event.getCode() == KeyCode.M && OptionButtons.musicCooldown) {
                 event.consume();
                 OptionButtons.toggleMusicStateReleased();
             }

@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -22,6 +21,7 @@ import java.util.Objects;
 
 // The following code has been partially adapted from ChatGPT
 public class PlayerSelectionScreen {
+    private static final Image BACKGROUND_IMG = new Image("images/player_select_screen/Player_Selection_Screen.PNG");
 
     /*constants for screen width, number of columns, character image size,
     padding values, minimum players and offsets  */
@@ -40,17 +40,19 @@ public class PlayerSelectionScreen {
 
     /*creates and returns PlayerSelectionScreen including
     character selection grid, instructions and buttons */
-    public static Scene createPlayerSelectionScreen() {
+    public static Pane createPlayerSelectionScreen() {
         playerCounter = 1;
 
+        Pane mainLayout = new Pane();
+        SceneController.createBackgroundRegion(BACKGROUND_IMG, mainLayout);
         AnchorPane controlsBox = createControlsBox();
         charactersGrid = createCharactersGrid();
         AnchorPane optionButtons = OptionButtons.createOptionButtonsSet(null, true, true, true, false, true);
-        Pane mainLayout = new Pane(controlsBox, charactersGrid, optionButtons);
-        String backgroundIMG = "images/player_select_screen/Player_Selection_Screen.PNG";
-        mainLayout.setStyle("-fx-background-image: url('" + backgroundIMG + "'); -fx-background-size: cover;");
+        mainLayout.getChildren().add(controlsBox);
+        mainLayout.getChildren().add(charactersGrid);
+        mainLayout.getChildren().add(optionButtons);
 
-        return new Scene(mainLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
+        return mainLayout;
     }
 
     //creates VBox and includes instruction text and images for controls

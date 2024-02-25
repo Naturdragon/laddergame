@@ -1,5 +1,6 @@
 package com.example.theos;
 
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -10,8 +11,11 @@ public class TheOs extends javafx.application.Application {
     /* scene width and height are used for scene size and field class
        (–> x and y parameters of field constructor are in percent, useful for resizing)
         */ 
-    public static final int SCENE_WIDTH = 1422;
-    public static final int SCENE_HEIGHT = 800;
+    public static final double SCENE_WIDTH = 1422;
+    public static final double SCENE_HEIGHT = 800;
+
+    public static Stage mainStage;
+    public static boolean waitingForUserInput;
 
     // Fonts for text
     public static final Font CAVEAT = Font.loadFont(PlayerSelectionScreen.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), 25);
@@ -25,14 +29,17 @@ public class TheOs extends javafx.application.Application {
     public static final Color MINTO_GREEN = Color.rgb(63, 139, 88);
     public static final Color BROOKE_BLUE = Color.rgb(106, 162, 194);
     public static final Color OFITZ_PURPLE = Color.rgb(58, 75, 156);
-    public static boolean waitingForUserInput;
 
     @Override
     public void start(Stage stage){
-        SceneController.stage = stage;
+        mainStage = stage;
+        Scene scene = new Scene(TitleScreen.createTitleScreen(), SCENE_WIDTH, SCENE_HEIGHT);
+        scene.setFill(Color.BLACK);
+        mainStage.setScene(scene);
         stage.setTitle("The O’s");
-        stage.setResizable(false); // For now: not resizable
-        SceneController.showTitleScreen();
+        mainStage.setResizable(false); // For now non-resizable
+        SceneController.manageStateButtonAction(TheOs.mainStage.getScene());
+        mainStage.show();
 
         SoundGame soundGame = new SoundGame("/sound/sound.wav"); // Play theme song
         SoundGame.setVolume(0.1);

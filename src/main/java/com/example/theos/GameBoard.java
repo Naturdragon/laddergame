@@ -3,7 +3,6 @@ package com.example.theos;
 import com.example.theos.BordGameGraph.BoardGraph;
 import javafx.animation.*;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -16,15 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameBoard {
+    private static final Image BACKGROUND_IMG = new Image("images/gameboard_screen/Game_BG.PNG");
     private BoardGraph boardGraph;
     private List<Player> playerList;
-    private Background background;
     private Background backgroundTop;
     private DiceUI diceUI;
     private List<Player> finishedPlayers;
     private List<Field> winningFields;
     private List<Field> lastFields;
-    private Pane rootLayout;
+    private Pane mainLayout;
     private final AnchorPane INSTRUCTIONS_WINDOW = createInstructionsWindow();
     private Field waterfallField1;
     private Field waterfallField2;
@@ -43,7 +42,7 @@ public class GameBoard {
         winningFields = new ArrayList<>();
         finishedPlayers = new ArrayList<>();
         diceUI = new DiceUI();
-        rootLayout = new Pane();
+        mainLayout = new Pane();
     }
 
     /*
@@ -58,7 +57,7 @@ public class GameBoard {
         lastFields = new ArrayList<>();
         finishedPlayers = new ArrayList<>();
         diceUI = new DiceUI();
-        rootLayout = new Pane();
+        mainLayout = new Pane();
 
         fillGraphData();
     }
@@ -77,10 +76,6 @@ public class GameBoard {
 
     public List<Player> getPlayerList() {
         return playerList;
-    }
-
-    public Background getBackground() {
-        return background;
     }
 
     public List<Player> getFinishedPlayers() {
@@ -119,46 +114,36 @@ public class GameBoard {
     All characters are placed on screen and playGameStartAnimation() is called, afterwards userinput is unlocked
     Returns a scene object, which can be used for the stage object in TheOs start() method
      */
-    public Scene createGameBoardScreen() {
-
-        // Creating and setting the game background (image of the board), backgroundTop is later added to the layout (it's only the waterfall)
-        BackgroundImage backgroundImg = new BackgroundImage(
-                new Image("images/gameboard_screen/Game_BG.PNG"),
-                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-                new BackgroundSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT, false, false, true, true));
-
-        background = new Background(backgroundImg);
-
-        BackgroundImage backgroundImgTop = new BackgroundImage(
-                new Image("images/gameboard_screen/Game_BG_Top.PNG"),
-                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-                new BackgroundSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT, false, false, true, true));
-
-        backgroundTop = new Background(backgroundImgTop);
-
-        rootLayout.setBackground(background);
+    public Pane createGameBoardScreen() {
+        SceneController.createBackgroundRegion(BACKGROUND_IMG, mainLayout);
 
         // Placing the diceUI on the screen
         diceUI.updateNextPlayer(playerList);
         diceUI.setTranslateX(40);
         diceUI.setTranslateY(800 - 215);
-        rootLayout.getChildren().add(diceUI);
+        mainLayout.getChildren().add(diceUI);
 
         // the ImageViews of all players in playerList are placed on screen at the coordinates of their spawn field
         for (Player player : playerList) {
-            rootLayout.getChildren().add(player.getImageView());
+            mainLayout.getChildren().add(player.getImageView());
             player.getImageView().setX(player.getCurrentField().getX() - 27);
             player.getImageView().setY(player.getCurrentField().getY() - 27 - 15);
         }
 
-        // Placing the top background (water fall section)
+        // Placing the top background (waterfall section)
+        BackgroundImage backgroundImgTop = new BackgroundImage(
+                new Image("images/gameboard_screen/Game_BG_Top.PNG"),
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+                new BackgroundSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT, false, false, false, false));
+        backgroundTop = new Background(backgroundImgTop);
+
         Region backgroundTopRegion = new Region();
         backgroundTopRegion.setBackground(backgroundTop);
         backgroundTopRegion.setPrefSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
-        rootLayout.getChildren().add(backgroundTopRegion);
+        mainLayout.getChildren().add(backgroundTopRegion);
 
         AnchorPane optionButtons = OptionButtons.createOptionButtonsSet(this, true, true, true, true, true);
-        rootLayout.getChildren().add(optionButtons);
+        mainLayout.getChildren().add(optionButtons);
 
         this.playGameStartAnimation(); // plays the spawn in animation of the characters
 
@@ -166,7 +151,7 @@ public class GameBoard {
 
         //selectPathEvent(crossoverField2, 0); // TODO delete later, only for simulating a crossover
 
-        return new Scene(rootLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
+        return mainLayout;
     }
 
     /*
@@ -263,8 +248,8 @@ public class GameBoard {
     Returns nothing
      */
     public void showInstructions() {
-        if (!rootLayout.getChildren().contains(INSTRUCTIONS_WINDOW)) {
-            rootLayout.getChildren().add(INSTRUCTIONS_WINDOW);
+        if (!mainLayout.getChildren().contains(INSTRUCTIONS_WINDOW)) {
+            mainLayout.getChildren().add(INSTRUCTIONS_WINDOW);
 
             ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(350), INSTRUCTIONS_WINDOW);
             scaleTransition.setFromX(0);
@@ -305,7 +290,7 @@ public class GameBoard {
 
         ParallelTransition closeAnimation = new ParallelTransition(scaleTransition, fadeTransition);
         closeAnimation.play();
-        closeAnimation.setOnFinished(actionEvent -> rootLayout.getChildren().remove(INSTRUCTIONS_WINDOW));
+        closeAnimation.setOnFinished(actionEvent -> mainLayout.getChildren().remove(INSTRUCTIONS_WINDOW));
     }
 
     /*
@@ -818,19 +803,11 @@ public class GameBoard {
         getBoardGraph().addOneDirectionalEdgeForward(field347, win5, 500, BoardGraph.edgeType.NormalEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field347, win6, 500, BoardGraph.edgeType.NormalEdge);
 
-
-        for (Player player : playerList) {
+        /*
+        for (Player player : playerList) { // For testing, can spawn all players on specific field
             player.setCurrentField(field209);
         }
-
-
-
-
-
-
-
-
-
+        */
     }
 
     /*
@@ -948,7 +925,7 @@ public class GameBoard {
 
         if (sequentialTransition == null) { // this happens when a player is already on a crossover field since there is no animation to get there left (getAnimationPathFromGraph returns null in that case)
             player.playIdle();
-            rootLayout.getChildren().addAll(pathOneArrow, pathTwoArrow, dieBG, remainingTurns); // after the player has graphically moved to the crossing field the arrows are added to the layout
+            mainLayout.getChildren().addAll(pathOneArrow, pathTwoArrow, dieBG, remainingTurns); // after the player has graphically moved to the crossing field the arrows are added to the layout
         } else {
             // Plays the Sequential Transition given by the getAnimationPathMethode Methode
             sequentialTransition.setNode(player.getImageView());
@@ -957,7 +934,7 @@ public class GameBoard {
 
             sequentialTransition.setOnFinished(event -> {
                 player.playIdle();
-                rootLayout.getChildren().addAll(pathOneArrow, pathTwoArrow, dieBG, remainingTurns); // after the player has graphically moved to the crossing field the arrows are added to the layout
+                mainLayout.getChildren().addAll(pathOneArrow, pathTwoArrow, dieBG, remainingTurns); // after the player has graphically moved to the crossing field the arrows are added to the layout
             });
         }
 
@@ -972,7 +949,7 @@ public class GameBoard {
         });
         pathOneArrow.setOnMouseReleased(event -> {
             pathOneArrow.setOpacity(1);
-            rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow, dieBG, remainingTurns);
+            mainLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow, dieBG, remainingTurns);
             crossingManager(hopsLeft, player, BoardGraph.edgeType.CrossoverPathOne);
         });
 
@@ -983,7 +960,7 @@ public class GameBoard {
         });
         pathTwoArrow.setOnMouseReleased(event -> {
             pathTwoArrow.setOpacity(1);
-            rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow, dieBG, remainingTurns);
+            mainLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow, dieBG, remainingTurns);
             crossingManager(hopsLeft, player, BoardGraph.edgeType.CrossoverPathTwo);
         });
     }
@@ -1076,7 +1053,7 @@ public class GameBoard {
 
         text.setX(370);
         text.setY(350);
-        rootLayout.getChildren().add(text);
+        mainLayout.getChildren().add(text);
 
         TranslateTransition translate = new TranslateTransition(Duration.millis(1000), text);
         translate.setByY(-60);
@@ -1095,7 +1072,7 @@ public class GameBoard {
 
         ParallelTransition parallelTransition = new ParallelTransition(translate, fadeInAndOut);
         parallelTransition.play();
-        parallelTransition.setOnFinished(actionEvent -> rootLayout.getChildren().remove(text));
+        parallelTransition.setOnFinished(actionEvent -> mainLayout.getChildren().remove(text));
     }
 
     /*
