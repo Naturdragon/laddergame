@@ -9,13 +9,15 @@ Once all players reach the end, a ranking based on their turns will be displayed
 Some of the commits have been done by one person, even though multiple people worked on the code, since we worked on it together & sometimes used the same device with multiple people.
 Additionally, Lisa Freund was unable to commit her code in the early stages of programming, so Marko Zdravkovic committed it for her on his device.
 
-TODO (as an add-on after the project has concluded):
-1. More animations to enhance the overall aesthetic of the game. (playFallWaterfall + end animations; Mateo)
-2. Implement possibility to use ladders/snakes if negative fields are rolled with die (Aleyna)
-3. Correct crossing with new branch, movePlayer() (Martin)
-4. Spread out characters in bowl once finishing game (Lisa) - fixed
-5. Make it possible to play full-screen (Marko)
-6. (Invert images when going left)
+TO-DO / ADD-ONS:
+1. [Mateo] : Implement more animations to enhance the overall aesthetic of the game (playFallWaterfall + end animations)
+2. [Aleyna] Implement possibility to use ladders/snakes if negative fields are rolled with die
+3. [Martin] : Merge new branch for crossing fields with main branch (movePlayer())
+4. FIN - [Lisa] : Spread out finished players in bowl
+5. FIN - [Lisa] : Implement visual aid for remaining fields at crossing
+6. FIN - [Marko] : Implement fullscreen
+7. FIN - [Marko] : Add missing music button in winning screen
+8. (Invert images when going left)
 
 BUGS:
-1. Crossing fields don't work well when rolling negative numbers (Ist man beispielsweise bei field302, würfelt mit Diva eine -3, so wird man nur bis field301 zurückgesetzt & man kann nicht auf field208 gebracht werden.)
+1. [Martin] Crossing fields don't work well when rolling negative numbers (Ist man beispielsweise bei field302, würfelt mit Diva eine -3, so wird man nur bis field301 zurückgesetzt & man kann nicht auf field208 gebracht werden)
