@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,232 +19,163 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.theos.TheOs.BROWN;
-
-// Der folgende Code wurde teilweise angepasst von [ChatGPT]
+// The following code has been partially adapted from ChatGPT
 public class PlayerSelectionScreen {
+    private static final Image BACKGROUND_IMG = new Image("images/player_select_screen/Player_Selection_Screen.PNG");
 
     /*constants for screen width, number of columns, character image size,
     padding values, minimum players and offsets  */
     private static final double SCREEN_WIDTH = 1422;
     private static final int NUM_COLUMNS = 3;
     private static final double CHARACTER_IMAGE_SIZE = SCREEN_WIDTH / (NUM_COLUMNS + 2);
-    private static final int PADDING_VALUE = 20;
-    private static final int SPACING_VALUE = 10;
     private static final int MIN_PLAYERS = 2;
     private static final double SELECTED_IMAGE_TRANSLATE_Y = 5; // Adjust this value
 
-    /*Gridpane for characters, BooleanProperties to track selection,
+    /*GridPane for characters, BooleanProperties to track selection,
     arrays for characters and players characters, and playerCounter*/
     private static GridPane charactersGrid;
-    private static BooleanProperty[] playerSelectedProperties;
-    private static Character[] characters;
     private static Player[] players;
     private static int playerCounter = 1;
-
-    static final Font CAVEAT = Font.loadFont(PlayerSelectionScreen.class.getClassLoader().getResourceAsStream("fonts/Caveat-SemiBold.ttf"), -1);
-    static final Font VARELA = Font.loadFont(PlayerSelectionScreen.class.getClassLoader().getResourceAsStream("fonts/VarelaRound-Regular.ttf"), -1);
+    public static final ImageView MOUSE_DISPLAY = new ImageView(new Image("images/player_select_screen/Player_Mouse.PNG"));
 
     /*creates and returns PlayerSelectionScreen including
     character selection grid, instructions and buttons */
-    public static Scene createPlayerSelectionScreen() {
+    public static Pane createPlayerSelectionScreen() {
         playerCounter = 1;
 
-        VBox instructionsBox = createInstructionsBox();
+        Pane mainLayout = new Pane();
+        SceneController.createBackgroundRegion(BACKGROUND_IMG, mainLayout);
+        AnchorPane controlsBox = createControlsBox();
         charactersGrid = createCharactersGrid();
+        AnchorPane optionButtons = OptionButtons.createOptionButtonsSet(null, true, true, true, false, true);
+        mainLayout.getChildren().add(controlsBox);
+        mainLayout.getChildren().add(charactersGrid);
+        mainLayout.getChildren().add(optionButtons);
 
-        HBox mainLayout = new HBox(instructionsBox, charactersGrid);
-        mainLayout.setAlignment(Pos.CENTER);
-        mainLayout.setSpacing(SPACING_VALUE);
-        mainLayout.setFillHeight(false);
-
-        String backgroundImage = "images/player_select_screen/Player_Selection_Screen.PNG";
-        mainLayout.setStyle("-fx-background-image: url('" + backgroundImage + "'); -fx-background-size: cover;");
-
-        // Create close and return-to-main-menu buttons
-        HBox closeButton = OptionButtons.createCloseAppButton();
-        HBox mainMenuButton = OptionButtons.createReturnToTitleButton();
-        HBox musicButton = OptionButtons.createMusicButton();
-        closeButton.setTranslateX(-388);
-        closeButton.setTranslateY(-306);
-        mainMenuButton.setTranslateX(-329);
-        mainMenuButton.setTranslateY(-356);
-        musicButton.setTranslateX(943);
-        musicButton.setTranslateY(-408);
-
-        // Add buttons to the layout
-        VBox buttonLayout = new VBox(closeButton, mainMenuButton, musicButton);
-        mainLayout.getChildren().add(buttonLayout);
-        charactersGrid.toFront();
-
-        return new Scene(mainLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
+        return mainLayout;
     }
+
     //creates VBox and includes instruction text and images for controls
-    private static VBox createInstructionsBox() {
-
+    private static AnchorPane createControlsBox() {
         Text controls = new Text("CONTROLS");
-        controls.setFont(Font.font(VARELA.getFamily(), 58));
-        controls.setFill(BROWN);
+        controls.setFont(Font.font(TheOs.VARELA.getFamily(), 58));
+        controls.setFill(TheOs.BROWN);
 
-        Text row1 = new Text("Clicking on a Character" + System.lineSeparator() +
-                "selects the Player" + System.lineSeparator());
-        row1.setFont(Font.font(VARELA.getFamily(), 28));
-        row1.setFill(BROWN);
+        Text selectText = new Text("Clicking on a Character" + "\nselects the Player");
+        selectText.setFont(Font.font(TheOs.VARELA.getFamily(), 28));
+        selectText.setFill(TheOs.BROWN);
 
-        Text row2 = new Text("Clicking on a Character" + System.lineSeparator() +
-                "after Selection deselects" + System.lineSeparator() +
-                "the Player" + System.lineSeparator());
-        row2.setFont(Font.font(VARELA.getFamily(), 28));
-        row2.setFill(BROWN);
+        Text deselectText = new Text("Clicking on a Character" + "\nafter Selection deselects" + "\nthe Player");
+        deselectText.setFont(Font.font(TheOs.VARELA.getFamily(), 28));
+        deselectText.setFill(TheOs.BROWN);
 
-        Text row3 = new Text("You must select" + System.lineSeparator() +
-                "at least two Characters!" + System.lineSeparator());
-        row3.setFont(Font.font(VARELA.getFamily(), 28));
-        row3.setFill(BROWN);
+        Text minPlayerText = new Text("You must select" + "\nat least two Characters!");
+        minPlayerText.setFont(Font.font(TheOs.VARELA.getFamily(), 28));
+        minPlayerText.setFill(TheOs.BROWN);
 
-        Text row4 = new Text("Dice" + System.lineSeparator() +
-                "Select");
-        row4.setFont(Font.font(VARELA.getFamily(), 30));
-        row4.setFill(BROWN);
+        Text ArrowText = new Text("Dice" + "\nSelect");
+        ArrowText.setFont(Font.font(TheOs.VARELA.getFamily(), 30));
+        ArrowText.setFill(TheOs.BROWN);
 
-        Text row5 = new Text("Player Select" + System.lineSeparator() +
-                "Option Select");
-        row5.setFont(Font.font(VARELA.getFamily(), 30));
-        row5.setFill(BROWN);
+        Text MouseText = new Text("Player Select" + "\nOption Select");
+        MouseText.setFont(Font.font(TheOs.VARELA.getFamily(), 30));
+        MouseText.setFill(TheOs.BROWN);
 
-        Text row6 = new Text("Start");
-        row6.setFont(Font.font(VARELA.getFamily(), 30));
-        row6.setFill(BROWN);
+        Text StartText = new Text("Start");
+        StartText.setFont(Font.font(TheOs.VARELA.getFamily(), 30));
+        StartText.setFill(TheOs.BROWN);
 
-        Text row7 = new Text("SPACE");
-        row7.setFont(Font.font(VARELA.getFamily(), 28));
-        row7.setFill(BROWN);
+        Text SpaceText = new Text("SPACE");
+        SpaceText.setFont(Font.font(TheOs.VARELA.getFamily(), 25));
+        SpaceText.setFill(TheOs.BROWN);
 
         ImageView spaceButton = new ImageView(new Image("images/option_button_extras/Button_Space_Small.PNG"));
         spaceButton.setPreserveRatio(true);
         spaceButton.setFitWidth(165);
 
+        MOUSE_DISPLAY.setPreserveRatio(true);
+        MOUSE_DISPLAY.setFitWidth(30);
+
         Button startButton = new Button();
-
-        // Event handler for pressing SPACE key
-        startButton.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.SPACE) {
-                // Toggle opacity for spaceText and menuButton
-                double currentOpacity = row6.getOpacity();
-                double newOpacity = (currentOpacity > 0.5) ? currentOpacity - 0.5 : 0.5; // Decrease opacity by 0.2, but not below 0.2
-                row6.setOpacity(newOpacity);
-                spaceButton.setOpacity(newOpacity);
-                row6.setTranslateY(-480);
-                spaceButton.setTranslateY(1075);
-            }
-        });
-
-        // Event handler for releasing SPACE key
-        startButton.setOnKeyReleased(event -> {
-            if (event.getCode() == KeyCode.SPACE) {
-                // Reset opacity to normal when the button is released
-                row6.setOpacity(1.0);
-                spaceButton.setOpacity(1.0);
-                row6.setTranslateY(-480);
-                spaceButton.setTranslateY(1075);
-
-                // The scene is switched to the GameBoard with the current list of selected characters if at least 2 characters are selected
-                if (allowPlayability()) SceneController.showGameBoardScreen(PlayerSelectionScreen.createPlayerList());
-            }
-        });
-
         startButton.setOpacity(0);
 
-        //Vbox (left side)
-        VBox leftSide = new VBox(controls, row1, row2, row3, row4, row6,row7, spaceButton, row5, startButton);
-        leftSide.setAlignment(Pos.CENTER);
-        leftSide.setSpacing(100);
+        AnchorPane controlsBox = new AnchorPane(controls, selectText, deselectText, minPlayerText, ArrowText, MouseText, StartText, spaceButton, SpaceText, startButton, MOUSE_DISPLAY);
+        controlsBox.setTranslateX(70);
+        controlsBox.setTranslateY(155);
+        AnchorPane.setLeftAnchor(controls, -5.0);
+        AnchorPane.setTopAnchor(selectText,30.0);
+        AnchorPane.setTopAnchor(deselectText,115.0);
+        AnchorPane.setTopAnchor(minPlayerText,235.0);
+        AnchorPane.setLeftAnchor(ArrowText,220.0);
+        AnchorPane.setTopAnchor(ArrowText,330.0);
+        AnchorPane.setTopAnchor(MouseText,425.0);
+        AnchorPane.setLeftAnchor(MOUSE_DISPLAY,250.0);
+        AnchorPane.setTopAnchor(MOUSE_DISPLAY,440.0);
+        AnchorPane.setLeftAnchor(StartText,220.0);
+        AnchorPane.setTopAnchor(StartText,527.0);
+        AnchorPane.setLeftAnchor(SpaceText,41.0);
+        AnchorPane.setTopAnchor(SpaceText,531.0);
+        AnchorPane.setTopAnchor(spaceButton,525.0);
 
-        controls.setTranslateX(-8);
-        controls.setTranslateY(355);
+        // Event handlers for pressing / releasing SPACE key
+        startButton.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.SPACE) {
+                SpaceText.setOpacity(0.5);
+                spaceButton.setOpacity(0.5);
+                SpaceText.setTranslateY(SpaceText.getY() + 1);
+                spaceButton.setTranslateY(spaceButton.getY() + 1);
+            }
+        });
+        startButton.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.SPACE) {
+                SpaceText.setOpacity(1.0);
+                spaceButton.setOpacity(1.0);
+                SpaceText.setTranslateY(SpaceText.getY() - 1);
+                spaceButton.setTranslateY(spaceButton.getY() - 1);
 
-        row1.setTranslateX(-16);
-        row1.setTranslateY(268);
+                if (allowPlayability()) { // Switch to game board in case of at least two players
+                    SceneController.showGameBoardScreen(PlayerSelectionScreen.createPlayerList());
+                } else { // Alert text
+                    minPlayerText.setFill(TheOs.YOLANDA_RED);
+                    OptionButtons.animateTextShake(minPlayerText);
+                }
+            }
+        });
 
-        row2.setTranslateX(-6);
-        row2.setTranslateY(150);
-
-        row3.setTranslateX(-11);
-        row3.setTranslateY(33);
-
-        row4.setTranslateX(87);
-        row4.setTranslateY(-75);
-
-        row5.setTranslateX(-65);
-        row5.setTranslateY(-283);
-
-        row6.setTranslateX(93);
-        row6.setTranslateY(-480);
-
-        row7.setTranslateX(-77);
-        row7.setTranslateY(-45);
-
-        spaceButton.setTranslateX(-79);
-        spaceButton.setTranslateY(1075);
-
-        spaceButton.toBack();
-        row6.toFront();
-
-        return leftSide;
+        return controlsBox;
     }
 
-    /*Gridpane contains character images, names and deselect buttons,
+    /*GridPane contains character images, names and deselect buttons,
     allowing select or deselect characters*/
     private static GridPane createCharactersGrid() {
         charactersGrid = new GridPane();
-        charactersGrid.setPadding(new Insets(PADDING_VALUE));
-        charactersGrid.setHgap(-3);
-        charactersGrid.setVgap(-10);
+        charactersGrid.setPadding(new Insets(75, 0, 0, 500));
 
-        characters = new Character[NUM_COLUMNS * 2];
+        Character[] characters = new Character[NUM_COLUMNS * 2];
         players = new Player[NUM_COLUMNS * 2];
 
-        String[] characterImagePaths = {
-                "images/player_icons/Icon_1.PNG",
-                "images/player_icons/Icon_2.PNG",
-                "images/player_icons/Icon_3.PNG",
-                "images/player_icons/Icon_4.PNG",
-                "images/player_icons/Icon_5.PNG",
-                "images/player_icons/Icon_6.PNG"
-        };
+        String[] characterImagePaths = {"images/player_icons/Icon_1.PNG", "images/player_icons/Icon_2.PNG", "images/player_icons/Icon_3.PNG", "images/player_icons/Icon_4.PNG", "images/player_icons/Icon_5.PNG", "images/player_icons/Icon_6.PNG"};
+        String[] characterNames = {"Diva O'Hara", "Y'Olanda", "Kidd'O", "Mint'O Lint", "Brooke O'Let", "O'Fitz"};
 
-        String[] characterNames = {
-                "Diva O'Hara",
-                "Y'Olanda",
-                "Kidd'O",
-                "Mint'O Lint",
-                "Brooke O'Let",
-                "O'Fitz"
-        };
-
-        playerSelectedProperties = new BooleanProperty[characterImagePaths.length];
+        BooleanProperty[] playerSelectedProperties = new BooleanProperty[characterImagePaths.length];
 
         int columnIndex = 0;
         int rowIndex = 0;
-
         for (int i = 0; i < characterImagePaths.length; i++) {
-            if (i >= NUM_COLUMNS * 2) {
-                break;
-            }
 
             ImageView characterImage = createCharacterImageView(characterImagePaths[i], i);
 
             characters[i] = new Character(characterNames[i]);
             players[i] = new Player(characters[i], null);
 
-            Text playerNameText = new Text(characters[i].getName());
-            playerNameText.setFont(Font.font(CAVEAT.getFamily(), 28));
-            playerNameText.setFill(BROWN);
+            Text playerNameText = new Text(characters[i].name());
+            playerNameText.setFont(Font.font(TheOs.CAVEAT.getFamily(), 28));
+            playerNameText.setFill(TheOs.BROWN);
 
             Text playerInfoText = new Text();
-            playerInfoText.setFont(Font.font(VARELA.getFamily(), 20));
-            playerInfoText.setFill(BROWN);
-            playerInfoText.textProperty().bind(players[i].playerInfoProperty()); // Bind the player info property
+            playerInfoText.setFont(Font.font(TheOs.VARELA.getFamily(), 20));
+            playerInfoText.setFill(TheOs.BROWN);
+            playerInfoText.textProperty().bind(players[i].playerInfoProperty()); // Bind player info property
 
             VBox playerInfoBox = new VBox(characterImage, playerNameText, playerInfoText);
             playerInfoBox.setAlignment(Pos.CENTER);
@@ -272,8 +202,19 @@ public class PlayerSelectionScreen {
         imageView.setFitWidth(CHARACTER_IMAGE_SIZE); // changed resizing to be done on the ImageView, not the Image itself (looks better / less pixelated)
         imageView.setPreserveRatio(true);
 
-        imageView.setOnMouseClicked(event -> {
+        imageView.setOnMousePressed(event -> {
+            Player currentPlayer = players[playerIndex];
+            if (currentPlayer.getPlayerNumber() == 0) {
+                imageView.setOpacity(0.5);
+            } else {
+                imageView.setOpacity(0.25);
+            }
+            imageView.setTranslateY(imageView.getY() + 3);
+        });
+
+        imageView.setOnMouseReleased(event -> {
             togglePlayerSelection(playerIndex, imageView);
+            imageView.setTranslateY(imageView.getY() - 3);
         });
 
         return imageView;
@@ -309,7 +250,6 @@ public class PlayerSelectionScreen {
         playerCounter--;
 
         currentPlayer.setPlayerNumber(0);
-        characterImage.setTranslateY(0);
         characterImage.setOpacity(1.0);
 
         System.out.println("Deselected: " + currentPlayer);
@@ -320,8 +260,7 @@ public class PlayerSelectionScreen {
     /*adjusts the player numbers of all players with numbers greater than
      the deselects player´s number */
     private static void adjustPlayerNumbers(int deselectedPlayerNumber) {
-        for (int i = 0; i < players.length; i++) {
-            Player player = players[i];
+        for (Player player : players) {
             if (player.getPlayerNumber() > deselectedPlayerNumber) {
                 player.setPlayerNumber(player.getPlayerNumber() - 1);
             }
@@ -330,11 +269,7 @@ public class PlayerSelectionScreen {
     /*checks if the current selections allows to start the game
     by ensuring the minimum numbers of players is selected*/
     private static boolean allowPlayability() {
-        boolean allowPlayability = false;
-        if (countSelectedPlayers() >= MIN_PLAYERS) {
-            allowPlayability = true;
-        }
-        return allowPlayability;
+        return countSelectedPlayers() >= MIN_PLAYERS;
     }
 
     //counts and returns the number of currently selected players
@@ -374,32 +309,33 @@ public class PlayerSelectionScreen {
                 Field spawn;
 
                 switch (i) { // every character has a fixed index in players[], so based on which iteration of the for loop it is the correct com.example.theos.Player and their unique spawn field can be created
-                    case 0:
-                        player = new com.example.theos.Player("Diva O'Hara", new int[]{-3, -3, 5, 6, 6, 7}, Paths.get("images/player_icons/Icon_1.PNG"), Paths.get("images/winning_screen/Win_1.PNG"), Paths.get("images/gameboard_screen/Game_O_1.PNG"), Paths.get("images/sprites/Sprites_1.png"));
+                    case 0 -> {
+                        player = new com.example.theos.Player("Diva O'Hara", new int[]{-3, -3, 5, 6, 6, 7}, Paths.get("images/player_icons/Icon_1.PNG"), Paths.get("images/winning_screen/Win_1.PNG"), Paths.get("images/gameboard_screen/Game_O_1.PNG"), Paths.get("images/sprites/Sprites_1.PNG"), Paths.get("images/player_icons/PixelIcon_1.PNG"));
                         spawn = new Field(Field.fieldType.NormalField, 4.8, 60.1 - 1);
-                        break;
-                    case 1:
-                        player = new com.example.theos.Player("Y'Olanda", new int[]{1, 1, 2, 4, 6, 6}, Paths.get("images/player_icons/Icon_2.PNG"), Paths.get("images/winning_screen/Win_2.PNG"), Paths.get("images/gameboard_screen/Game_O_2.PNG"), Paths.get("images/sprites/Sprites_2.png"));
+                    }
+                    case 1 -> {
+                        player = new com.example.theos.Player("Y'Olanda", new int[]{1, 1, 2, 4, 6, 6}, Paths.get("images/player_icons/Icon_2.PNG"), Paths.get("images/winning_screen/Win_2.PNG"), Paths.get("images/gameboard_screen/Game_O_2.PNG"), Paths.get("images/sprites/Sprites_2.PNG"), Paths.get("images/player_icons/PixelIcon_2.PNG"));
                         spawn = new Field(Field.fieldType.NormalField, 8.3, 56.6 - 1);
-                        break;
-                    case 2:
-                        player = new com.example.theos.Player("Kidd'O", new int[]{-2, -1, 4, 5, 6, 6}, Paths.get("images/player_icons/Icon_3.PNG"), Paths.get("images/winning_screen/Win_3.PNG"), Paths.get("images/gameboard_screen/Game_O_3.PNG"), Paths.get("images/sprites/Sprites_3.png"));
+                    }
+                    case 2 -> {
+                        player = new com.example.theos.Player("Kidd'O", new int[]{-2, -1, 4, 5, 6, 6}, Paths.get("images/player_icons/Icon_3.PNG"), Paths.get("images/winning_screen/Win_3.PNG"), Paths.get("images/gameboard_screen/Game_O_3.PNG"), Paths.get("images/sprites/Sprites_3.PNG"), Paths.get("images/player_icons/PixelIcon_3.PNG"));
                         spawn = new Field(Field.fieldType.NormalField, 11.6, 53.1 - 1);
-                        break;
-                    case 3:
-                        player = new com.example.theos.Player("Mint'O Lint", new int[]{1, 1, 2, 2, 3, 7}, Paths.get("images/player_icons/Icon_4.PNG"), Paths.get("images/winning_screen/Win_4.PNG"), Paths.get("images/gameboard_screen/Game_O_4.PNG"), Paths.get("images/sprites/Sprites_4.png"));
+                    }
+                    case 3 -> {
+                        player = new com.example.theos.Player("Mint'O Lint", new int[]{1, 1, 2, 2, 3, 7}, Paths.get("images/player_icons/Icon_4.PNG"), Paths.get("images/winning_screen/Win_4.PNG"), Paths.get("images/gameboard_screen/Game_O_4.PNG"), Paths.get("images/sprites/Sprites_4.PNG"), Paths.get("images/player_icons/PixelIcon_4.PNG"));
                         spawn = new Field(Field.fieldType.NormalField, 8.3, 63.9 - 1);
-                        break;
-                    case 4:
-                        player = new com.example.theos.Player("Brooke O'Let", new int[]{2, 2, 3, 4, 4, 5}, Paths.get("images/player_icons/Icon_5.PNG"), Paths.get("images/winning_screen/Win_5.PNG"), Paths.get("images/gameboard_screen/Game_O_5.PNG"), Paths.get("images/sprites/Sprites_5.png"));
+                    }
+                    case 4 -> {
+                        player = new com.example.theos.Player("Brooke O'Let", new int[]{2, 2, 3, 4, 4, 5}, Paths.get("images/player_icons/Icon_5.PNG"), Paths.get("images/winning_screen/Win_5.PNG"), Paths.get("images/gameboard_screen/Game_O_5.PNG"), Paths.get("images/sprites/Sprites_5.PNG"), Paths.get("images/player_icons/PixelIcon_5.PNG"));
                         spawn = new Field(Field.fieldType.NormalField, 11.9, 60.3 - 1);
-                        break;
-                    case 5:
-                        player = new com.example.theos.Player("O'Fitz", new int[]{-1, 0, 2, 3, 4, 7}, Paths.get("images/player_icons/Icon_6.PNG"), Paths.get("images/winning_screen/Win_6.PNG"), Paths.get("images/gameboard_screen/Game_O_6.PNG"), Paths.get("images/sprites/Sprites_6.png"));
+                    }
+                    case 5 -> {
+                        player = new com.example.theos.Player("O'Fitz", new int[]{-1, 0, 2, 3, 4, 7}, Paths.get("images/player_icons/Icon_6.PNG"), Paths.get("images/winning_screen/Win_6.PNG"), Paths.get("images/gameboard_screen/Game_O_6.PNG"), Paths.get("images/sprites/Sprites_6.PNG"), Paths.get("images/player_icons/PixelIcon_6.PNG"));
                         spawn = new Field(Field.fieldType.NormalField, 15.2, 56.9 - 1);
-                        break;
-                    default:
+                    }
+                    default -> {
                         continue; // Wenn i nicht einem der erwarteten Werte entspricht, überspringe den aktuellen Durchlauf
+                    }
                 }
 
                 player.setCurrentField(spawn);
@@ -412,21 +348,11 @@ public class PlayerSelectionScreen {
         return selectedPlayers;
     }
 
-    private static class Character {
-        private String name;
-
-        public Character(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
+    private record Character(String name){} // Record of character (has: constructor, getter, equals, hashCode, toString)
 
     private static class Player {
-        private static List<Integer> playerNumbers = new ArrayList<>(); // List to store player numbers
-        private Character selectedCharacter;
+        private static final List<Integer> playerNumbers = new ArrayList<>(); // List to store player numbers
+        private final Character selectedCharacter;
         private int playerNumber;
         private final SimpleBooleanProperty selectedProperty = new SimpleBooleanProperty(false);
         private final StringProperty playerInfoProperty = new SimpleStringProperty();
@@ -467,7 +393,7 @@ public class PlayerSelectionScreen {
 
         @Override
         public String toString() {
-            return "P" + playerNumber + " (" + selectedCharacter.getName() + ")";
+            return "P" + playerNumber + " (" + selectedCharacter.name() + ")";
         }
     }
 }

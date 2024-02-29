@@ -21,6 +21,7 @@ public class Player {
     private Path winningImagePath;
     private Path nextPlayerImagePath;
     private Path spriteImagePath;
+    private Path pixelImagePath;
     private Field currentField; // Current Field where the player is
     private Transition currentAnimation; // The current animation of the Player. aka. Walking, standing, etc.
     private ImageView imageView; //used to represent the character of the player on screen
@@ -38,11 +39,12 @@ public class Player {
         turnCount = 0;
     }
 
-    public Player(String characterName, int[] specialDiceArray, Path path, Path winningImagePath, Path nextPlayerImagePath, Path spriteImagePath) {
+    public Player(String characterName, int[] specialDiceArray, Path path, Path winningImagePath, Path nextPlayerImagePath, Path spriteImagePath, Path pixelImagePath) {
         this(characterName, specialDiceArray, path);
         this.winningImagePath = winningImagePath;
         this.nextPlayerImagePath = nextPlayerImagePath;
         this.spriteImagePath = spriteImagePath;
+        this.pixelImagePath = pixelImagePath;
 
         imageView = new ImageView(new Image(getSpriteImagePath()));
 
@@ -58,6 +60,9 @@ public class Player {
         return spriteImagePath.toString();
     }
 
+    public String getPixelImagePath() {
+        return pixelImagePath.toString();
+    }
 
     public String getName() {
         return name;

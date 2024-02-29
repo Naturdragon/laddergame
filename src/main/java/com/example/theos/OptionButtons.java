@@ -1,23 +1,78 @@
 package com.example.theos;
 
+import javafx.animation.Animation;
+import javafx.animation.PauseTransition;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
 
-// Der folgende Code wurde teilweise angepasst von [ChatGPT]
-public class OptionButtons {
+// The following code has been partially adapted from ChatGPT
+public class OptionButtons { // Creates option buttons, toggles states & manages button animation
+    static boolean fullscreenOn = false;
+    static boolean fullscreenCooldown = false;
     static boolean instructionsOn = true;
     private static boolean musicOn = true;
-    private GameBoard gameBoard; // Add reference to GameBoard for createCloseInstructionsButton()
+    static boolean musicCooldown = false;
+    private static boolean animationCooldown = false;
+    public static StackPane fullscreenButtonPane;
+    private static StackPane musicButtonPane;
+    private final GameBoard gameBoard; // Add reference to GameBoard for createCloseInstructionsButton()
     public OptionButtons(GameBoard gameBoard) {
         this.gameBoard = gameBoard;
     }
 
-    public static HBox createCloseAppButton() {
+    // Create entire option buttons set
+    public static AnchorPane createOptionButtonsSet(GameBoard gameBoard, boolean includeCloseAppButton, boolean includeFullscreenButton, boolean includeReturnToTitleButton, boolean includeInstructionsButton, boolean includeMusicButton) {
+        AnchorPane optionButtons = new AnchorPane();
+        optionButtons.setTranslateX(20);
+        optionButtons.setTranslateY(18);
+
+        // Create buttons according to boolean
+        HBox closeAppButton = includeCloseAppButton ? createCloseAppButton() : null;
+        HBox fullscreenButton = includeFullscreenButton ? createFullscreenButton() : null;
+        HBox returnToTitleButton = includeReturnToTitleButton ? createReturnToTitleButton() : null;
+        HBox instructionsButton = includeInstructionsButton ? createInstructionsButton(gameBoard) : null;
+        HBox musicButton = includeMusicButton ? createMusicButton() : null;
+
+        // Add existing buttons to AnchorPane
+        if (includeCloseAppButton) {
+            optionButtons.getChildren().add(closeAppButton);
+        }
+        if (includeFullscreenButton) {
+            AnchorPane.setLeftAnchor(fullscreenButton, 60.0);
+            optionButtons.getChildren().add(fullscreenButton);
+        }
+        if (includeReturnToTitleButton) {
+            AnchorPane.setLeftAnchor(returnToTitleButton, 120.0);
+            optionButtons.getChildren().add(returnToTitleButton);
+        }
+        if (includeInstructionsButton) {
+            AnchorPane.setLeftAnchor(instructionsButton, 1273.0);
+            optionButtons.getChildren().add(instructionsButton);
+        }
+        if (includeMusicButton) {
+            AnchorPane.setLeftAnchor(musicButton, 1333.0);
+            optionButtons.getChildren().add(musicButton);
+        }
+
+        return optionButtons;
+    }
+
+    private static HBox createCloseAppButton() {
         ImageView closeAppIMG = new ImageView(new Image("images/option_button_extras/Button_Exit.PNG"));
         closeAppIMG.setFitWidth(50);
         closeAppIMG.setPreserveRatio(true);
@@ -33,7 +88,7 @@ public class OptionButtons {
         // Opacity & translation effects
         closeAppButtonBox.setOnMousePressed(event -> {
             closeAppButtonPane.setOpacity(0.5);
-            closeAppButtonPane.setTranslateY(closeAppButtonPane.getTranslateY() + 5);
+            closeAppButtonPane.setTranslateY(closeAppButtonPane.getTranslateY() + 3);
         });
 
         // Close application
@@ -42,7 +97,60 @@ public class OptionButtons {
         return closeAppButtonBox;
     }
 
-    public static HBox createReturnToTitleButton() {
+    private static HBox createFullscreenButton() {
+        ImageView fullscreenIMG = new ImageView(new Image("images/option_button_extras/Button_Fullscreen.PNG"));
+        fullscreenIMG.setFitHeight(50);
+        fullscreenIMG.setPreserveRatio(true);
+
+        // Create invisible hitbox
+        Rectangle hitbox = new Rectangle(50, 50);
+        hitbox.setFill(Color.TRANSPARENT);
+
+        // StackPane overlays image/hitbox & creates HBox
+        fullscreenButtonPane = new StackPane(fullscreenIMG, hitbox);
+        HBox fullscreenButtonBox = new HBox(fullscreenButtonPane);
+
+        // Set right state when loaded in (fullscreen on/off)
+        if (fullscreenOn) {
+            fullscreenButtonPane.setOpacity(0.5);
+        } else {
+            fullscreenButtonPane.setOpacity(1.0);
+        }
+
+        // Opacity & translation effects
+        fullscreenButtonBox.setOnMousePressed(event -> toggleFullscreenPressed());
+        fullscreenButtonBox.setOnMouseReleased(event -> toggleFullscreenReleased());
+
+        return fullscreenButtonBox;
+    }
+
+    // Helper method to toggle fullscreen when pressed
+    public static void toggleFullscreenPressed() {
+        if (fullscreenOn) {
+            fullscreenButtonPane.setOpacity(0.25);
+        } else {
+            fullscreenButtonPane.setOpacity(0.5);
+        }
+        fullscreenButtonPane.setTranslateY(fullscreenButtonPane.getTranslateY() + 3);
+        fullscreenCooldown = true;
+    }
+
+    // Helper method to toggle fullscreen when pressed
+    public static void toggleFullscreenReleased() {
+        fullscreenButtonPane.setTranslateY(fullscreenButtonPane.getTranslateY() - 3);
+        if (fullscreenOn) {
+            fullscreenButtonPane.setOpacity(1.0);
+            TheOs.mainStage.setFullScreen(false);
+            fullscreenOn = false;
+        } else {
+            fullscreenButtonPane.setOpacity(0.5);
+            TheOs.mainStage.setFullScreen(true);
+            fullscreenOn = true;
+        }
+        fullscreenCooldown = false;
+    }
+
+    private static HBox createReturnToTitleButton() {
         ImageView returnIMG = new ImageView(new Image("images/option_button_extras/Button_Main.PNG"));
         returnIMG.setFitWidth(50);
         returnIMG.setPreserveRatio(true);
@@ -58,7 +166,7 @@ public class OptionButtons {
         // Opacity & translation effects
         returnButtonBox.setOnMousePressed(event -> {
             returnButtonPane.setOpacity(0.5);
-            returnButtonPane.setTranslateY(returnButtonPane.getTranslateY() + 5);
+            returnButtonPane.setTranslateY(returnButtonPane.getTranslateY() + 3);
             instructionsOn = true;
         });
 
@@ -68,7 +176,7 @@ public class OptionButtons {
         return returnButtonBox;
     }
 
-    public static HBox createInstructionsButton(GameBoard gameBoard) {
+    private static HBox createInstructionsButton(GameBoard gameBoard) {
         ImageView instructionsIMG = new ImageView(new Image("images/option_button_extras/Button_Instructions.PNG"));
         instructionsIMG.setFitHeight(50);
         instructionsIMG.setPreserveRatio(true);
@@ -84,13 +192,13 @@ public class OptionButtons {
         // Opacity & translation effects
         instructionsButtonBox.setOnMousePressed(event -> {
             instructionsButtonPane.setOpacity(0.5);
-            instructionsButtonPane.setTranslateY(instructionsButtonPane.getTranslateY() + 5);
+            instructionsButtonPane.setTranslateY(instructionsButtonPane.getTranslateY() + 3);
         });
 
         instructionsButtonBox.setOnMouseReleased(event -> {
             // Opacity & translation effects
             instructionsButtonPane.setOpacity(1.0);
-            instructionsButtonPane.setTranslateY(instructionsButtonPane.getTranslateY() - 5);
+            instructionsButtonPane.setTranslateY(instructionsButtonPane.getTranslateY() - 3);
 
             // Show / hide instructions window
             if (instructionsOn) {
@@ -121,13 +229,13 @@ public class OptionButtons {
         // Opacity & translation effects
         closeInstructionsButtonBox.setOnMousePressed(event -> {
             closeInstructionsButtonPane.setOpacity(0.5);
-            closeInstructionsButtonPane.setTranslateY(closeInstructionsButtonPane.getTranslateY() + 5);
+            closeInstructionsButtonPane.setTranslateY(closeInstructionsButtonPane.getTranslateY() + 3);
         });
 
         // Reset opacity & translation + close instructions window
         closeInstructionsButtonBox.setOnMouseReleased(event -> {
             closeInstructionsButtonPane.setOpacity(1.0);
-            closeInstructionsButtonPane.setTranslateY(closeInstructionsButtonPane.getTranslateY() - 5);
+            closeInstructionsButtonPane.setTranslateY(closeInstructionsButtonPane.getTranslateY() - 3);
             gameBoard.hideInstructions();
             instructionsOn = false;
         });
@@ -135,7 +243,7 @@ public class OptionButtons {
         return closeInstructionsButtonBox;
     }
 
-    public static HBox createMusicButton() {
+    private static HBox createMusicButton() {
         ImageView musicIMG = new ImageView(new Image("images/option_button_extras/Button_Sound.PNG"));
         musicIMG.setFitWidth(50);
         musicIMG.setPreserveRatio(true);
@@ -145,33 +253,124 @@ public class OptionButtons {
         hitbox.setFill(Color.TRANSPARENT);
 
         // StackPane overlays image/hitbox & creates HBox
-        StackPane musicButtonPane = new StackPane(musicIMG, hitbox);
+        musicButtonPane = new StackPane(musicIMG, hitbox);
         HBox musicButtonBox = new HBox(musicButtonPane);
 
-        // Make sure right state displayed when loaded in (music on/off)
+        // Set right state when loaded in (music on/off)
         if (musicOn) {
             musicButtonPane.setOpacity(1.0);
-            musicButtonPane.setTranslateY(0);
         } else {
             musicButtonPane.setOpacity(0.5);
-            musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() + 5);
         }
 
-        // Change state once clicked
-        musicButtonBox.setOnMouseClicked(event -> {
-            if (musicOn) {
-                musicButtonPane.setOpacity(0.5);
-                musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() + 5);
-                musicOn = false;
-                SoundGame.setVolume(0);
-            } else {
-                musicButtonPane.setOpacity(1.0);
-                musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() - 5);
-                musicOn = true;
-                SoundGame.setVolume(0.1);
-                }
-        });
+        // Opacity & translation effects
+        musicButtonBox.setOnMousePressed(event -> toggleMusicStatePressed());
+        musicButtonBox.setOnMouseReleased(event -> toggleMusicStateReleased());
 
         return musicButtonBox;
+    }
+
+    // Helper method to toggle music state when pressed
+    public static void toggleMusicStatePressed() {
+        if (musicOn) {
+            musicButtonPane.setOpacity(0.5);
+        } else {
+            musicButtonPane.setOpacity(0.25);
+        }
+        musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() + 3);
+        musicCooldown = true;
+    }
+
+    // Helper method to toggle music state when released
+    public static void toggleMusicStateReleased() {
+        if (musicOn) {
+            musicButtonPane.setOpacity(0.5);
+            musicOn = false;
+            SoundGame.setVolume(0);
+        } else {
+            musicButtonPane.setOpacity(1.0);
+            musicOn = true;
+            SoundGame.setVolume(0.1);
+        }
+        musicButtonPane.setTranslateY(musicButtonPane.getTranslateY() - 3);
+        musicCooldown = false;
+    }
+
+    // Generic space button format
+    public static void spaceButtonFormat(Text descriptionText, Text spaceText, ImageView spaceButton, Button button, Runnable releaseAction) {
+
+        descriptionText.setFont(Font.font(TheOs.VARELA.getFamily(), 30));
+        descriptionText.setFill(TheOs.BROWN);
+        AnchorPane.setTopAnchor(descriptionText, -40.0);
+
+        spaceText.setFont(Font.font(TheOs.VARELA.getFamily(), 32));
+        spaceText.setFill(TheOs.BROWN);
+        AnchorPane.setLeftAnchor(spaceText, 115.0);
+        AnchorPane.setTopAnchor(spaceText, 18.0);
+
+        spaceButton.setPreserveRatio(true);
+        spaceButton.setFitWidth(348);
+
+        button.setFont(Font.font(TheOs.VARELA.getFamily(), 30));
+        button.setOpacity(0);
+        button.setPrefSize(348, 77);
+
+        // Event handlers for pressing & releasing
+        EventHandler<Event> pressHandler = event -> {
+            spaceText.setOpacity(0.5);
+            spaceButton.setOpacity(0.5);
+        };
+        EventHandler<Event> releaseHandler = event -> {
+            spaceText.setOpacity(1.0);
+            spaceButton.setOpacity(1.0);
+            releaseAction.run(); // Run specified action
+        };
+
+        // Call press & release handlers for mouse
+        button.setOnMousePressed(pressHandler);
+        button.setOnMouseReleased(releaseHandler);
+
+        // Call press & release handlers for SPACE key
+        button.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.SPACE) {
+                pressHandler.handle(null);
+            }
+        });
+        button.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.SPACE) {
+                releaseHandler.handle(null);
+            }
+        });
+    }
+
+    // Up-and-down bouncing animation
+    public static void animateButtonBounce(Node... buttons) {
+        for (Node button : buttons) {
+            TranslateTransition transition = new TranslateTransition(Duration.millis(500), button);
+            transition.setByY(-5); // Movement
+            transition.setCycleCount(Animation.INDEFINITE); // Repetition
+            transition.setAutoReverse(true); // Bouncing effect
+            transition.play();
+        }
+    }
+
+    // Left-and-right shake animation
+    public static void animateTextShake(Node text) {
+        if (!animationCooldown) {
+            animationCooldown = true;
+
+            TranslateTransition transition = new TranslateTransition(Duration.millis(100), text);
+            transition.setByX(5); // Movement
+            transition.setCycleCount(4); // Repetition
+            transition.setAutoReverse(true); // Shake effect
+
+            // Set up a pause after the animation finishes to escape an animation collide
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
+            pause.setOnFinished(event -> animationCooldown = false);
+
+            // Play the animation and then the pause
+            transition.setOnFinished(event -> pause.play());
+            transition.play();
+        }
     }
 }

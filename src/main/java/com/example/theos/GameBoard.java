@@ -3,7 +3,6 @@ package com.example.theos;
 import com.example.theos.BordGameGraph.BoardGraph;
 import javafx.animation.*;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -16,15 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameBoard {
+    private static final Image BACKGROUND_IMG = new Image("images/gameboard_screen/Game_BG.PNG");
     private BoardGraph boardGraph;
     private List<Player> playerList;
-    private Background background;
     private Background backgroundTop;
     private DiceUI diceUI;
     private List<Player> finishedPlayers;
-
     private List<Field> winningFields;
-    private Pane rootLayout;
+    private List<Field> lastFields;
+    private Pane mainLayout;
     private final AnchorPane INSTRUCTIONS_WINDOW = createInstructionsWindow();
     private Field waterfallField1;
     private Field waterfallField2;
@@ -36,7 +35,6 @@ public class GameBoard {
     private int animationOffsetY = 15;
 
     // Default constructor: just initializes the most important variables with their default constructor
-
     public GameBoard() {
 
         boardGraph = new BoardGraph();
@@ -44,7 +42,7 @@ public class GameBoard {
         winningFields = new ArrayList<>();
         finishedPlayers = new ArrayList<>();
         diceUI = new DiceUI();
-        rootLayout = new Pane();
+        mainLayout = new Pane();
     }
 
     /*
@@ -56,9 +54,10 @@ public class GameBoard {
 
         boardGraph = new BoardGraph();
         winningFields = new ArrayList<>();
+        lastFields = new ArrayList<>();
         finishedPlayers = new ArrayList<>();
         diceUI = new DiceUI();
-        rootLayout = new Pane();
+        mainLayout = new Pane();
 
         fillGraphData();
     }
@@ -77,10 +76,6 @@ public class GameBoard {
 
     public List<Player> getPlayerList() {
         return playerList;
-    }
-
-    public Background getBackground() {
-        return background;
     }
 
     public List<Player> getFinishedPlayers() {
@@ -114,64 +109,41 @@ public class GameBoard {
     }
 
     /*
-    Creates the scene/screen view of the gameboard
+    Creates the scene/screen view of the game board
     Backgrounds are set, DiceUI and instructionsWindow are placed on screen
     All characters are placed on screen and playGameStartAnimation() is called, afterwards userinput is unlocked
     Returns a scene object, which can be used for the stage object in TheOs start() method
      */
-    public Scene createGameBoardScreen() {
-
-        // Creating and setting the game background (image of the board), backgroundTop is later added to the layout (its only the waterfall)
-        BackgroundImage backgroundImg = new BackgroundImage(
-                new Image("images/gameboard_screen/Game_BG.PNG"),
-                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-                new BackgroundSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT, false, false, true, true));
-
-        background = new Background(backgroundImg);
-
-        BackgroundImage backgroundImgTop = new BackgroundImage(
-                new Image("images/gameboard_screen/Game_BG_Top.PNG"),
-                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-                new BackgroundSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT, false, false, true, true));
-
-        backgroundTop = new Background(backgroundImgTop);
-
-        rootLayout.setBackground(background);
+    public Pane createGameBoardScreen() {
+        SceneController.createBackgroundRegion(BACKGROUND_IMG, mainLayout);
 
         // Placing the diceUI on the screen
         diceUI.updateNextPlayer(playerList);
         diceUI.setTranslateX(40);
         diceUI.setTranslateY(800 - 215);
-        rootLayout.getChildren().add(diceUI);
+        mainLayout.getChildren().add(diceUI);
 
         // the ImageViews of all players in playerList are placed on screen at the coordinates of their spawn field
         for (Player player : playerList) {
-            rootLayout.getChildren().add(player.getImageView());
+            mainLayout.getChildren().add(player.getImageView());
             player.getImageView().setX(player.getCurrentField().getX() - 27);
             player.getImageView().setY(player.getCurrentField().getY() - 27 - 15);
         }
 
-        // Placing the top background (water fall section)
+        // Placing the top background (waterfall section)
+        BackgroundImage backgroundImgTop = new BackgroundImage(
+                new Image("images/gameboard_screen/Game_BG_Top.PNG"),
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+                new BackgroundSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT, false, false, false, false));
+        backgroundTop = new Background(backgroundImgTop);
+
         Region backgroundTopRegion = new Region();
         backgroundTopRegion.setBackground(backgroundTop);
         backgroundTopRegion.setPrefSize(TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
-        rootLayout.getChildren().add(backgroundTopRegion);
+        mainLayout.getChildren().add(backgroundTopRegion);
 
-        // Create option buttons
-        HBox closeAppButton = OptionButtons.createCloseAppButton();
-        HBox mainMenuButton = OptionButtons.createReturnToTitleButton();
-        HBox instructionsButton = OptionButtons.createInstructionsButton(this);
-        HBox musicButton = OptionButtons.createMusicButton();
-        closeAppButton.setTranslateX(20);
-        closeAppButton.setTranslateY(19);
-        mainMenuButton.setTranslateX(79);
-        mainMenuButton.setTranslateY(-31);
-        instructionsButton.setTranslateX(1295);
-        instructionsButton.setTranslateY(-85);
-        musicButton.setTranslateX(1352);
-        musicButton.setTranslateY(-134);
-        VBox buttonLayout = new VBox(closeAppButton, mainMenuButton, instructionsButton, musicButton);
-        rootLayout.getChildren().add(buttonLayout);
+        AnchorPane optionButtons = OptionButtons.createOptionButtonsSet(this, true, true, true, true, true);
+        mainLayout.getChildren().add(optionButtons);
 
         this.playGameStartAnimation(); // plays the spawn in animation of the characters
 
@@ -179,7 +151,7 @@ public class GameBoard {
 
         //selectPathEvent(crossoverField2, 0); // TODO delete later, only for simulating a crossover
 
-        return new Scene(rootLayout, TheOs.SCENE_WIDTH, TheOs.SCENE_HEIGHT);
+        return mainLayout;
     }
 
     /*
@@ -192,25 +164,25 @@ public class GameBoard {
         VBox instructionsText = new VBox();
 
         Text text1 = new Text("Landing on a        - Field makes your Character" + System.lineSeparator() + "take a shortcut");
-        text1.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text1.setFont(TheOs.VARELA);
         text1.setFill(TheOs.BROWN);
         Text text2 = new Text("Landing on a        - Field makes your Character " + System.lineSeparator() + "be set backwards, try to avoid them!");
-        text2.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text2.setFont(TheOs.VARELA);
         text2.setFill(TheOs.BROWN);
         Text text3 = new Text("Every Character has a Normal Die" + System.lineSeparator() + "and a Special Die");
-        text3.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text3.setFont(TheOs.VARELA);
         text3.setFill(TheOs.BROWN);
         Text text4 = new Text("The Numbers on the Special Die are different" + System.lineSeparator() + "for each Character, choose carefully!");
-        text4.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text4.setFont(TheOs.VARELA);
         text4.setFill(TheOs.BROWN);
         Text text5 = new Text("You can use your Special Die only 3 Times at" + System.lineSeparator() + "the Start");
-        text5.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text5.setFont(TheOs.VARELA);
         text5.setFill(TheOs.BROWN);
         Text text6 = new Text("Landing on a        - Field increases your Charges");
-        text6.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text6.setFont(TheOs.VARELA);
         text6.setFill(TheOs.BROWN);
         Text text7 = new Text("Select which Die to use with");
-        text7.setFont(DiceUI.CUSTOM_FONT_VARELA);
+        text7.setFont(TheOs.VARELA);
         text7.setFill(TheOs.BROWN);
 
         instructionsText.getChildren().addAll(text1, text2, text3, text4, text5, text6, text7);
@@ -219,14 +191,14 @@ public class GameBoard {
         VBox.setMargin(text4, new Insets(-35, 0, 0, 0));
         VBox.setMargin(text6, new Insets(-35, 0, 0, 0));
 
-        ImageView instructionsBG = new ImageView("images/gameboard_screen/Instructions_BG.png");
+        ImageView instructionsBG = new ImageView("images/gameboard_screen/Instructions_BG.PNG");
         instructionsBG.setOpacity(0.85);
 
         ImageView normalDieIMG = new ImageView("images/gameboard_screen/Game_Die_0.PNG");
         normalDieIMG.setFitWidth(140);
         normalDieIMG.setPreserveRatio(true);
 
-        ImageView specialDieIMG = new ImageView("images/gameboard_screen/Game_Die_All.png");
+        ImageView specialDieIMG = new ImageView("images/gameboard_screen/Game_Die_All.PNG");
         specialDieIMG.setFitWidth(140);
         specialDieIMG.setPreserveRatio(true);
 
@@ -276,8 +248,8 @@ public class GameBoard {
     Returns nothing
      */
     public void showInstructions() {
-        if (!rootLayout.getChildren().contains(INSTRUCTIONS_WINDOW)) {
-            rootLayout.getChildren().add(INSTRUCTIONS_WINDOW);
+        if (!mainLayout.getChildren().contains(INSTRUCTIONS_WINDOW)) {
+            mainLayout.getChildren().add(INSTRUCTIONS_WINDOW);
 
             ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(350), INSTRUCTIONS_WINDOW);
             scaleTransition.setFromX(0);
@@ -318,7 +290,7 @@ public class GameBoard {
 
         ParallelTransition closeAnimation = new ParallelTransition(scaleTransition, fadeTransition);
         closeAnimation.play();
-        closeAnimation.setOnFinished(actionEvent -> rootLayout.getChildren().remove(INSTRUCTIONS_WINDOW));
+        closeAnimation.setOnFinished(actionEvent -> mainLayout.getChildren().remove(INSTRUCTIONS_WINDOW));
     }
 
     /*
@@ -544,6 +516,8 @@ public class GameBoard {
         fieldListUpperPath.add(field194);
         fieldListUpperPath.add(field195);
 
+        lastFields.add(field195);
+
         // Fields on shortest path
         List<Field> fieldListMiddlePath = new ArrayList<>();
 
@@ -705,7 +679,8 @@ public class GameBoard {
         fieldListLowerPath.add(field346);
         fieldListLowerPath.add(field347);
 
-        // Fields for winning area
+        lastFields.add(field347);
+
         Field win1 = new Field(Field.fieldType.NormalField, 82.4, 29.1);
         Field win2 = new Field(Field.fieldType.NormalField, 84.5, 31.3);
         Field win3 = new Field(Field.fieldType.NormalField, 85.1, 26.1);
@@ -713,8 +688,12 @@ public class GameBoard {
         Field win5 = new Field(Field.fieldType.NormalField, 88.4, 26.5);
         Field win6 = new Field(Field.fieldType.NormalField, 88.9, 31.1);
 
-        // TODO: add all winning fields to this list
         winningFields.add(win1);
+        winningFields.add(win2);
+        winningFields.add(win3);
+        winningFields.add(win4);
+        winningFields.add(win5);
+        winningFields.add(win6);
 
         // Adding Fields to the Beginning Path && Upper Path && Upper End Path (101 - 149 & 150 - 187 & 188 - 195)
         for (int i = 0; i < fieldListUpperPath.size(); i++) {
@@ -803,12 +782,8 @@ public class GameBoard {
         getBoardGraph().addOneDirectionalEdgeForward(field340, field328, 2600, BoardGraph.edgeType.LadderEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field346, field322, 1500, BoardGraph.edgeType.LadderEdge);
 
-        // Add normal edges from last fields to winning area
+
         getBoardGraph().addVertex(win1);
-
-        getBoardGraph().addOneDirectionalEdgeForward(field195, win1, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdgeForward(field347, win1, 500, BoardGraph.edgeType.NormalEdge);
-
         getBoardGraph().addVertex(win2);
         getBoardGraph().addVertex(win3);
         getBoardGraph().addVertex(win4);
@@ -816,40 +791,41 @@ public class GameBoard {
         getBoardGraph().addVertex(win6);
 
         getBoardGraph().addOneDirectionalEdgeForward(field195, win1, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdgeForward(field347, win1, 500, BoardGraph.edgeType.NormalEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field195, win2, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdgeForward(field347, win2, 500, BoardGraph.edgeType.NormalEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field195, win3, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdgeForward(field347, win3, 500, BoardGraph.edgeType.NormalEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field195, win4, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdgeForward(field347, win4, 500, BoardGraph.edgeType.NormalEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field195, win5, 500, BoardGraph.edgeType.NormalEdge);
-        getBoardGraph().addOneDirectionalEdgeForward(field347, win5, 500, BoardGraph.edgeType.NormalEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field195, win6, 500, BoardGraph.edgeType.NormalEdge);
+
+       // Add normal edges from last fields to winning area
+
+        getBoardGraph().addOneDirectionalEdgeForward(field347, win1, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field347, win2, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field347, win3, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field347, win4, 500, BoardGraph.edgeType.NormalEdge);
+        getBoardGraph().addOneDirectionalEdgeForward(field347, win5, 500, BoardGraph.edgeType.NormalEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field347, win6, 500, BoardGraph.edgeType.NormalEdge);
-
-
+      
         // TODO Testing
-
+/*
         for (Player player : playerList) {
             player.setCurrentField(field208);
         }
-
-
-
+      */
     }
 
     /*
     This method is meant to be called when a player lands at a crossover
     The arrows for the user to select a path are created and placed on screen
     Normal user input (UP / DOWN / SPACE) is locked during this event
-    After an arrow was clicked with the mouse they dissapear, and the method to further move the player along the chosen path is called
+    After an arrow was clicked with the mouse they disappear, and the method to further move the player along the chosen path is called
      */
     public void selectPathEvent(int hopsLeft, Player player) {
 
         // Creating the arrows with the image and setting their size and opacity
         ImageView pathOneArrow = new ImageView("images/gameboard_screen/Game_Crossover_Arrow.PNG");
         ImageView pathTwoArrow = new ImageView("images/gameboard_screen/Game_Crossover_Arrow.PNG");
+        ImageView dieBG = new ImageView("images/gameboard_screen/Game_Die_BG.PNG");
 
         pathOneArrow.setFitWidth(55);
         pathOneArrow.setPreserveRatio(true);
@@ -858,6 +834,20 @@ public class GameBoard {
         pathTwoArrow.setFitWidth(55);
         pathTwoArrow.setPreserveRatio(true);
         pathTwoArrow.setOpacity(0.85);
+
+        dieBG.setFitWidth(50);
+        dieBG.setPreserveRatio(true);
+        dieBG.setOpacity(0.85);
+
+        String turns = String.valueOf(hopsLeft);
+        Text remainingTurns = new Text(turns);
+        remainingTurns.setFont(Font.font(TheOs.VARELA.getFamily(), 35));
+        remainingTurns.setFill(TheOs.BROWN);
+
+        remainingTurns.setTranslateX(player.getCurrentField().getX() - 11);
+        remainingTurns.setTranslateY(player.getCurrentField().getY() - 63);
+        dieBG.setTranslateX(player.getCurrentField().getX() - 25);
+        dieBG.setTranslateY(player.getCurrentField().getY() - 100);
 
         // Positioning the arrows
         if (player.getCurrentField() == crossoverField1) { // position the arrows at the first crossover
@@ -891,33 +881,42 @@ public class GameBoard {
         idleArrowOne.setAutoReverse(true);
         idleArrowOne.play();
 
+        FadeTransition fadeArrowOne = new FadeTransition(Duration.millis(200), pathOneArrow);
+        fadeArrowOne.setFromValue(0);
+        fadeArrowOne.setToValue(1);
+
         TranslateTransition idleArrowTwo = new TranslateTransition(Duration.millis(600), pathTwoArrow);
         idleArrowTwo.setByY(-5);
         idleArrowTwo.setCycleCount(Animation.INDEFINITE);
         idleArrowTwo.setAutoReverse(true);
         idleArrowTwo.play();
 
+
         rootLayout.getChildren().addAll(pathOneArrow, pathTwoArrow);
 
 
         // on mouse press the target arrow gets highlighted and on release both are removed form the layout and the rest of the move is done via crossingManager()
         pathOneArrow.setOnMousePressed(event -> {
-            pathOneArrow.setOpacity(1);
-            pathOneArrow.setScaleX(1.4);
-            pathOneArrow.setScaleY(1.4);
+            pathOneArrow.setOpacity(0.5);
+            //pathOneArrow.setScaleX(1.4);
+            //pathOneArrow.setScaleY(1.4);
+
+
         });
         pathOneArrow.setOnMouseReleased(event -> {
-            rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow);
+            pathOneArrow.setOpacity(1);
+            mainLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow, dieBG, remainingTurns);
             crossingManager(hopsLeft, player, BoardGraph.edgeType.CrossoverPathOne);
         });
 
         pathTwoArrow.setOnMousePressed(event -> {
-            pathTwoArrow.setOpacity(1);
-            pathTwoArrow.setScaleX(1.4);
-            pathTwoArrow.setScaleY(1.4);
+            pathTwoArrow.setOpacity(0.5);
+            //pathTwoArrow.setScaleX(1.4);
+            //pathTwoArrow.setScaleY(1.4);
         });
         pathTwoArrow.setOnMouseReleased(event -> {
-            rootLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow);
+            pathTwoArrow.setOpacity(1);
+            mainLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow, dieBG, remainingTurns);
             crossingManager(hopsLeft, player, BoardGraph.edgeType.CrossoverPathTwo);
         });
     }
@@ -988,7 +987,7 @@ public class GameBoard {
     public void playChargeAddedAnimation() {
         Text text = new Text("Special Die Charges +1");
         text.setFill(TheOs.BROWN);
-        text.setFont(Font.font(DiceUI.CUSTOM_FONT_VARELA.getFamily(), 65));
+        text.setFont(Font.font(TheOs.VARELA.getFamily(), 65));
         /* Adding a white stroke to the text makes it look better and more legible,
         but the animation becomes really laggy for some reason (maybe only on my pc):
 
@@ -999,7 +998,7 @@ public class GameBoard {
 
         text.setX(370);
         text.setY(350);
-        rootLayout.getChildren().add(text);
+        mainLayout.getChildren().add(text);
 
         TranslateTransition translate = new TranslateTransition(Duration.millis(1000), text);
         translate.setByY(-60);
@@ -1018,11 +1017,25 @@ public class GameBoard {
 
         ParallelTransition parallelTransition = new ParallelTransition(translate, fadeInAndOut);
         parallelTransition.play();
-        parallelTransition.setOnFinished(actionEvent -> rootLayout.getChildren().remove(text));
+        parallelTransition.setOnFinished(actionEvent -> mainLayout.getChildren().remove(text));
     }
 
+    /*
+    Method that checks, whether a player has finished the game and are then added to a list for the ranking
+    also removes the edge from the last field to a WinningField, if the winningField is already in use
+     */
     public boolean addFinishedPlayer(Player player) {
         Field lastField = boardGraph.hopCountTraversal(player.getCurrentField(), Integer.MAX_VALUE);
+
+            for (int i = 0; i < this.getWinningFields().size(); i++) {
+                if (player.getCurrentField().getX()  == getWinningFields().get(i).getX()
+                        && player.getCurrentField().getY() == getWinningFields().get(i).getY()) {
+                        boardGraph.removeEdge(lastFields.get(0), getWinningFields().get(i));
+                        boardGraph.removeEdge(lastFields.get(1), getWinningFields().get(i));
+                        getWinningFields().remove(i);
+
+                    }
+                }
 
         if (lastField != null && lastField.getType() != Field.fieldType.LadderField) {
             if (boardGraph.hopCountTraversal(player.getCurrentField(), Integer.MAX_VALUE) != null) {
@@ -1035,7 +1048,7 @@ public class GameBoard {
     }
 
     /*
-    Special Methode that gets called by the Cklick on the Arrows at a crossing.
+    Special Methode that gets called by the Click on the Arrows at a crossing.
      */
     public void crossingManager(int fieldsToMove, Player player, BoardGraph.edgeType edgeType) {
         player.playWalk();
