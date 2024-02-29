@@ -222,7 +222,7 @@ public class BoardGraph {
         SequentialTransition sequenTransis = new SequentialTransition();
 
         PauseTransition pause = new PauseTransition(Duration.millis(10));
-        sequenTransis.getChildren().add(pause); // Adds a Pause as a basic element. Allowes the returning without the use of null and required null checks
+        sequenTransis.getChildren().add(pause); // Adds a Pause as a basic element. Allows the returning without the use of null and required null checks
 
         Field vertexData = currentPlayer.getCurrentField();   // The beginning Field of the Move
 
@@ -243,7 +243,7 @@ public class BoardGraph {
                         if(typeOfEdge == null) {
 
                             currentPlayer.setCurrentField(vertexData);
-                            gameBord.selectPathEvent(i, currentPlayer);
+                            gameBord.selectPathEvent(hops-i, currentPlayer);
 
                             // Adding the Standart Path; The Methode returns the Path to the Crossing and sets the player there. The Events make the run from this point forward.
                             PathTransition standartPathTransition = new PathTransition();
@@ -251,7 +251,6 @@ public class BoardGraph {
                             standartPathTransition.setDuration(Duration.millis(standartDurration));
                             sequenTransis.getChildren().add(standartPathTransition);
 
-                            currentPlayer.setCurrentField(vertexData);
                             return sequenTransis;
                         }else {
                             // get next field
@@ -262,7 +261,7 @@ public class BoardGraph {
                                     Field newVertexData = (edge.getSource() == vertexData)? (Field) edge.getTarget(): (Field)edge.getSource();
                                     standartPath.getElements().add(new LineTo(newVertexData.getX() - animationOffsetX, newVertexData.getY() - animationOffsetY));
 
-                                    standartDurration = standartDurration + (Integer)getEdgeWeight(getNextEdge(vertexData,forwardGraph,edgeType.NormalEdge)).getData();
+                                    standartDurration = standartDurration + (Integer)getEdgeWeight(getNextEdge(vertexData,forwardGraph,typeOfEdge)).getData();
 
                                     vertexData = newVertexData; // Sets the new Fields to the current one
                                 }
@@ -270,7 +269,7 @@ public class BoardGraph {
                         }
                     }
 
-                    if (vertexData.getType() == Field.fieldType.NormalField || (vertexData.getType() == Field.fieldType.LadderField &&  i < hops)) {
+                    if (vertexData.getType() == Field.fieldType.NormalField || vertexData.getType() == Field.fieldType.SpecialChargeField || (vertexData.getType() == Field.fieldType.LadderField &&  i < hops)) {
                         // Normal Movement Forward
                         Field newVertexData = getNextVertex(vertexData, forwardGraph,edgeType.NormalEdge);
 

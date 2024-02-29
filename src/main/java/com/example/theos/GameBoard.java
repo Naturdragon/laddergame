@@ -716,6 +716,7 @@ public class GameBoard {
         // TODO: add all winning fields to this list
         winningFields.add(win1);
 
+        // Adding Fields to the Beginning Path && Upper Path && Upper End Path (101 - 149 & 150 - 187 & 188 - 195)
         for (int i = 0; i < fieldListUpperPath.size(); i++) {
             getBoardGraph().addVertex(fieldListUpperPath.get(i));
         }
@@ -728,6 +729,7 @@ public class GameBoard {
             getBoardGraph().addEdge(fieldListUpperPath.get(i), fieldListUpperPath.get(i + 1), 500, BoardGraph.edgeType.NormalEdge);
         }
 
+        // Adding Fields for the Middle Path (201 - 222)
         for (int i = 0; i < fieldListMiddlePath.size(); i++) {
             getBoardGraph().addVertex(fieldListMiddlePath.get(i));
         }
@@ -740,6 +742,7 @@ public class GameBoard {
             getBoardGraph().addEdge(fieldListMiddlePath.get(i), fieldListMiddlePath.get(i + 1), 500, BoardGraph.edgeType.NormalEdge);
         }
 
+        // Adding Fields to the Lower Path (301 - 347)
         for (int i = 0; i < fieldListLowerPath.size(); i++) {
             getBoardGraph().addVertex(fieldListLowerPath.get(i));
         }
@@ -827,6 +830,7 @@ public class GameBoard {
 
 
         // TODO Testing
+
         for (Player player : playerList) {
             player.setCurrentField(field208);
         }
@@ -963,13 +967,16 @@ public class GameBoard {
                 diceUI.updateSpecialCharges(player);
                 this.playChargeAddedAnimation();
             }
-            player.increaseTurns();
-            diceUI.switchPlayerTurn(this);
-            player.playIdle();
 
-            // the current player is moved to the end of the list
-            playerList.add(playerList.get(0));
-            playerList.remove(0);
+            if(player.getCurrentField().getType() != Field.fieldType.CrossoverField ) { // Check if the player has no moves left
+                player.increaseTurns();
+                diceUI.switchPlayerTurn(this);
+
+                // the current player is moved to the end of the list
+                playerList.add(playerList.get(0));
+                playerList.remove(0);
+            }
+            player.playIdle();
         });
     }
 
@@ -1031,6 +1038,7 @@ public class GameBoard {
     Special Methode that gets called by the Cklick on the Arrows at a crossing.
      */
     public void crossingManager(int fieldsToMove, Player player, BoardGraph.edgeType edgeType) {
+        player.playWalk();
         SequentialTransition sequentialTransition =boardGraph.getSequentialAnimationAndMakeMove(player,fieldsToMove,animationOffsetX,animationOffsetY,this,edgeType);
         sequentialTransition.setNode(player.getImageView());
         sequentialTransition.play();
@@ -1046,7 +1054,7 @@ public class GameBoard {
             diceUI.switchPlayerTurn(this);
             player.playIdle();
 
-            // the current player is moved to the end of the list
+            // the current player is moved to the end of the list (This gets done when the first transition finishes)
             playerList.add(playerList.get(0));
             playerList.remove(0);
         });
