@@ -892,7 +892,7 @@ public class GameBoard {
         idleArrowTwo.play();
 
 
-        rootLayout.getChildren().addAll(pathOneArrow, pathTwoArrow);
+        mainLayout.getChildren().addAll(pathOneArrow, pathTwoArrow);
 
 
         // on mouse press the target arrow gets highlighted and on release both are removed form the layout and the rest of the move is done via crossingManager()
@@ -976,6 +976,9 @@ public class GameBoard {
                 playerList.remove(0);
             }
             player.playIdle();
+            if (winningFields.contains(player.getCurrentField())) {
+                player.playSwim();
+            }
         });
     }
 

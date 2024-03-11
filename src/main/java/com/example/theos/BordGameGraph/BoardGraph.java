@@ -231,6 +231,8 @@ public class BoardGraph {
 
         if (hops == 0) return sequenTransis;
 
+        boolean playerReachedEnd = false;
+
         if (hops > 0) {
             // Forwards Movement
             for (int i = 0; i < hops; i++) {
@@ -272,10 +274,18 @@ public class BoardGraph {
                         // Normal Movement Forward
                         Field newVertexData = getNextVertex(vertexData, forwardGraph,edgeType.NormalEdge);
 
-                        standartPath.getElements().add(new LineTo(newVertexData.getX() - animationOffsetX, newVertexData.getY() - animationOffsetY));
+                        if (!gameBord.getWinningFields().contains(newVertexData)) {
+                            // check if next vertex is a winning field: if that is the case, dont update path and duration (else section)
+                            standartPath.getElements().add(new LineTo(newVertexData.getX() - animationOffsetX, newVertexData.getY() - animationOffsetY));
+                            standartDurration = standartDurration + (Integer) getEdgeWeight(getNextEdge(vertexData, forwardGraph, edgeType.NormalEdge)).getData();
+                        } else {
+                            playerReachedEnd = true;
 
-                        standartDurration = standartDurration + (Integer)getEdgeWeight(getNextEdge(vertexData,forwardGraph,edgeType.NormalEdge)).getData();
-
+                            if (i == 0) {
+                                standartPath.getElements().add(new LineTo(vertexData.getX() - animationOffsetX, newVertexData.getY() - animationOffsetY));
+                                standartDurration = 0.1;
+                            }
+                        }
                         vertexData = newVertexData; // Sets the new Fields to the current one
 
                     }
@@ -311,6 +321,11 @@ public class BoardGraph {
                     standartPathTransition.setDuration(Duration.millis(standartDurration));
                     sequenTransis.getChildren().add(standartPathTransition);
 
+                    if (playerReachedEnd) {
+                        sequenTransis.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[0]);
+                        sequenTransis.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[1]);
+                    }
+
                     currentPlayer.setCurrentField(vertexData);
                     return sequenTransis;
 
@@ -324,6 +339,11 @@ public class BoardGraph {
             normalTransitionPath.setPath(standartPath);
             normalTransitionPath.setDuration(Duration.millis(standartDurration));
             sequenTransis.getChildren().add(normalTransitionPath);
+
+            if (playerReachedEnd) {
+                sequenTransis.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[0]);
+                sequenTransis.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[1]);
+            }
 
             currentPlayer.setCurrentField(vertexData);      // Sets the current Field for the Player
             return sequenTransis;
