@@ -1,12 +1,11 @@
 package com.example.theos;
 
 import Animation.SpriteAnimation;
-import javafx.animation.Animation;
-import javafx.animation.ParallelTransition;
-import javafx.animation.Transition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
 import javafx.util.Duration;
 
 import java.nio.file.Path;
@@ -193,6 +192,58 @@ public class Player {
         currentAnimation = new SpriteAnimation(imageView, 20, 20, 0, 148, 74, 74);
         currentAnimation.setCycleCount(Animation.INDEFINITE);
         currentAnimation.play();
+    }
+
+    /*
+    Plays the ending animation when a player reaches a winning field: the character jumps up from the last field (195 or 347) and falls down to the winning fields, swimming animation starts then
+    The player has already logically reached the winning field, so currentField == one of the winning fields
+    to correctly play the animation the input parameter specifies from which last field the player reached the end
+    returns nothing (plays the animation)
+     */
+    public Transition[] getEndAnimation(Field winningField) {
+        if (currentAnimation != null) {
+            currentAnimation.stop();
+        }
+
+        // First part: jump up from last field
+        TranslateTransition translateUp = new TranslateTransition(Duration.millis(600), imageView);
+        translateUp.setByY(-200);
+
+        SpriteAnimation jumpSprite = new SpriteAnimation(imageView, 6, 6, 740, 296, 74, 74); // jump animation based on spritesheet
+
+        ParallelTransition jumpParallel = new ParallelTransition(translateUp, jumpSprite);
+        /*
+        jumpParallel.setOnFinished(event -> {
+            this.imageView.setX(currentField.getX()-82);
+            this.imageView.setY(currentField.getY()-200+95);
+            // -82 and +95 because the characters weren’t displayed at the correct coordinates of the fields (maybe something to do with how setX/Y works)
+        });
+        */
+        jumpParallel.setOnFinished(actionEvent -> imageView.setOpacity(0));
+
+        // Second part: fall down to the winning field
+        TranslateTransition translateDown = new TranslateTransition(Duration.millis(600), imageView);
+        translateDown.setByY(200);
+
+        SpriteAnimation fallCerealSprite = new SpriteAnimation(imageView, 6, 6, 740, 222, 74, 74); // fallCereal animation based on spritesheet
+
+        ParallelTransition fallParallel = new ParallelTransition(translateDown, fallCerealSprite);
+
+        PathTransition pseudoPath = new PathTransition();
+        pseudoPath.setNode(imageView);
+        pseudoPath.setDuration(Duration.millis(200));
+
+        javafx.scene.shape.Path path = new javafx.scene.shape.Path();
+        path.getElements().add(new MoveTo(200, 200));
+        path.getElements().add(new LineTo(winningField.getX(), winningField.getY()-200));
+
+        //pseudoPath.setPath(new Line(200, 200, currentField.getX(), currentField.getY()-200));
+        pseudoPath.setPath(path);
+        pseudoPath.setOnFinished(actionEvent -> imageView.setOpacity(1));
+
+        SequentialTransition sequence = new SequentialTransition(pseudoPath, fallParallel);
+
+        return new Transition[]{jumpParallel, sequence};
     }
 
     /*

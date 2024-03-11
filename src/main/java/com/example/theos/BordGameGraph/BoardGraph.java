@@ -14,7 +14,6 @@ import javafx.scene.shape.Path;
 import javafx.util.Duration;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 public class BoardGraph {
     private Graph forwardGraph;
@@ -213,6 +212,8 @@ public class BoardGraph {
         Path ladderPath = new Path(); // Path to be used for normale movement
         double ladderDurration = 0;
 
+        boolean playerReachedEnd = false;
+
         Field vertexData = root;
         int vertexListSize;
         Weight tmpWeigth;
@@ -250,8 +251,20 @@ public class BoardGraph {
                             tmpWeigth = (Weight) item.getWeight();
                             if (tmpWeigth.getType() == edgeType.NormalEdge) {
                                 var nextVertexData = (item.getSource() == vertexData) ? (Field) item.getTarget() : (Field) item.getSource();
-                                standartPath.getElements().add(new LineTo(nextVertexData.getX() - animationOffsetX, nextVertexData.getY() - animationOffsetY));
-                                standartDurration = standartDurration + (Integer) tmpWeigth.getData();
+
+                                if (!gameBord.getWinningFields().contains(nextVertexData)) { // TODO problems if player reaches winning field from last possible field
+                                    // check if next vertex is a winning field: if yes, dont update path and duration
+                                    standartPath.getElements().add(new LineTo(nextVertexData.getX() - animationOffsetX, nextVertexData.getY() - animationOffsetY));
+                                    standartDurration = standartDurration + (Integer) tmpWeigth.getData();
+                                } else {
+                                    playerReachedEnd = true;
+
+                                    if (i == 0) {
+                                        standartPath.getElements().add(new LineTo(vertexData.getX() - animationOffsetX, nextVertexData.getY() - animationOffsetY));
+                                        standartDurration = 0.1;
+                                    }
+                                }
+
                                 vertexData = nextVertexData;
                                 break;
                             }
@@ -290,6 +303,12 @@ public class BoardGraph {
                         ladderPathTransition.setDuration(Duration.millis(ladderDurration));
                         seqtrans.getChildren().add(ladderPathTransition);
                     }
+
+                    if (playerReachedEnd) {
+                        seqtrans.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[0]);
+                        seqtrans.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[1]);
+                    }
+
                     return seqtrans;   // End of Graph
                 }
             }
@@ -304,6 +323,11 @@ public class BoardGraph {
                 ladderPathTransition.setPath(ladderPath);
                 ladderPathTransition.setDuration(Duration.millis(ladderDurration));
                 seqtrans.getChildren().add(ladderPathTransition);
+            }
+
+            if (playerReachedEnd) {
+                seqtrans.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[0]);
+                seqtrans.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[1]);
             }
 
             return seqtrans;

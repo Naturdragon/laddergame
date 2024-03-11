@@ -1028,6 +1028,11 @@ public class GameBoard {
             diceUI.switchPlayerTurn(this);
             player.playIdle();
 
+            if (winningFields.contains(player.getCurrentField())) {
+                //player.playEndAnimation();
+                player.playSwim();
+            }
+
             // the current player is moved to the end of the list
             playerList.add(playerList.get(0));
             playerList.remove(0);
