@@ -6,7 +6,6 @@ import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -23,11 +22,9 @@ public class GameBoard {
     private List<Player> finishedPlayers;
     private List<Field> winningFields;
     private List<Field> lastFields;
+    private List<Field> waterfallFields;
     private Pane mainLayout;
     private final AnchorPane INSTRUCTIONS_WINDOW = createInstructionsWindow();
-    private Field waterfallField1;
-    private Field waterfallField2;
-
     private Field crossoverField1;
     private Field crossoverField2;
 
@@ -55,6 +52,7 @@ public class GameBoard {
         boardGraph = new BoardGraph();
         winningFields = new ArrayList<>();
         lastFields = new ArrayList<>();
+        waterfallFields = new ArrayList<>();
         finishedPlayers = new ArrayList<>();
         diceUI = new DiceUI();
         mainLayout = new Pane();
@@ -86,11 +84,15 @@ public class GameBoard {
         return winningFields;
     }
 
+    public List<Field> getWaterFallFields() {
+        return waterfallFields;
+    }
+
     /*
-    Plays the animation (as a ParallelTransition) of all characters spawning in
-    Unlocks the user to be able to input something (roll or select die)
-    Returns nothing
-     */
+        Plays the animation (as a ParallelTransition) of all characters spawning in
+        Unlocks the user to be able to input something (roll or select die)
+        Returns nothing
+         */
     public void playGameStartAnimation() {
         ParallelTransition transition = new ParallelTransition();
         transition.setCycleCount(1);
@@ -408,8 +410,8 @@ public class GameBoard {
         Field field194 = new Field(Field.fieldType.LadderField, 79.5, 44.7);
         Field field195 = new Field(Field.fieldType.NormalField, 81.1, 42.3);
 
-        waterfallField1 = field170;
-        waterfallField2 = field171;
+        waterfallFields.add(field170);
+        waterfallFields.add(field171);
 
         fieldListUpperPath.add(field101);
         fieldListUpperPath.add(field102);

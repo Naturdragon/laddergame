@@ -300,6 +300,11 @@ public class BoardGraph {
                         standartPathTransition.setDuration(Duration.millis(standartDurration));
                         sequenTransis.getChildren().add(standartPathTransition);
 
+                        if (gameBord.getWaterFallFields().contains(vertexData)) {
+                            System.out.println("player landed on a waterfall field");
+                            standartPathTransition.setOnFinished(actionEvent -> currentPlayer.playFallWaterfall());
+                        }
+
                         // Adding the Ladder Path
                         Path ladderPath = new Path();
                         ladderPath.getElements().add(new MoveTo(vertexData.getX() - animationOffsetX, vertexData.getY() - animationOffsetY));   // Beginning of the Ladder path
