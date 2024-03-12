@@ -115,12 +115,16 @@ public class Player {
         turnCount++;
     }
 
+    public Transition getCurrentAnimation() {
+        return currentAnimation;
+    }
+
     /*
-    Creates the SpawnAnimation of a character. It's a ParallelTransition consisting of a Translate and a Sprite Animation
-    Unlike other character animations this is not loaded into the currentAnimation variable, reason being:
-    the spawn animation of all characters are later played together in another ParallelTransition, this helps for input handling
-    Returns a Transition (ParallelTransition)
-     */
+        Creates the SpawnAnimation of a character. It's a ParallelTransition consisting of a Translate and a Sprite Animation
+        Unlike other character animations this is not loaded into the currentAnimation variable, reason being:
+        the spawn animation of all characters are later played together in another ParallelTransition, this helps for input handling
+        Returns a Transition (ParallelTransition)
+         */
     public Transition playSpawnAnimation() {
         if (currentAnimation != null) {
             currentAnimation.stop();
@@ -201,25 +205,21 @@ public class Player {
     returns nothing (plays the animation)
      */
     public Transition[] getEndAnimation(Field winningField) {
-        if (currentAnimation != null) {
-            currentAnimation.stop();
-        }
-
         // First part: jump up from last field
         TranslateTransition translateUp = new TranslateTransition(Duration.millis(600), imageView);
         translateUp.setByY(-200);
 
         SpriteAnimation jumpSprite = new SpriteAnimation(imageView, 6, 6, 740, 296, 74, 74); // jump animation based on spritesheet
 
-        ParallelTransition jumpParallel = new ParallelTransition(translateUp, jumpSprite);
+        ParallelTransition jumpUpAnimation = new ParallelTransition(translateUp, jumpSprite);
         /*
-        jumpParallel.setOnFinished(event -> {
+        jumpUpAnimation.setOnFinished(event -> {
             this.imageView.setX(currentField.getX()-82);
             this.imageView.setY(currentField.getY()-200+95);
             // -82 and +95 because the characters weren’t displayed at the correct coordinates of the fields (maybe something to do with how setX/Y works)
         });
         */
-        jumpParallel.setOnFinished(actionEvent -> imageView.setOpacity(0));
+        jumpUpAnimation.setOnFinished(actionEvent -> imageView.setOpacity(0));
 
         // Second part: fall down to the winning field
         TranslateTransition translateDown = new TranslateTransition(Duration.millis(600), imageView);
@@ -227,23 +227,23 @@ public class Player {
 
         SpriteAnimation fallCerealSprite = new SpriteAnimation(imageView, 6, 6, 740, 222, 74, 74); // fallCereal animation based on spritesheet
 
-        ParallelTransition fallParallel = new ParallelTransition(translateDown, fallCerealSprite);
+        ParallelTransition fallDownAnimation = new ParallelTransition(translateDown, fallCerealSprite);
 
-        PathTransition pseudoPath = new PathTransition();
-        pseudoPath.setNode(imageView);
-        pseudoPath.setDuration(Duration.millis(200));
+        PathTransition pseudoPathTransition = new PathTransition(); // needed to place the character above the end field to correctly display fall down animation
+        pseudoPathTransition.setNode(imageView);
+        pseudoPathTransition.setDuration(Duration.millis(200));
 
         javafx.scene.shape.Path path = new javafx.scene.shape.Path();
         path.getElements().add(new MoveTo(200, 200));
         path.getElements().add(new LineTo(winningField.getX(), winningField.getY()-200));
 
-        //pseudoPath.setPath(new Line(200, 200, currentField.getX(), currentField.getY()-200));
-        pseudoPath.setPath(path);
-        pseudoPath.setOnFinished(actionEvent -> imageView.setOpacity(1));
+        //pseudoPathTransition.setPath(new Line(200, 200, currentField.getX(), currentField.getY()-200));
+        pseudoPathTransition.setPath(path);
+        pseudoPathTransition.setOnFinished(actionEvent -> imageView.setOpacity(1));
 
-        SequentialTransition sequence = new SequentialTransition(pseudoPath, fallParallel);
+        SequentialTransition sequence = new SequentialTransition(pseudoPathTransition, fallDownAnimation);
 
-        return new Transition[]{jumpParallel, sequence};
+        return new Transition[]{jumpUpAnimation, sequence};
     }
 
     /*

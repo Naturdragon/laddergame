@@ -329,6 +329,7 @@ public class BoardGraph {
                     if (playerReachedEnd) {
                         sequenTransis.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[0]);
                         sequenTransis.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[1]);
+                        standartPathTransition.setOnFinished(actionEvent -> currentPlayer.getCurrentAnimation().stop()); // currentAnimation (walking) is stopped before the end animation starts; otherwise spriteanimation overlap
                     }
 
                     currentPlayer.setCurrentField(vertexData);
@@ -348,6 +349,7 @@ public class BoardGraph {
             if (playerReachedEnd) {
                 sequenTransis.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[0]);
                 sequenTransis.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[1]);
+                normalTransitionPath.setOnFinished(actionEvent -> currentPlayer.getCurrentAnimation().stop()); // currentAnimation (walking) is stopped before the end animation starts; otherwise spriteanimation overlap
             }
 
             currentPlayer.setCurrentField(vertexData);      // Sets the current Field for the Player
