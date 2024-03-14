@@ -893,9 +893,7 @@ public class GameBoard {
         idleArrowTwo.setAutoReverse(true);
         idleArrowTwo.play();
 
-
-        mainLayout.getChildren().addAll(pathOneArrow, pathTwoArrow);
-
+        mainLayout.getChildren().addAll(pathOneArrow, pathTwoArrow, dieBG, remainingTurns);
 
         // on mouse press the target arrow gets highlighted and on release both are removed form the layout and the rest of the move is done via crossingManager()
         pathOneArrow.setOnMousePressed(event -> {
