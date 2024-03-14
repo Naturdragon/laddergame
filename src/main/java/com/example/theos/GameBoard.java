@@ -811,9 +811,9 @@ public class GameBoard {
         // TODO Testing
         /*
         for (Player player : playerList) {
-            player.setCurrentField(fiels208);
+            player.setCurrentField(field208);
         }
-        */
+         */
     }
 
     /*
@@ -906,7 +906,7 @@ public class GameBoard {
         pathOneArrow.setOnMouseReleased(event -> {
             pathOneArrow.setOpacity(1);
             mainLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow, dieBG, remainingTurns);
-            crossingManager(hopsLeft, player, BoardGraph.edgeType.CrossoverPathOne);
+            movePlayer(player, hopsLeft, BoardGraph.edgeType.CrossoverPathOne);
         });
 
         pathTwoArrow.setOnMousePressed(event -> {
@@ -917,7 +917,7 @@ public class GameBoard {
         pathTwoArrow.setOnMouseReleased(event -> {
             pathTwoArrow.setOpacity(1);
             mainLayout.getChildren().removeAll(pathOneArrow, pathTwoArrow, dieBG, remainingTurns);
-            crossingManager(hopsLeft, player, BoardGraph.edgeType.CrossoverPathTwo);
+            movePlayer(player, hopsLeft, BoardGraph.edgeType.CrossoverPathTwo);
         });
     }
 
@@ -950,13 +950,16 @@ public class GameBoard {
     Loads created path and character into PathTransitions and plays the animation.
     Returns nothing
     */
-    public void movePlayer(Player player, int fieldsToMove) {
+    public void movePlayer(Player player, int fieldsToMove){
+        movePlayer(player,fieldsToMove,null);
+    }
+    public void movePlayer(Player player, int fieldsToMove, BoardGraph.edgeType typeOfEdge) {
         Field startingField = player.getCurrentField(); // The Field where the player starts from when the method gets called.
 
         player.playWalk();  // Begins Player Animation
 
         // Gets SequentialPath from the Graph and plays it
-        SequentialTransition sequentialTransition = boardGraph.getSequentialAnimationAndMakeMove(player, fieldsToMove, animationOffsetX, animationOffsetY, this, null);
+        SequentialTransition sequentialTransition = boardGraph.getSequentialAnimationAndMakeMove(player, fieldsToMove, animationOffsetX, animationOffsetY, this, typeOfEdge);
         sequentialTransition.setNode(player.getImageView());
         sequentialTransition.play();
 
@@ -968,8 +971,8 @@ public class GameBoard {
                 this.playChargeAddedAnimation();
             }
 
-            // TODO: There has to be a more efficient way to find out if the players has hops left. Calling a Methode which traverses the graph a second time to check that is not efficient at all.
-            if (player.getCurrentField().getType() != Field.fieldType.CrossoverField || boardGraph.hopCountTraversal(startingField, fieldsToMove).getId() == player.getCurrentField().getId()) {        // Checks if the methode has the first return of the crossing.
+            // TODO: Improve?
+            if (player.getCurrentField().getType() != Field.fieldType.CrossoverField && typeOfEdge == null || typeOfEdge != null) {        // Checks if the methode has the first return of the crossing.
                 player.increaseTurns();
                 diceUI.switchPlayerTurn(this);
 
@@ -977,6 +980,7 @@ public class GameBoard {
                 playerList.add(playerList.get(0));
                 playerList.remove(0);
             }
+
             player.playIdle();
             if (winningFields.contains(player.getCurrentField())) {
                 player.playSwim();
@@ -1030,7 +1034,7 @@ public class GameBoard {
     also removes the edge from the last field to a WinningField, if the winningField is already in use
      */
     public boolean addFinishedPlayer(Player player) {
-        Field lastField = boardGraph.hopCountTraversal(player.getCurrentField(), Integer.MAX_VALUE);
+        Field lastField = boardGraph.hopCountTraversal(player.getCurrentField(), Integer.MAX_VALUE, null);
 
             for (int i = 0; i < this.getWinningFields().size(); i++) {
                 if (player.getCurrentField().getX()  == getWinningFields().get(i).getX()
@@ -1038,16 +1042,13 @@ public class GameBoard {
                         boardGraph.removeEdge(lastFields.get(0), getWinningFields().get(i));
                         boardGraph.removeEdge(lastFields.get(1), getWinningFields().get(i));
                         getWinningFields().remove(i);
-
-                    }
                 }
+            }
 
         if (lastField != null && lastField.getType() != Field.fieldType.LadderField) {
-            if (boardGraph.hopCountTraversal(player.getCurrentField(), Integer.MAX_VALUE) != null) {
                 // Player has reached or passed the last field
                 finishedPlayers.add(player);
                 return true;
-            }
         }
         return false;
     }
@@ -1055,6 +1056,7 @@ public class GameBoard {
     /*
     Special Methode that gets called by the Click on the Arrows at a crossing.
      */
+    /*
     public void crossingManager(int fieldsToMove, Player player, BoardGraph.edgeType edgeType) {
         player.playWalk();
         SequentialTransition sequentialTransition =boardGraph.getSequentialAnimationAndMakeMove(player,fieldsToMove,animationOffsetX,animationOffsetY,this,edgeType);
@@ -1078,4 +1080,5 @@ public class GameBoard {
         });
 
     }
+    */
 }

@@ -115,7 +115,7 @@ public class BoardGraph {
     /*
     Used to traverse the graph in both directions. Takes care of Lader Fields and Crossings
      */
-    public Field hopCountTraversal(Field root, int hops)
+    public Field hopCountTraversal(Field root, int hops, edgeType typeOfEdge)
     {
         if (hops == 0) return root; // When a zero got roled nothing needs to be done. Return the current field
 
@@ -137,7 +137,15 @@ public class BoardGraph {
                 vertexListSize = forwardGraph.getAdjacenctVertex(vertexData).size();
                 if (vertexListSize > 0) {
                     if (vertexData.getType() == Field.fieldType.CrossoverField) {
-                        return vertexData;  // Crossing
+                        // Crossing
+                        if(typeOfEdge == null) return vertexData;
+
+                        for (var edge : forwardGraph.getAdjacenctVertexEdges(vertexData)) {
+                            Weight edgeWeight = (Weight) edge.getWeight();
+                            if (edgeWeight.getType() == typeOfEdge) {
+                                vertexData = (edge.getSource() == vertexData) ? (Field) edge.getTarget() : (Field) edge.getSource();
+                            }
+                        }
                     } else {
                         if (vertexData.getType() == Field.fieldType.LadderField)
                             System.out.println("!! This should not Happen !!");

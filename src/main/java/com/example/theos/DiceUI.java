@@ -409,6 +409,7 @@ public class DiceUI extends AnchorPane {
         ParallelTransition parallel = new ParallelTransition(scale, fade);
 
         if (uiState == state.NormalDieSelected) {
+            // TODO: Can this be done with a switch?
             if (numberRolled == 1) {
                 scale.setNode(NORMAL_DIE_0);
                 fade.setNode(NORMAL_DIE_0);
@@ -460,6 +461,7 @@ public class DiceUI extends AnchorPane {
                 indexOfRolledNumber = equalsFound.get(0);
             }
 
+            // TODO: Can this be replaced with a switch?
             if (indexOfRolledNumber == 0) {
                 scale.setNode(specialDie0);
                 fade.setNode(specialDie0);
