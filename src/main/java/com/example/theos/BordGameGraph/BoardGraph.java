@@ -318,7 +318,24 @@ public class BoardGraph {
                         sequenTransis.getChildren().add(ladderPathTransition);
 
                         currentPlayer.setCurrentField(newVertexData);
+                        //Aleyna:
+                       // return sequenTransis;
+                        if (newVertexData.getType() == Field.fieldType.LadderField) {
+                            Field downVertexData = getNextVertex(newVertexData, forwardGraph, edgeType.LadderEdge);
+                            if (downVertexData.getType() == Field.fieldType.NormalField) {
+                                Path downLadderPath = new Path();
+                                downLadderPath.getElements().add(new MoveTo(newVertexData.getX() - animationOffsetX, newVertexData.getY() - animationOffsetY));
+                                downLadderPath.getElements().add(new LineTo(downVertexData.getX() - animationOffsetX, downVertexData.getY() - animationOffsetY));
+                                PathTransition downLadderPathTransition = new PathTransition();
+                                downLadderPathTransition.setPath(downLadderPath);
+                                downLadderPathTransition.setDuration(Duration.millis((Integer) getEdgeWeight(getNextEdge(newVertexData, forwardGraph, edgeType.LadderEdge)).getData()));
+                                sequenTransis.getChildren().add(downLadderPathTransition);
+                                currentPlayer.setCurrentField(downVertexData);
+                            }
+                        }
                         return sequenTransis;
+
+
                     }
                 } else {
                     // End of Graph
@@ -329,16 +346,22 @@ public class BoardGraph {
                     standartPathTransition.setDuration(Duration.millis(standartDurration));
                     sequenTransis.getChildren().add(standartPathTransition);
 
+
                     if (playerReachedEnd) {
                         sequenTransis.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[0]);
                         sequenTransis.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[1]);
                         standartPathTransition.setOnFinished(actionEvent -> currentPlayer.getCurrentAnimation().stop()); // currentAnimation (walking) is stopped before the end animation starts; otherwise spriteanimation overlap
-                    }
+                    } //Aleyna
+
+
 
                     currentPlayer.setCurrentField(vertexData);
                     return sequenTransis;
 
                 }
+
+
+
 
             }
             // End of Movement
@@ -355,7 +378,7 @@ public class BoardGraph {
                 normalTransitionPath.setOnFinished(actionEvent -> currentPlayer.getCurrentAnimation().stop()); // currentAnimation (walking) is stopped before the end animation starts; otherwise spriteanimation overlap
             }
 
-            currentPlayer.setCurrentField(vertexData);      // Sets the current Field for the Player
+            currentPlayer.setCurrentField(vertexData);// Sets the current Field for the Player
             return sequenTransis;
         } else {
             // Backwards Movement
@@ -414,6 +437,7 @@ public class BoardGraph {
             currentPlayer.setCurrentField(vertexData);      // Sets the current Field for the Player
             return sequenTransis;
         }
+
     }
 
     private Field getNextVertex(Field root, Graph graphToUse, edgeType typeOfEdge)
