@@ -326,7 +326,7 @@ public class BoardGraph {
                         sequenTransis.getChildren().add(ladderPathTransition);
 
                         currentPlayer.setCurrentField(newVertexData);
-                        //new code Aleynas task:
+                        //new code Aleynas task to do:
                        // return sequenTransis;
                         if (newVertexData.getType() == Field.fieldType.LadderField) {
                             Field downVertexData = getNextVertex(newVertexData, forwardGraph, edgeType.LadderEdge);
