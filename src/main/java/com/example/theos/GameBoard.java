@@ -321,7 +321,7 @@ public class GameBoard {
         Field field114 = new Field(Field.fieldType.NormalField, 39.6, 62.7);
         Field field115 = new Field(Field.fieldType.NormalField, 40.8, 58.7);
         Field field116 = new Field(Field.fieldType.NormalField, 40.9, 54.1);
-        Field field117 = new Field(Field.fieldType.LadderField, 39.8, 50.2);
+        Field field117 = new Field(Field.fieldType.NormalField, 39.8, 50.2);
         Field field118 = new Field(Field.fieldType.NormalField, 38.4, 47);
         Field field119 = new Field(Field.fieldType.NormalField, 36.3, 44.8);
         Field field120 = new Field(Field.fieldType.NormalField, 34, 42.9);
@@ -809,11 +809,11 @@ public class GameBoard {
         getBoardGraph().addOneDirectionalEdgeForward(field347, win6, 500, BoardGraph.edgeType.NormalEdge);
       
         // TODO Testing
-/*
+        /*
         for (Player player : playerList) {
-            player.setCurrentField(field208);
+            player.setCurrentField(fiels208);
         }
-      */
+        */
     }
 
     /*
