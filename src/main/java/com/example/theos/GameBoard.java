@@ -972,7 +972,7 @@ public class GameBoard {
             }
 
             // TODO: Improve?
-            if (player.getCurrentField().getType() != Field.fieldType.CrossoverField && typeOfEdge == null || typeOfEdge != null) {        // Checks if the methode has the first return of the crossing.
+            if (boardGraph.hopCountTraversal(startingField, fieldsToMove, BoardGraph.edgeType.CrossoverPathOne).getId() == player.getCurrentField().getId()) {        // Checks if the methode has the first return of the crossing.
                 player.increaseTurns();
                 diceUI.switchPlayerTurn(this);
 
