@@ -14,7 +14,6 @@ import javafx.scene.shape.Path;
 import javafx.util.Duration;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 public class BoardGraph {
     private Graph forwardGraph;
@@ -216,7 +215,7 @@ public class BoardGraph {
             1) Around Field 114 craracters might bug out and stop moving
             2) After Selecting a Arrow the character does not continiue to move
      */
-    public SequentialTransition getSequentialAnimationAndMakeMove(Player currentPlayer, int hops, int animationOffsetX, int animationOffsetY, GameBoard gameBord, edgeType typeOfEdge)
+    public SequentialTransition getSequentialAnimationAndMakeMove(Player currentPlayer, int hops, int animationOffsetX, int animationOffsetY, GameBoard gameBord,  edgeType typeOfEdge)
     {
         // Initialising of variables
         SequentialTransition sequenTransis = new SequentialTransition();
@@ -231,6 +230,8 @@ public class BoardGraph {
         double standartDurration = 0;
 
         if (hops == 0) return sequenTransis;
+
+        boolean playerReachedEnd = false;
 
         if (hops > 0) {
             // Forwards Movement
@@ -274,11 +275,20 @@ public class BoardGraph {
                             // Normal Movement Forward
                             Field newVertexData = getNextVertex(vertexData, forwardGraph, edgeType.NormalEdge);
 
+
+                        if (!gameBord.getWinningFields().contains(newVertexData)) {
+                            // check if next vertex is a winning field: if that is the case, dont update path and duration (else section)
                             standartPath.getElements().add(new LineTo(newVertexData.getX() - animationOffsetX, newVertexData.getY() - animationOffsetY));
-
                             standartDurration = standartDurration + (Integer) getEdgeWeight(getNextEdge(vertexData, forwardGraph, edgeType.NormalEdge)).getData();
-
+                        } else {
+                            playerReachedEnd = true;
                             vertexData = newVertexData; // Sets the new Fields to the current one
+                            if (i == 0) {
+                                standartPath.getElements().add(new LineTo(vertexData.getX() - animationOffsetX, newVertexData.getY() - animationOffsetY));
+                                standartDurration = 0.1;
+                            }
+                        }
+                        vertexData = newVertexData; // Sets the new Fields to the current one
 
                         }
                     }
@@ -292,6 +302,11 @@ public class BoardGraph {
                         standartPathTransition.setPath(standartPath);
                         standartPathTransition.setDuration(Duration.millis(standartDurration));
                         sequenTransis.getChildren().add(standartPathTransition);
+
+                        if (gameBord.getWaterFallFields().contains(vertexData)) {
+                            System.out.println("player landed on a waterfall field");
+                            standartPathTransition.setOnFinished(actionEvent -> currentPlayer.playFallWaterfall());
+                        }
 
                         // Adding the Ladder Path
                         Path ladderPath = new Path();
@@ -314,6 +329,12 @@ public class BoardGraph {
                     standartPathTransition.setDuration(Duration.millis(standartDurration));
                     sequenTransis.getChildren().add(standartPathTransition);
 
+                    if (playerReachedEnd) {
+                        sequenTransis.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[0]);
+                        sequenTransis.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[1]);
+                        standartPathTransition.setOnFinished(actionEvent -> currentPlayer.getCurrentAnimation().stop()); // currentAnimation (walking) is stopped before the end animation starts; otherwise spriteanimation overlap
+                    }
+
                     currentPlayer.setCurrentField(vertexData);
                     return sequenTransis;
 
@@ -327,6 +348,12 @@ public class BoardGraph {
             normalTransitionPath.setPath(standartPath);
             normalTransitionPath.setDuration(Duration.millis(standartDurration));
             sequenTransis.getChildren().add(normalTransitionPath);
+
+            if (playerReachedEnd) {
+                sequenTransis.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[0]);
+                sequenTransis.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[1]);
+                normalTransitionPath.setOnFinished(actionEvent -> currentPlayer.getCurrentAnimation().stop()); // currentAnimation (walking) is stopped before the end animation starts; otherwise spriteanimation overlap
+            }
 
             currentPlayer.setCurrentField(vertexData);      // Sets the current Field for the Player
             return sequenTransis;
@@ -351,25 +378,25 @@ public class BoardGraph {
                 if (knownVertexes == 1) {
                     // One way back
 
-                    Field newVertexData = getNextVertex(vertexData, backwardGraph, edgeType.NormalEdge);
+                    Field newVertexData = getNextVertex(vertexData, backwardGraph,edgeType.NormalEdge);
 
                     standartPath.getElements().add(new LineTo(newVertexData.getX() - animationOffsetX, newVertexData.getY() - animationOffsetY));
 
-                    standartDurration = standartDurration + (Integer) getEdgeWeight(getNextEdge(vertexData, backwardGraph, edgeType.NormalEdge)).getData();
+                    standartDurration = standartDurration + (Integer)getEdgeWeight(getNextEdge(vertexData,backwardGraph,edgeType.NormalEdge)).getData();
 
                     vertexData = newVertexData; // Sets the new Fields to the current one
                 } else {
                     // Multible ways back
                     Field newVertesData = backwardGraph.getAdjacenctVertex(vertexData).get(rnd.nextInt(knownVertexes));
 
-                    Field newVertexData = getNextVertex(vertexData, backwardGraph, edgeType.NormalEdge);
+                    Field newVertexData = getNextVertex(vertexData, backwardGraph,edgeType.NormalEdge);
 
                     standartPath.getElements().add(new LineTo(newVertexData.getX() - animationOffsetX, newVertexData.getY() - animationOffsetY));
 
-                    for (var edges : backwardGraph.getAdjacenctVertexEdges(vertexData)) {
+                    for (var edges:backwardGraph.getAdjacenctVertexEdges(vertexData)) {
                         Weight edgesWeight = (Weight) edges.getWeight();
-                        if (edgesWeight.getType() == edgeType.NormalEdge && (edges.getSource() == vertexData || edges.getTarget() == vertexData) && (edges.getSource() == newVertexData || edges.getTarget() == newVertesData)) {
-                            standartDurration = standartDurration + (Integer) edgesWeight.getData();
+                        if(edgesWeight.getType() == edgeType.NormalEdge && (edges.getSource() == vertexData || edges.getTarget() == vertexData) && (edges.getSource() == newVertexData || edges.getTarget() == newVertesData)){
+                            standartDurration = standartDurration + (Integer)edgesWeight.getData();
                         }
                     }
 
@@ -391,22 +418,21 @@ public class BoardGraph {
 
     private Field getNextVertex(Field root, Graph graphToUse, edgeType typeOfEdge)
     {
-        if (graphToUse.getAdjacenctVertexEdges(root).size() == 0) return root;
+        if(graphToUse.getAdjacenctVertexEdges(root).size() == 0) return root;
 
-        for (var edges : graphToUse.getAdjacenctVertexEdges(root)) {
-            if (getEdgeWeight(edges).getType() == typeOfEdge)
-                return (edges.getSource() == root) ? (Field) edges.getTarget() : (Field) edges.getSource();
+        for (var edges:graphToUse.getAdjacenctVertexEdges(root)) {
+            if(getEdgeWeight(edges).getType() == typeOfEdge) return (edges.getSource() == root) ? (Field) edges.getTarget() : (Field) edges.getSource();
         }
         return null; // No next Vertex was found
     }
 
     private Edge getNextEdge(Field root, Graph graphToUse, edgeType typeOfEdge)
     {
-        if (graphToUse.getAdjacenctVertexEdges(root).size() == 0) return null;
+        if(graphToUse.getAdjacenctVertexEdges(root).size() == 0) return null;
         Weight weight;
-        for (var edges : graphToUse.getAdjacenctVertexEdges(root)) {
-            weight = (Weight) edges.getWeight();
-            if (weight.getType() == typeOfEdge) return edges;
+        for (var edges:graphToUse.getAdjacenctVertexEdges(root)) {
+            weight = (Weight)edges.getWeight();
+            if(weight.getType() == typeOfEdge) return edges;
         }
         return null; // No next Edge was found
     }
