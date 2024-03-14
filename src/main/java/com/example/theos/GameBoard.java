@@ -953,6 +953,7 @@ public class GameBoard {
     Returns nothing
     */
     public void movePlayer(Player player, int fieldsToMove) {
+        Field startingField = player.getCurrentField(); // The Field where the player starts from when the method gets called.
 
         player.playWalk();  // Begins Player Animation
 
@@ -969,7 +970,8 @@ public class GameBoard {
                 this.playChargeAddedAnimation();
             }
 
-            if(player.getCurrentField().getType() != Field.fieldType.CrossoverField ) { // Check if the player has no moves left
+            // TODO: There has to be a more efficient way to find out if the players has hops left. Calling a Methode which traverses the graph a second time to check that is not efficient at all.
+            if (player.getCurrentField().getType() != Field.fieldType.CrossoverField || boardGraph.hopCountTraversal(startingField, fieldsToMove).getId() == player.getCurrentField().getId()) {        // Checks if the methode has the first return of the crossing.
                 player.increaseTurns();
                 diceUI.switchPlayerTurn(this);
 
