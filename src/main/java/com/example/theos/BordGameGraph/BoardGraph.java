@@ -216,7 +216,7 @@ public class BoardGraph {
             1) Around Field 114 craracters might bug out and stop moving
             2) After Selecting a Arrow the character does not continiue to move
      */
-    public SequentialTransition getSequentialAnimationAndMakeMove(Player currentPlayer, int hops, int animationOffsetX, int animationOffsetY, GameBoard gameBord,  edgeType typeOfEdge)
+    public SequentialTransition getSequentialAnimationAndMakeMove(Player currentPlayer, int hops, int animationOffsetX, int animationOffsetY, GameBoard gameBord, edgeType typeOfEdge)
     {
         // Initialising of variables
         SequentialTransition sequenTransis = new SequentialTransition();
@@ -240,10 +240,10 @@ public class BoardGraph {
                     if (vertexData.getType() == Field.fieldType.CrossoverField) {
                         // Crossing
 
-                        if(typeOfEdge == null) {
+                        if (typeOfEdge == null) {
 
                             currentPlayer.setCurrentField(vertexData);
-                            gameBord.selectPathEvent(hops-i, currentPlayer);
+                            gameBord.selectPathEvent(hops - i, currentPlayer);
 
                             // Adding the Standart Path; The Methode returns the Path to the Crossing and sets the player there. The Events make the run from this point forward.
                             PathTransition standartPathTransition = new PathTransition();
@@ -252,38 +252,40 @@ public class BoardGraph {
                             sequenTransis.getChildren().add(standartPathTransition);
 
                             return sequenTransis;
-                        }else {
+                        } else {
                             // get next field
                             // Animations of normal Movement -> continiue
-                            for (var edge:forwardGraph.getAdjacenctVertexEdges(vertexData)) {
+                            for (var edge : forwardGraph.getAdjacenctVertexEdges(vertexData)) {
                                 Weight edgeWeight = (Weight) edge.getWeight();
-                                if(edgeWeight.getType() == typeOfEdge){
-                                    Field newVertexData = (edge.getSource() == vertexData)? (Field) edge.getTarget(): (Field)edge.getSource();
+                                if (edgeWeight.getType() == typeOfEdge) {
+                                    Field newVertexData = (edge.getSource() == vertexData) ? (Field) edge.getTarget() : (Field) edge.getSource();
                                     standartPath.getElements().add(new LineTo(newVertexData.getX() - animationOffsetX, newVertexData.getY() - animationOffsetY));
 
-                                    standartDurration = standartDurration + (Integer)getEdgeWeight(getNextEdge(vertexData,forwardGraph,typeOfEdge)).getData();
+                                    standartDurration = standartDurration + (Integer) getEdgeWeight(getNextEdge(vertexData, forwardGraph, typeOfEdge)).getData();
 
                                     vertexData = newVertexData; // Sets the new Fields to the current one
                                 }
                             }
                         }
+                    } else {
+
+
+                        if (vertexData.getType() == Field.fieldType.NormalField || vertexData.getType() == Field.fieldType.SpecialChargeField || (vertexData.getType() == Field.fieldType.LadderField && i < hops)) {
+                            // Normal Movement Forward
+                            Field newVertexData = getNextVertex(vertexData, forwardGraph, edgeType.NormalEdge);
+
+                            standartPath.getElements().add(new LineTo(newVertexData.getX() - animationOffsetX, newVertexData.getY() - animationOffsetY));
+
+                            standartDurration = standartDurration + (Integer) getEdgeWeight(getNextEdge(vertexData, forwardGraph, edgeType.NormalEdge)).getData();
+
+                            vertexData = newVertexData; // Sets the new Fields to the current one
+
+                        }
                     }
 
-                    if (vertexData.getType() == Field.fieldType.NormalField || vertexData.getType() == Field.fieldType.SpecialChargeField || (vertexData.getType() == Field.fieldType.LadderField &&  i < hops)) {
-                        // Normal Movement Forward
-                        Field newVertexData = getNextVertex(vertexData, forwardGraph,edgeType.NormalEdge);
-
-                        standartPath.getElements().add(new LineTo(newVertexData.getX() - animationOffsetX, newVertexData.getY() - animationOffsetY));
-
-                        standartDurration = standartDurration + (Integer)getEdgeWeight(getNextEdge(vertexData,forwardGraph,edgeType.NormalEdge)).getData();
-
-                        vertexData = newVertexData; // Sets the new Fields to the current one
-
-                    }
-
-                    if (vertexData.getType() == Field.fieldType.LadderField && i == hops-1) { // Last hop
+                    if (vertexData.getType() == Field.fieldType.LadderField && i == hops - 1) { // Last hop
                         // Ladder
-                        Field newVertexData = getNextVertex(vertexData, forwardGraph,edgeType.LadderEdge);
+                        Field newVertexData = getNextVertex(vertexData, forwardGraph, edgeType.LadderEdge);
 
                         // Adding the Standart Path
                         PathTransition standartPathTransition = new PathTransition();
@@ -297,7 +299,7 @@ public class BoardGraph {
                         ladderPath.getElements().add(new LineTo(newVertexData.getX() - animationOffsetX, newVertexData.getY() - animationOffsetY));   // Ending of the Ladder Path
                         PathTransition ladderPathTransition = new PathTransition();
                         ladderPathTransition.setPath(ladderPath);
-                        ladderPathTransition.setDuration(Duration.millis((Integer)getEdgeWeight(getNextEdge(vertexData,forwardGraph,edgeType.LadderEdge)).getData()));
+                        ladderPathTransition.setDuration(Duration.millis((Integer) getEdgeWeight(getNextEdge(vertexData, forwardGraph, edgeType.LadderEdge)).getData()));
                         sequenTransis.getChildren().add(ladderPathTransition);
 
                         currentPlayer.setCurrentField(newVertexData);
@@ -349,25 +351,25 @@ public class BoardGraph {
                 if (knownVertexes == 1) {
                     // One way back
 
-                    Field newVertexData = getNextVertex(vertexData, backwardGraph,edgeType.NormalEdge);
+                    Field newVertexData = getNextVertex(vertexData, backwardGraph, edgeType.NormalEdge);
 
                     standartPath.getElements().add(new LineTo(newVertexData.getX() - animationOffsetX, newVertexData.getY() - animationOffsetY));
 
-                    standartDurration = standartDurration + (Integer)getEdgeWeight(getNextEdge(vertexData,backwardGraph,edgeType.NormalEdge)).getData();
+                    standartDurration = standartDurration + (Integer) getEdgeWeight(getNextEdge(vertexData, backwardGraph, edgeType.NormalEdge)).getData();
 
                     vertexData = newVertexData; // Sets the new Fields to the current one
                 } else {
                     // Multible ways back
                     Field newVertesData = backwardGraph.getAdjacenctVertex(vertexData).get(rnd.nextInt(knownVertexes));
 
-                    Field newVertexData = getNextVertex(vertexData, backwardGraph,edgeType.NormalEdge);
+                    Field newVertexData = getNextVertex(vertexData, backwardGraph, edgeType.NormalEdge);
 
                     standartPath.getElements().add(new LineTo(newVertexData.getX() - animationOffsetX, newVertexData.getY() - animationOffsetY));
 
-                    for (var edges:backwardGraph.getAdjacenctVertexEdges(vertexData)) {
+                    for (var edges : backwardGraph.getAdjacenctVertexEdges(vertexData)) {
                         Weight edgesWeight = (Weight) edges.getWeight();
-                        if(edgesWeight.getType() == edgeType.NormalEdge && (edges.getSource() == vertexData || edges.getTarget() == vertexData) && (edges.getSource() == newVertexData || edges.getTarget() == newVertesData)){
-                            standartDurration = standartDurration + (Integer)edgesWeight.getData();
+                        if (edgesWeight.getType() == edgeType.NormalEdge && (edges.getSource() == vertexData || edges.getTarget() == vertexData) && (edges.getSource() == newVertexData || edges.getTarget() == newVertesData)) {
+                            standartDurration = standartDurration + (Integer) edgesWeight.getData();
                         }
                     }
 
@@ -389,27 +391,29 @@ public class BoardGraph {
 
     private Field getNextVertex(Field root, Graph graphToUse, edgeType typeOfEdge)
     {
-        if(graphToUse.getAdjacenctVertexEdges(root).size() == 0) return root;
+        if (graphToUse.getAdjacenctVertexEdges(root).size() == 0) return root;
 
-        for (var edges:graphToUse.getAdjacenctVertexEdges(root)) {
-            if(getEdgeWeight(edges).getType() == typeOfEdge) return (edges.getSource() == root) ? (Field) edges.getTarget() : (Field) edges.getSource();
+        for (var edges : graphToUse.getAdjacenctVertexEdges(root)) {
+            if (getEdgeWeight(edges).getType() == typeOfEdge)
+                return (edges.getSource() == root) ? (Field) edges.getTarget() : (Field) edges.getSource();
         }
         return null; // No next Vertex was found
     }
 
     private Edge getNextEdge(Field root, Graph graphToUse, edgeType typeOfEdge)
     {
-        if(graphToUse.getAdjacenctVertexEdges(root).size() == 0) return null;
+        if (graphToUse.getAdjacenctVertexEdges(root).size() == 0) return null;
         Weight weight;
-        for (var edges:graphToUse.getAdjacenctVertexEdges(root)) {
-            weight = (Weight)edges.getWeight();
-            if(weight.getType() == typeOfEdge) return edges;
+        for (var edges : graphToUse.getAdjacenctVertexEdges(root)) {
+            weight = (Weight) edges.getWeight();
+            if (weight.getType() == typeOfEdge) return edges;
         }
         return null; // No next Edge was found
     }
 
-    private Weight getEdgeWeight(Edge edge){
-        return (Weight)edge.getWeight();
+    private Weight getEdgeWeight(Edge edge)
+    {
+        return (Weight) edge.getWeight();
     }
 
     public void checkGraph()
