@@ -735,10 +735,10 @@ public class GameBoard {
         // Add edges between three main paths
 
         boardGraph.addOneDirectionalEdgeForward(field149, field201, 500, BoardGraph.edgeType.CrossoverPathTwo);
-        boardGraph.addOneDirectionalEdgeBackward(field149, field201, 500, BoardGraph.edgeType.NormalEdge);
+        boardGraph.addOneDirectionalEdgeBackward(field201, field149, 500, BoardGraph.edgeType.NormalEdge);
 
         boardGraph.addOneDirectionalEdgeForward(field209, field301, 500, BoardGraph.edgeType.CrossoverPathTwo);
-        boardGraph.addOneDirectionalEdgeBackward(field209, field301, 500, BoardGraph.edgeType.NormalEdge);
+        boardGraph.addOneDirectionalEdgeBackward(field301, field209, 500, BoardGraph.edgeType.NormalEdge);
 
         boardGraph.addEdge(field222, field187, 500, BoardGraph.edgeType.NormalEdge);
 
