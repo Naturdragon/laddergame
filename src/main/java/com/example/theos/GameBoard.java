@@ -704,7 +704,8 @@ public class GameBoard {
 
         for (int i = 0; i < fieldListUpperPath.size() - 1; i++) {
             if (field149 == fieldListUpperPath.get(i)) {
-                getBoardGraph().addEdge(fieldListUpperPath.get(i), fieldListUpperPath.get(i + 1), 500, BoardGraph.edgeType.CrossoverPathOne);
+                getBoardGraph().addOneDirectionalEdgeForward(fieldListUpperPath.get(i), fieldListUpperPath.get(i + 1), 500, BoardGraph.edgeType.CrossoverPathOne);
+                getBoardGraph().addOneDirectionalEdgeBackward(fieldListUpperPath.get(i + 1), fieldListUpperPath.get(i), 500, BoardGraph.edgeType.NormalEdge);
                 continue;
             }
             getBoardGraph().addEdge(fieldListUpperPath.get(i), fieldListUpperPath.get(i + 1), 500, BoardGraph.edgeType.NormalEdge);
@@ -717,7 +718,8 @@ public class GameBoard {
 
         for (int i = 0; i < fieldListMiddlePath.size() - 1; i++) {
             if (field209 == fieldListMiddlePath.get(i)) {
-                getBoardGraph().addEdge(fieldListMiddlePath.get(i), fieldListMiddlePath.get(i + 1), 500, BoardGraph.edgeType.CrossoverPathOne);
+                getBoardGraph().addOneDirectionalEdgeForward(fieldListMiddlePath.get(i), fieldListMiddlePath.get(i + 1), 500, BoardGraph.edgeType.CrossoverPathOne);
+                getBoardGraph().addOneDirectionalEdgeBackward(fieldListMiddlePath.get(i + 1), fieldListMiddlePath.get(i), 500, BoardGraph.edgeType.NormalEdge);
                 continue;
             }
             getBoardGraph().addEdge(fieldListMiddlePath.get(i), fieldListMiddlePath.get(i + 1), 500, BoardGraph.edgeType.NormalEdge);
@@ -809,10 +811,11 @@ public class GameBoard {
         getBoardGraph().addOneDirectionalEdgeForward(field347, win6, 500, BoardGraph.edgeType.NormalEdge);
       
         // TODO Testing
-
+/*
         for (Player player : playerList) {
-            player.setCurrentField(field208);
+            player.setCurrentField(field302);
         }
+        */
 
     }
 
@@ -972,9 +975,7 @@ public class GameBoard {
             }
 
             // TODO: Improve?
-            Field a = boardGraph.hopCountTraversal(startingField, fieldsToMove, (typeOfEdge != null)? typeOfEdge : BoardGraph.edgeType.CrossoverPathOne);
-            Field b = player.getCurrentField();
-            if (a.getId() == b.getId()) {        // Checks if the methode has the first return of the crossing.
+            if (boardGraph.hopCountTraversal(startingField, fieldsToMove, (typeOfEdge != null)? typeOfEdge : BoardGraph.edgeType.CrossoverPathOne).getId() == player.getCurrentField().getId()) {        // Checks if the methode has the first return of the crossing.
                 player.increaseTurns();
                 diceUI.switchPlayerTurn(this);
 
