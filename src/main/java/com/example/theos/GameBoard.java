@@ -809,11 +809,11 @@ public class GameBoard {
         getBoardGraph().addOneDirectionalEdgeForward(field347, win6, 500, BoardGraph.edgeType.NormalEdge);
       
         // TODO Testing
-        /*
+
         for (Player player : playerList) {
             player.setCurrentField(field208);
         }
-         */
+
     }
 
     /*
@@ -972,7 +972,9 @@ public class GameBoard {
             }
 
             // TODO: Improve?
-            if (boardGraph.hopCountTraversal(startingField, fieldsToMove, BoardGraph.edgeType.CrossoverPathOne).getId() == player.getCurrentField().getId()) {        // Checks if the methode has the first return of the crossing.
+            Field a = boardGraph.hopCountTraversal(startingField, fieldsToMove, (typeOfEdge != null)? typeOfEdge : BoardGraph.edgeType.CrossoverPathOne);
+            Field b = player.getCurrentField();
+            if (a.getId() == b.getId()) {        // Checks if the methode has the first return of the crossing.
                 player.increaseTurns();
                 diceUI.switchPlayerTurn(this);
 
