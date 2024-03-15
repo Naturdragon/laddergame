@@ -12,7 +12,7 @@ Additionally, Lisa Freund was unable to commit her code in the early stages of p
 TO-DO / ADD-ONS:
 1. [Mateo] : Implement more animations to enhance the overall aesthetic of the game (playFallWaterfall + end animations)
 2. [Aleyna] Implement possibility to use ladders/snakes if negative fields are rolled with die
-3. [Martin] : Merge new branch for crossing fields with main branch (movePlayer())
+3. FIN - [Martin] : Merge new branch for crossing fields with main branch (movePlayer())
 4. FIN - [Lisa] : Spread out finished players in bowl
 5. FIN - [Lisa] : Implement visual aid for remaining fields at crossing
 6. FIN - [Marko] : Implement fullscreen
@@ -20,4 +20,7 @@ TO-DO / ADD-ONS:
 8. (Invert images when going left)
 
 BUGS:
-1. [Martin] Crossing fields don't work well when rolling negative numbers (Ist man beispielsweise bei field302, würfelt mit Diva eine -3, so wird man nur bis field301 zurückgesetzt & man kann nicht auf field208 gebracht werden)
+1. FIN - [Martin] Crossing fields don't work well when rolling negative numbers (Ist man beispielsweise bei field302, würfelt mit Diva eine -3, so wird man nur bis field301 zurückgesetzt & man kann nicht auf field208 gebracht werden)
+2. FIN - [Martin] When players cross the crossing the turn order is wrong.
+3. [Martin] The Character Walks while the player selects the path with the arrows.
+4. [Martin] A null pointer exception gets thrown when a player is moving to the crossing field.
