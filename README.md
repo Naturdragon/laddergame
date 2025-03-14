@@ -22,5 +22,6 @@ TO-DO / ADD-ONS:
 BUGS:
 1. FIN - [Martin] Crossing fields don't work well when rolling negative numbers (Ist man beispielsweise bei field302, würfelt mit Diva eine -3, so wird man nur bis field301 zurückgesetzt & man kann nicht auf field208 gebracht werden)
 2. FIN - [Martin] When players cross the crossing the turn order is wrong.
-3. [Martin] The Character Walks while the player selects the path with the arrows.
-4. [Martin] A null pointer exception gets thrown when a player is moving to the crossing field.
+3. FIN - [Martin] The Character Walks while the player selects the path with the arrows.
+4. FIN - [Martin] Index ou of bounds exception at the end of the game due to all players being removed from the playerList.
+5. [Martin] A null pointer exception gets thrown when a player is moving to the crossing field. Payer beginns Turn on Crossig -> Nullpointer exception and Walk Animation is playing.

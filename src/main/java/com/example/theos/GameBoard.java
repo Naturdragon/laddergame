@@ -810,12 +810,12 @@ public class GameBoard {
         getBoardGraph().addOneDirectionalEdgeForward(field347, win5, 500, BoardGraph.edgeType.NormalEdge);
         getBoardGraph().addOneDirectionalEdgeForward(field347, win6, 500, BoardGraph.edgeType.NormalEdge);
       
-        // TODO Testing
+        // TODO: For Testing
 /*
         for (Player player : playerList) {
-            player.setCurrentField(field302);
+            player.setCurrentField( field345);//field302);
         }
-        */
+*/
 
     }
 
@@ -980,8 +980,10 @@ public class GameBoard {
                 diceUI.switchPlayerTurn(this);
 
                 // the current player is moved to the end of the list
-                playerList.add(playerList.get(0));
-                playerList.remove(0);
+                if(playerList.size()>0) {
+                    playerList.add(playerList.get(0));
+                    playerList.remove(0);
+                }
             }
 
             player.playIdle();

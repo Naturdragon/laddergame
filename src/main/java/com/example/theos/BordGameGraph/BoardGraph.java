@@ -147,8 +147,15 @@ public class BoardGraph {
                             }
                         }
                     } else {
+
+                        /*
+                        // TODO: Might be not required
+                        // Is this not in the move loop? Only the last field needs to be checked if it is a lader field. Else the
+                        // character just walks over it. Does this code check if the character walks over a lader? If so, why?
+
                         if (vertexData.getType() == Field.fieldType.LadderField)
-                            System.out.println("!! This should not Happen !!");
+                            System.out.println("!! This should not Happen (Line 151)!!");
+                         */
                         for (var item : forwardGraph.getAdjacenctVertexEdges(vertexData)) {
                             tmpWeigth = (Weight) item.getWeight();
                             if (tmpWeigth.getType() == edgeType.NormalEdge) {
@@ -326,24 +333,8 @@ public class BoardGraph {
                         sequenTransis.getChildren().add(ladderPathTransition);
 
                         currentPlayer.setCurrentField(newVertexData);
-                        //new code Aleynas task to do hello:
-                       // return sequenTransis;
-                        if (newVertexData.getType() == Field.fieldType.LadderField) {
-                            Field downVertexData = getNextVertex(newVertexData, forwardGraph, edgeType.LadderEdge);
-                            if (downVertexData.getType() == Field.fieldType.NormalField) {
-                                Path downLadderPath = new Path();
-                                downLadderPath.getElements().add(new MoveTo(newVertexData.getX() - animationOffsetX, newVertexData.getY() - animationOffsetY));
-                                downLadderPath.getElements().add(new LineTo(downVertexData.getX() - animationOffsetX, downVertexData.getY() - animationOffsetY));
-                                PathTransition downLadderPathTransition = new PathTransition();
-                                downLadderPathTransition.setPath(downLadderPath);
-                                downLadderPathTransition.setDuration(Duration.millis((Integer) getEdgeWeight(getNextEdge(newVertexData, forwardGraph, edgeType.LadderEdge)).getData()));
-                                sequenTransis.getChildren().add(downLadderPathTransition);
-                                currentPlayer.setCurrentField(downVertexData);
-                            }
-                        }
+
                         return sequenTransis;
-
-
                     }
                 } else {
                     // End of Graph
@@ -354,23 +345,15 @@ public class BoardGraph {
                     standartPathTransition.setDuration(Duration.millis(standartDurration));
                     sequenTransis.getChildren().add(standartPathTransition);
 
-
                     if (playerReachedEnd) {
                         sequenTransis.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[0]);
                         sequenTransis.getChildren().add(currentPlayer.getEndAnimation(gameBord.getWinningFields().get(0))[1]);
                         standartPathTransition.setOnFinished(actionEvent -> currentPlayer.getCurrentAnimation().stop()); // currentAnimation (walking) is stopped before the end animation starts; otherwise spriteanimation overlap
-                    } //Aleyna
-
-
+                    }
 
                     currentPlayer.setCurrentField(vertexData);
                     return sequenTransis;
-
                 }
-
-
-
-
             }
             // End of Movement
 
@@ -414,6 +397,24 @@ public class BoardGraph {
                     standartPath.getElements().add(new LineTo(newVertexData.getX() - animationOffsetX, newVertexData.getY() - animationOffsetY));
 
                     standartDurration = standartDurration + (Integer)getEdgeWeight(getNextEdge(vertexData,backwardGraph,edgeType.NormalEdge)).getData();
+
+
+                    //new code Aleynas task to do hello:
+                    // return sequenTransis;
+                    if (newVertexData.getType() == Field.fieldType.LadderField) {
+                        Field downVertexData = getNextVertex(newVertexData, forwardGraph, edgeType.LadderEdge);
+                        if (downVertexData.getType() == Field.fieldType.NormalField) {
+                            Path downLadderPath = new Path();
+                            downLadderPath.getElements().add(new MoveTo(newVertexData.getX() - animationOffsetX, newVertexData.getY() - animationOffsetY));
+                            downLadderPath.getElements().add(new LineTo(downVertexData.getX() - animationOffsetX, downVertexData.getY() - animationOffsetY));
+                            PathTransition downLadderPathTransition = new PathTransition();
+                            downLadderPathTransition.setPath(downLadderPath);
+                            downLadderPathTransition.setDuration(Duration.millis((Integer) getEdgeWeight(getNextEdge(newVertexData, forwardGraph, edgeType.LadderEdge)).getData()));
+                            sequenTransis.getChildren().add(downLadderPathTransition);
+                            currentPlayer.setCurrentField(downVertexData);
+                        }
+                    }
+
 
                     vertexData = newVertexData; // Sets the new Fields to the current one
                 } else {

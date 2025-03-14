@@ -332,10 +332,10 @@ public class DiceUI extends AnchorPane {
                 // check if the current player reached the final field
                 if (gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1).getCurrentField() == gameBoard.getWinningFields().get(0)) {
                     gameBoard.addFinishedPlayer(gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1));
-                    gameBoard.getPlayerList().remove(gameBoard.getPlayerList().size() - 1);
+                    gameBoard.getPlayerList().remove(gameBoard.getPlayerList().size() - 1);   // Removes Players who are in the finish from the plaerList.
                 }
 
-                System.out.println(gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1).getName()); // TODO only for debugging
+                System.out.println(gameBoard.getPlayerList().get(gameBoard.getPlayerList().size() - 1).getName()); // TODO only for debugging; Prints out all the Player Turns in the Console after they have happeed
 
                 updateNextPlayer(gameBoard.getPlayerList());
                 selectNormalDie();
